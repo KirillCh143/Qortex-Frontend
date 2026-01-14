@@ -2,29 +2,20 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Eye } from 'lucide-react'
-import { mockDocuments, formatFileSize, formatDate, generateMockFileContent, type Document } from '@/lib/mockDocuments'
+import { Search, X, Download, Eye, Loader2 } from 'lucide-react'
+import { formatFileSize, formatDate } from '@/lib/mockDocuments'
+import { useFiles, useDownloadFile } from '@/hooks/useFiles'
+import type { DirectusFile } from '@/services/directus/types'
 
 export default function KnowledgeBase() {
-  const [documents] = useState<Document[]>(mockDocuments)
-  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>(mockDocuments)
-  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null)
+  const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Filter documents when search query changes
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredDocuments(documents)
-    } else {
-      const query = searchQuery.toLowerCase()
-      const filtered = documents.filter(
-        doc =>
-          doc.title.toLowerCase().includes(query) ||
-          doc.description.toLowerCase().includes(query)
-      )
-      setFilteredDocuments(filtered)
-    }
-  }, [searchQuery, documents])
+  // Fetch files using React Query with search filter
+  const { data: files = [], isLoading, error } = useFiles({ search: searchQuery })
+
+  // Download mutation
+  const downloadMutation = useDownloadFile()
 
   // Handle escape key to close detail panel
   useEffect(() => {
@@ -38,39 +29,43 @@ export default function KnowledgeBase() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedDoc])
 
-  const handleView = () => {
+  const handleView = async () => {
     if (!selectedDoc) return
 
-    // Generate mock file content
-    const blob = generateMockFileContent(selectedDoc)
-    const url = URL.createObjectURL(blob)
+    // Use download mutation to get file blob
+    downloadMutation.mutate(selectedDoc.id, {
+      onSuccess: (blob) => {
+        // Create blob URL and open in new tab
+        const url = URL.createObjectURL(blob)
+        window.open(url, '_blank')
 
-    // Open in new tab
-    window.open(url, '_blank')
-
-    // Clean up blob URL after short delay
-    setTimeout(() => {
-      URL.revokeObjectURL(url)
-    }, 100)
+        // Clean up blob URL after short delay
+        setTimeout(() => {
+          URL.revokeObjectURL(url)
+        }, 100)
+      }
+    })
   }
 
   const handleDownload = () => {
     if (!selectedDoc) return
 
-    // Generate mock file content
-    const blob = generateMockFileContent(selectedDoc)
-    const url = URL.createObjectURL(blob)
+    // Use download mutation - the hook handles the download logic
+    downloadMutation.mutate(selectedDoc.id, {
+      onSuccess: (blob) => {
+        // Override default behavior to use actual filename
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = selectedDoc.filename_download
+        document.body.appendChild(a)
+        a.click()
 
-    // Create anchor element and trigger download
-    const a = document.createElement('a')
-    a.href = url
-    a.download = selectedDoc.filename
-    document.body.appendChild(a)
-    a.click()
-
-    // Clean up
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+        // Clean up
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }
+    })
   }
 
   return (
@@ -95,33 +90,42 @@ export default function KnowledgeBase() {
         </div>
 
         {/* Document list */}
-        {filteredDocuments.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-cyan-500 mx-auto" />
+            <p className="mt-4 text-gray-500">Loading documents...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 text-red-500">
+            <p>Error loading documents: {error instanceof Error ? error.message : 'Unknown error'}</p>
+          </div>
+        ) : files.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <p>No documents found</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredDocuments.map((doc) => (
+            {files.map((file) => (
               <Card
-                key={doc.id}
+                key={file.id}
                 className="cursor-pointer transition-colors hover:border-cyan-500"
-                onClick={() => setSelectedDoc(doc)}
+                onClick={() => setSelectedDoc(file)}
               >
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg">{doc.title}</CardTitle>
+                    <CardTitle className="text-lg">{file.title}</CardTitle>
                     <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded whitespace-nowrap">
-                      {doc.category}
+                      {file.type.split('/')[0]}
                     </span>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="line-clamp-2 mb-3">
-                    {doc.description}
+                    {file.description}
                   </CardDescription>
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{formatFileSize(doc.filesize)}</span>
-                    <span>{formatDate(doc.uploadedOn)}</span>
+                    <span>{formatFileSize(file.filesize)}</span>
+                    <span>{formatDate(new Date(file.uploaded_on))}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -158,9 +162,9 @@ export default function KnowledgeBase() {
                 </h2>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
-                    {selectedDoc.category}
+                    {selectedDoc.type}
                   </span>
-                  <span>{formatDate(selectedDoc.uploadedOn)}</span>
+                  <span>{formatDate(new Date(selectedDoc.uploaded_on))}</span>
                 </div>
               </div>
 
@@ -168,7 +172,7 @@ export default function KnowledgeBase() {
               <div className="mb-6 space-y-2">
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">Filename:</span>
-                  <span className="text-sm text-gray-600">{selectedDoc.filename}</span>
+                  <span className="text-sm text-gray-600">{selectedDoc.filename_download}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">File size:</span>
