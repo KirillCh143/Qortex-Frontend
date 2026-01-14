@@ -4,6 +4,7 @@ import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
 import { generateMockResponse } from '@/lib/mockResponses'
 import { loadMessages, saveMessages, type Message } from '@/lib/chatStorage'
+import { Trash2 } from 'lucide-react'
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -42,27 +43,46 @@ export default function Chat() {
     }, 500)
   }
 
+  const handleClearHistory = () => {
+    if (window.confirm('Clear all chat history? This cannot be undone.')) {
+      setMessages([])
+      saveMessages([])
+    }
+  }
+
   return (
     <div className="flex flex-col h-full">
       {/* Mode toggle */}
       <div className="border-b border-gray-200 p-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex gap-2">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <Button
+                variant={mode === 'rag' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setMode('rag')}
+                className={mode === 'rag' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
+              >
+                RAG Search
+              </Button>
+              <Button
+                variant={mode === 'llm' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setMode('llm')}
+                className={mode === 'llm' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
+              >
+                LLM Chat
+              </Button>
+            </div>
             <Button
-              variant={mode === 'rag' ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
-              onClick={() => setMode('rag')}
-              className={mode === 'rag' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
+              onClick={handleClearHistory}
+              disabled={messages.length === 0}
+              className="flex items-center gap-2"
             >
-              RAG Search
-            </Button>
-            <Button
-              variant={mode === 'llm' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMode('llm')}
-              className={mode === 'llm' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
-            >
-              LLM Chat
+              <Trash2 className="h-4 w-4" />
+              Clear History
             </Button>
           </div>
         </div>
