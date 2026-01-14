@@ -39,6 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Skip real auth check if using mock data
       const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
       if (useMockData) {
+        // Clear any stored Directus auth to prevent SDK auto-refresh attempts
+        localStorage.removeItem('directus_auth');
         setLoading(false);
         return;
       }
