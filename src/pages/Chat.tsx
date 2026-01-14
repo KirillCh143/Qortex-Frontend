@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
-import { generateMockResponse } from '@/lib/mockResponses'
+import { useChatQuery } from '@/hooks/useChatQuery'
 import { loadMessages, saveMessages, type Message } from '@/lib/chatStorage'
 import { loadSettings } from '@/lib/settings'
 import { Trash2 } from 'lucide-react'
@@ -11,6 +11,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [mode, setMode] = useState<'rag' | 'llm'>('rag')
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const chatMutation = useChatQuery()
 
   // Load messages from localStorage on mount (conditionally based on persistence setting)
   useEffect(() => {
@@ -58,25 +59,56 @@ export default function Chat() {
       saveMessages(updatedMessages)
     }
 
-    // Add mock assistant response after 500ms
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: generateMockResponse(mode, content),
-        timestamp: new Date(),
-        mode
-      }
-      setMessages(prev => {
-        const newMessages = [...prev, assistantMessage]
+    // Send query to webhook service (mock or real)
+    chatMutation.mutate(
+      {
+        question: content,
+        mode,
+        sessionId: crypto.randomUUID(),
+        history: messages.slice(-10).map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      },
+      {
+        onSuccess: (data) => {
+          const assistantMessage: Message = {
+            role: 'assistant',
+            content: data.answer,
+            timestamp: new Date(),
+            mode
+          }
+          setMessages(prev => {
+            const newMessages = [...prev, assistantMessage]
 
-        // Only save if persistence is enabled
-        if (settings.messagePersistence) {
-          saveMessages(newMessages)
+            // Only save if persistence is enabled
+            if (settings.messagePersistence) {
+              saveMessages(newMessages)
+            }
+
+            return newMessages
+          })
+        },
+        onError: (error) => {
+          const errorMessage: Message = {
+            role: 'assistant',
+            content: `Error: ${error.message}`,
+            timestamp: new Date(),
+            mode
+          }
+          setMessages(prev => {
+            const newMessages = [...prev, errorMessage]
+
+            // Only save if persistence is enabled
+            if (settings.messagePersistence) {
+              saveMessages(newMessages)
+            }
+
+            return newMessages
+          })
         }
-
-        return newMessages
-      })
-    }, 500)
+      }
+    )
   }
 
   const handleClearHistory = () => {
@@ -146,7 +178,7 @@ export default function Chat() {
       </div>
 
       {/* Chat input at bottom */}
-      <ChatInput onSend={handleSend} />
+      <ChatInput onSend={handleSend} disabled={chatMutation.isPending} />
     </div>
   )
 }

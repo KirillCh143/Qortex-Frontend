@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button'
 
 interface ChatInputProps {
   onSend: (message: string) => void
+  disabled?: boolean
 }
 
-export default function ChatInput({ onSend }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled = false }: ChatInputProps) {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -49,10 +50,11 @@ export default function ChatInput({ onSend }: ChatInputProps) {
           className="flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent overflow-y-auto"
           rows={1}
           style={{ minHeight: '40px', maxHeight: '96px' }}
+          disabled={disabled}
         />
         <Button
           onClick={handleSend}
-          disabled={!message.trim()}
+          disabled={!message.trim() || disabled}
           className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 h-10"
         >
           <Send size={18} />
