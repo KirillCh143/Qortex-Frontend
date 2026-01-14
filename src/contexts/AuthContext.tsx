@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     // Use client.login() for JSON auth mode - SDK handles token storage
-    const result = await client.login(email, password);
+    const result = await client.login({ email, password });
     localStorage.setItem('directus_auth', JSON.stringify(result));
     await checkAuth();
   };
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const parsedAuth = JSON.parse(authData);
         // Call logout with refresh_token and consistent JSON mode
         await client.request(
-          directusLogout(parsedAuth.refresh_token, 'json')
+          directusLogout({ refresh_token: parsedAuth.refresh_token, mode: 'json' })
         );
       }
     } catch (error) {
