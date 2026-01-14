@@ -1,8 +1,94 @@
+import { useState, useEffect } from 'react'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { saveSettings, loadSettings, type ApiSettings } from '@/lib/settings'
+
 export default function Settings() {
+  const [formValues, setFormValues] = useState<ApiSettings>({
+    directusUrl: '',
+    n8nWebhookUrl: ''
+  })
+
+  // Load initial values from localStorage on mount
+  useEffect(() => {
+    const settings = loadSettings()
+    setFormValues(settings)
+  }, [])
+
+  const handleSave = () => {
+    saveSettings(formValues)
+    console.log('Settings saved successfully!')
+  }
+
+  const handleReset = () => {
+    localStorage.removeItem('api-settings')
+    const defaults = loadSettings()
+    setFormValues(defaults)
+    console.log('Settings reset to defaults')
+  }
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-      <p className="mt-4 text-gray-600">Configure API Endpoints</p>
+    <div className="p-8 max-w-2xl">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Settings</h1>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>API Configuration</CardTitle>
+          <CardDescription>
+            Configure your backend API endpoints for Directus and n8n
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="directusUrl" className="text-sm font-medium text-gray-900">
+              Directus URL
+            </label>
+            <Input
+              id="directusUrl"
+              type="url"
+              placeholder="http://localhost:8055"
+              value={formValues.directusUrl}
+              onChange={(e) => setFormValues({ ...formValues, directusUrl: e.target.value })}
+            />
+            <p className="text-sm text-gray-500">
+              URL of your Directus backend instance (used for authentication and data)
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="n8nWebhookUrl" className="text-sm font-medium text-gray-900">
+              n8n Webhook URL
+            </label>
+            <Input
+              id="n8nWebhookUrl"
+              type="url"
+              placeholder="http://localhost:5678/webhook/chat"
+              value={formValues.n8nWebhookUrl}
+              onChange={(e) => setFormValues({ ...formValues, n8nWebhookUrl: e.target.value })}
+            />
+            <p className="text-sm text-gray-500">
+              Webhook endpoint for n8n chat workflow processing
+            </p>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button
+              onClick={handleSave}
+              className="bg-cyan-500 hover:bg-cyan-600 text-white"
+            >
+              Save Settings
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleReset}
+            >
+              Reset to Defaults
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
