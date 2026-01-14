@@ -4,6 +4,7 @@ import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
 import { generateMockResponse } from '@/lib/mockResponses'
 import { loadMessages, saveMessages, type Message } from '@/lib/chatStorage'
+import { loadSettings } from '@/lib/settings'
 import { Trash2 } from 'lucide-react'
 
 export default function Chat() {
@@ -11,8 +12,21 @@ export default function Chat() {
   const [mode, setMode] = useState<'rag' | 'llm'>('rag')
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
-  // Load messages from localStorage on mount
+  // Load messages from localStorage on mount (conditionally based on persistence setting)
   useEffect(() => {
+    const settings = loadSettings()
+
+    // If persistence is disabled, clear any stale messages from localStorage
+    if (!settings.messagePersistence) {
+      const staleMessages = localStorage.getItem('chat-messages')
+      if (staleMessages) {
+        localStorage.removeItem('chat-messages')
+      }
+      setMessages([])
+      return
+    }
+
+    // If persistence is enabled, load messages
     const savedMessages = loadMessages()
     setMessages(savedMessages)
   }, [])
@@ -28,6 +42,8 @@ export default function Chat() {
   }, [messages.length])
 
   const handleSend = (content: string) => {
+    const settings = loadSettings()
+
     // Add user message
     const userMessage: Message = {
       role: 'user',
@@ -36,7 +52,11 @@ export default function Chat() {
     }
     const updatedMessages = [...messages, userMessage]
     setMessages(updatedMessages)
-    saveMessages(updatedMessages)
+
+    // Only save if persistence is enabled
+    if (settings.messagePersistence) {
+      saveMessages(updatedMessages)
+    }
 
     // Add mock assistant response after 500ms
     setTimeout(() => {
@@ -48,7 +68,12 @@ export default function Chat() {
       }
       setMessages(prev => {
         const newMessages = [...prev, assistantMessage]
-        saveMessages(newMessages)
+
+        // Only save if persistence is enabled
+        if (settings.messagePersistence) {
+          saveMessages(newMessages)
+        }
+
         return newMessages
       })
     }, 500)
