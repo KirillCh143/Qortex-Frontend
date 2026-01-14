@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-13)
 
 **Core value:** Exceptional chat user experience that makes finding documentation feel natural and effortless.
-**Current focus:** Phase 5 — Knowledge Base Interface (In Progress)
+**Current focus:** Phase 6 — Settings Panel (Complete)
 
 ## Current Position
 
-Phase: 5 of 8 (Knowledge Base Interface)
+Phase: 6 of 8 (Settings Panel)
 Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-01-14 — Completed 05-02-PLAN.md
+Last activity: 2026-01-14 — Completed 06-02-PLAN.md
 
-Progress: ██████████████░ 67%
+Progress: ████████████████ 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
-- Average duration: ~7.8 min/plan
-- Total execution time: ~109 min
+- Total plans completed: 16
+- Average duration: ~7.4 min/plan
+- Total execution time: ~119 min
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: ██████████████░ 67%
 | 3. Authentication System | 3 | ~10 min | ~3.3 min | Sequential (rate limit recovery) |
 | 4. Chat Interface - Mock Mode | 3 | ~28 min | ~9.3 min | Parallel (3 waves) |
 | 5. Knowledge Base Interface | 2 | ~26 min | ~13 min | Sequential |
+| 6. Settings Panel | 2 | ~10 min | ~5 min | Sequential (file conflict + checkpoint) |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (12m), 04-03 (8m), 05-01 (22m), 05-02 (4m)
-- Trend: Phase 5 complete with document browsing and view/download functionality
+- Last 5 plans: 05-01 (22m), 05-02 (4m), 06-01 (4m), 06-02 (6m)
+- Trend: Phase 6 complete with API configuration and chat persistence controls
 
 ## Accumulated Context
 
@@ -54,6 +55,17 @@ Recent decisions affecting current work:
 - Markdown files use text/markdown MIME type for proper rendering
 - Blob URLs cleaned up after short delay (100ms for view, immediate for download)
 
+**Phase 6 Plan 1 (API Configuration Settings):**
+- localStorage key 'api-settings' consistent with 'chat-messages' pattern
+- Directus URL precedence: user settings > env var > dev/prod defaults
+- Cyan accent color (#06b6d4) for Save button matching project palette
+- Console.log for success notifications (toast deferred to Phase 8)
+
+**Phase 6 Plan 2 (Chat Preferences):**
+- Default message persistence enabled (messagePersistence: true) for most users
+- Persistence check on mount clears stale localStorage when disabled
+- Separate "Chat Preferences" Card section for clear organization
+
 ### Deferred Issues
 
 None yet.
@@ -65,5 +77,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-14
-Stopped at: Phase 5 complete (Knowledge Base Interface with document browsing, view, and download)
+Stopped at: Phase 6 complete (Settings Panel with API configuration and message persistence controls)
 Resume file: None
