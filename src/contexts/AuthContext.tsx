@@ -36,6 +36,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async () => {
     try {
+      // Skip real auth check if using mock data
+      const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+      if (useMockData) {
+        setLoading(false);
+        return;
+      }
+
       const authData = localStorage.getItem('directus_auth');
       if (!authData) {
         setLoading(false);
