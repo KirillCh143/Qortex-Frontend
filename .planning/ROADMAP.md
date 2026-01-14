@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Project Foundation** - Initialize React + TypeScript stack with tooling and structure
 - [x] **Phase 2: Core Layout & Navigation** - Build sidebar, header, and protected route structure
 - [x] **Phase 3: Authentication System** - Custom Directus login with session management
-- [ ] **Phase 4: Chat Interface - Mock Mode** - Build chat UI with RAG/LLM modes using mock data
+- [x] **Phase 4: Chat Interface - Mock Mode** - Build chat UI with RAG/LLM modes using mock data
 - [ ] **Phase 5: Knowledge Base Interface** - Document browsing with view/download capabilities
 - [ ] **Phase 6: Settings Panel** - API configuration and chat preference controls
 - [ ] **Phase 7: API Integration Layer** - Connect to Directus and n8n with real/mock toggle
@@ -78,10 +78,10 @@ Plans:
 **Goal**: Document browsing interface with view/download capabilities
 **Depends on**: Phase 4
 **Research**: Unlikely (UI patterns similar to Phase 4, mock data first)
-**Plans**: TBD
+**Plans**: 1/2 complete
 
 Plans:
-- [ ] 05-01: Create document list and detail views
+- [x] 05-01: Create document list and detail views
 - [ ] 05-02: Implement view/download functionality with mock data
 
 ### Phase 6: Settings Panel
@@ -125,9 +125,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 |-------|----------------|--------|-----------|
 | 1. Project Foundation | 3/3 | Complete | 2026-01-14 |
 | 2. Core Layout & Navigation | 3/3 | Complete | 2026-01-14 |
-| 3. Authentication System | 0/3 | Not started | - |
-| 4. Chat Interface - Mock Mode | 0/3 | Not started | - |
-| 5. Knowledge Base Interface | 0/2 | Not started | - |
+| 3. Authentication System | 3/3 | Complete | 2026-01-14 |
+| 4. Chat Interface - Mock Mode | 3/3 | Complete | 2026-01-14 |
+| 5. Knowledge Base Interface | 1/2 | In progress | - |
 | 6. Settings Panel | 0/2 | Not started | - |
 | 7. API Integration Layer | 0/3 | Not started | - |
 | 8. Polish & Testing | 0/2 | Not started | - |
