@@ -57,8 +57,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: Build custom login page UI
-- [ ] 03-02: Create auth abstraction layer with mock/real mode toggle
+- [x] 03-01: Build Directus SDK and AuthContext
+- [x] 03-02: Create custom login page UI
 - [ ] 03-03: Implement protected routes and session persistence
 
 ### Phase 4: Chat Interface - Mock Mode
