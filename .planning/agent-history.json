@@ -1,0 +1,182 @@
+{
+  "version": "1.2",
+  "max_entries": 50,
+  "entries": [
+    {
+      "agent_id": "adc1966",
+      "task_description": "Parallel: Execute 01-01-PLAN.md",
+      "phase": "01",
+      "plan": "01",
+      "parallel_group": "pg-20260114001418-09ead03c",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-13T21:14:25Z",
+      "status": "completed",
+      "files_modified": [
+        ".gitignore",
+        "index.html",
+        "package.json",
+        "package-lock.json",
+        ".planning/phases/01-project-foundation/01-01-SUMMARY.md",
+        "public/vite.svg",
+        "src/App.css",
+        "src/App.tsx",
+        "src/assets/react.svg",
+        "src/index.css",
+        "src/main.tsx",
+        "src/vite-env.d.ts",
+        "tsconfig.json",
+        "tsconfig.node.json",
+        "vite.config.ts"
+      ],
+      "completion_timestamp": "2026-01-13T21:19:02Z",
+      "deviations": [
+        "Auto-fix blocker: Manual file creation"
+      ]
+    },
+    {
+      "agent_id": "ab5e0d0",
+      "task_description": "Parallel: Execute 01-02-PLAN.md",
+      "phase": "01",
+      "plan": "02",
+      "parallel_group": "pg-20260114001418-09ead03c",
+      "granularity": "plan",
+      "wave": 2,
+      "depends_on": [
+        "01-01"
+      ],
+      "timestamp": "2026-01-13T21:19:29Z",
+      "status": "completed",
+      "files_modified": [
+        "package.json",
+        "package-lock.json",
+        "eslint.config.js",
+        ".prettierrc",
+        ".vscode/settings.json",
+        ".gitignore",
+        "src/App.tsx",
+        "src/main.tsx"
+      ],
+      "completion_timestamp": "2026-01-13T21:23:24Z",
+      "deviations": [
+        "Modern ESLint flat config",
+        "Auto-fixed security issues"
+      ]
+    },
+    {
+      "agent_id": "a2f3549",
+      "task_description": "Parallel: Execute 01-03-PLAN.md",
+      "phase": "01",
+      "plan": "03",
+      "parallel_group": "pg-20260114001418-09ead03c",
+      "granularity": "plan",
+      "wave": 3,
+      "depends_on": [
+        "01-02"
+      ],
+      "timestamp": "2026-01-13T21:23:52Z",
+      "status": "completed",
+      "files_modified": [
+        "package.json",
+        "package-lock.json",
+        "tailwind.config.js",
+        "postcss.config.js",
+        "src/index.css",
+        "src/App.tsx",
+        "components.json",
+        "src/lib/utils.ts",
+        "tsconfig.json",
+        "vite.config.ts",
+        "src/components/.gitkeep",
+        "src/services/.gitkeep",
+        "src/hooks/.gitkeep",
+        "src/types/.gitkeep"
+      ],
+      "completion_timestamp": "2026-01-13T21:28:32Z",
+      "deviations": [
+        "Tailwind v4 breaking changes"
+      ]
+    },
+    {
+      "agent_id": "a3af3d6",
+      "task_description": "Parallel: Execute 02-01-PLAN.md (Sidebar)",
+      "phase": "02",
+      "plan": "01",
+      "parallel_group": "pg-20260114061231-adb44497",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-14T06:12:31Z",
+      "status": "completed",
+      "files_modified": [
+        "src/components/ui/button.tsx",
+        "src/components/ui/separator.tsx",
+        "src/components/Sidebar.tsx",
+        "package.json",
+        "package-lock.json",
+        ".planning/phases/02-core-layout-navigation/02-01-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-14T06:17:41Z",
+      "deviations": []
+    },
+    {
+      "agent_id": "a860161",
+      "task_description": "Parallel: Execute 02-02-PLAN.md (Header)",
+      "phase": "02",
+      "plan": "02",
+      "parallel_group": "pg-20260114061231-adb44497",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-14T06:12:31Z",
+      "status": "completed",
+      "files_modified": [
+        "src/components/ui/avatar.tsx",
+        "src/components/Header.tsx",
+        "src/App.tsx",
+        "postcss.config.js",
+        "src/index.css",
+        "package.json",
+        "package-lock.json",
+        ".planning/phases/02-core-layout-navigation/02-02-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-14T06:17:41Z",
+      "deviations": [
+        "Fixed Tailwind v4 PostCSS configuration",
+        "Fixed CSS @apply directives",
+        "Integrated App.tsx with both Header and Sidebar"
+      ]
+    },
+    {
+      "agent_id": "a34c8da",
+      "task_description": "Parallel: Execute 02-03-PLAN.md (Router)",
+      "phase": "02",
+      "plan": "03",
+      "parallel_group": "pg-20260114061231-adb44497",
+      "granularity": "plan",
+      "wave": 2,
+      "depends_on": [
+        "02-01",
+        "02-02"
+      ],
+      "timestamp": "2026-01-14T06:19:09Z",
+      "status": "completed",
+      "files_modified": [
+        "package.json",
+        "package-lock.json",
+        "src/pages/Chat.tsx",
+        "src/pages/KnowledgeBase.tsx",
+        "src/pages/Settings.tsx",
+        "src/components/Layout.tsx",
+        "src/components/ProtectedRoute.tsx",
+        "src/main.tsx",
+        "src/App.tsx",
+        "src/components/Sidebar.tsx",
+        ".planning/phases/02-core-layout-navigation/02-03-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-14T06:23:20Z",
+      "deviations": []
+    }
+  ]
+}
