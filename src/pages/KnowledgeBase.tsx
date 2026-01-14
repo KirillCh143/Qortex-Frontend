@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Search, X, Download, Eye } from 'lucide-react'
 import { mockDocuments, formatFileSize, formatDate, type Document } from '@/lib/mockDocuments'
 
 export default function KnowledgeBase() {
   const [documents] = useState<Document[]>(mockDocuments)
   const [filteredDocuments, setFilteredDocuments] = useState<Document[]>(mockDocuments)
-  const [_selectedDoc, setSelectedDoc] = useState<Document | null>(null)
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
   // Filter documents when search query changes
@@ -24,6 +25,26 @@ export default function KnowledgeBase() {
       setFilteredDocuments(filtered)
     }
   }, [searchQuery, documents])
+
+  // Handle escape key to close detail panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedDoc) {
+        setSelectedDoc(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedDoc])
+
+  const handleView = () => {
+    alert('View functionality will be implemented in Phase 7')
+  }
+
+  const handleDownload = () => {
+    alert('Download functionality will be implemented in Phase 7')
+  }
 
   return (
     <div className="h-full overflow-y-auto p-4">
@@ -81,6 +102,85 @@ export default function KnowledgeBase() {
           </div>
         )}
       </div>
+
+      {/* Detail Panel */}
+      {selectedDoc && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-50"
+            onClick={() => setSelectedDoc(null)}
+          />
+
+          {/* Panel */}
+          <div className="fixed right-0 top-0 h-full w-full md:w-1/2 bg-white shadow-xl z-50 overflow-y-auto transition-transform duration-300">
+            <div className="p-6">
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedDoc(null)}
+                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+
+              {/* Document header */}
+              <div className="mb-6 pr-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {selectedDoc.title}
+                </h2>
+                <div className="flex items-center gap-3 text-sm text-gray-500">
+                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+                    {selectedDoc.category}
+                  </span>
+                  <span>{formatDate(selectedDoc.uploadedOn)}</span>
+                </div>
+              </div>
+
+              {/* Metadata section */}
+              <div className="mb-6 space-y-2">
+                <div className="flex justify-between py-2 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Filename:</span>
+                  <span className="text-sm text-gray-600">{selectedDoc.filename}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">File size:</span>
+                  <span className="text-sm text-gray-600">{formatFileSize(selectedDoc.filesize)}</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Uploaded by:</span>
+                  <span className="text-sm text-gray-600">System Admin</span>
+                </div>
+              </div>
+
+              {/* Description section */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
+                <p className="text-gray-700 leading-relaxed">{selectedDoc.description}</p>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleView}
+                  className="flex-1 bg-cyan-500 hover:bg-cyan-600"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  View
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDownload}
+                  className="flex-1"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
