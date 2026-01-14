@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
@@ -9,12 +9,23 @@ import { Trash2 } from 'lucide-react'
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [mode, setMode] = useState<'rag' | 'llm'>('rag')
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   // Load messages from localStorage on mount
   useEffect(() => {
     const savedMessages = loadMessages()
     setMessages(savedMessages)
   }, [])
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  }, [messages.length])
 
   const handleSend = (content: string) => {
     // Add user message
@@ -89,7 +100,7 @@ export default function Chat() {
       </div>
 
       {/* Messages container with scroll */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             <p>Start a conversation by typing a message below</p>
