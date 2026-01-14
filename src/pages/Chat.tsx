@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
 import { generateMockResponse } from '@/lib/mockResponses'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: Date
-  mode?: 'rag' | 'llm'
-}
+import { loadMessages, saveMessages, type Message } from '@/lib/chatStorage'
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [mode, setMode] = useState<'rag' | 'llm'>('rag')
+
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const savedMessages = loadMessages()
+    setMessages(savedMessages)
+  }, [])
 
   const handleSend = (content: string) => {
     // Add user message
@@ -22,7 +22,9 @@ export default function Chat() {
       content,
       timestamp: new Date()
     }
-    setMessages(prev => [...prev, userMessage])
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
+    saveMessages(updatedMessages)
 
     // Add mock assistant response after 500ms
     setTimeout(() => {
@@ -32,7 +34,11 @@ export default function Chat() {
         timestamp: new Date(),
         mode
       }
-      setMessages(prev => [...prev, assistantMessage])
+      setMessages(prev => {
+        const newMessages = [...prev, assistantMessage]
+        saveMessages(newMessages)
+        return newMessages
+      })
     }, 500)
   }
 
