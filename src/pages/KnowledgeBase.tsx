@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Search, X, Download, Eye } from 'lucide-react'
-import { mockDocuments, formatFileSize, formatDate, type Document } from '@/lib/mockDocuments'
+import { mockDocuments, formatFileSize, formatDate, generateMockFileContent, type Document } from '@/lib/mockDocuments'
 
 export default function KnowledgeBase() {
   const [documents] = useState<Document[]>(mockDocuments)
@@ -39,11 +39,38 @@ export default function KnowledgeBase() {
   }, [selectedDoc])
 
   const handleView = () => {
-    alert('View functionality will be implemented in Phase 7')
+    if (!selectedDoc) return
+
+    // Generate mock file content
+    const blob = generateMockFileContent(selectedDoc)
+    const url = URL.createObjectURL(blob)
+
+    // Open in new tab
+    window.open(url, '_blank')
+
+    // Clean up blob URL after short delay
+    setTimeout(() => {
+      URL.revokeObjectURL(url)
+    }, 100)
   }
 
   const handleDownload = () => {
-    alert('Download functionality will be implemented in Phase 7')
+    if (!selectedDoc) return
+
+    // Generate mock file content
+    const blob = generateMockFileContent(selectedDoc)
+    const url = URL.createObjectURL(blob)
+
+    // Create anchor element and trigger download
+    const a = document.createElement('a')
+    a.href = url
+    a.download = selectedDoc.filename
+    document.body.appendChild(a)
+    a.click()
+
+    // Clean up
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   return (
