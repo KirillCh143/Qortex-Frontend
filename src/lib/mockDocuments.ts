@@ -116,3 +116,69 @@ export function formatDate(date: Date): string {
     year: 'numeric'
   })
 }
+
+// Generate mock file content for view/download
+export function generateMockFileContent(document: Document): Blob {
+  const extension = document.filename.split('.').pop()?.toLowerCase()
+  let content = ''
+  let mimeType = 'text/plain'
+
+  // Build content based on file type
+  if (extension === 'md') {
+    // Markdown format
+    mimeType = 'text/markdown'
+    content = `# ${document.title}
+
+**Category:** ${document.category}
+**Filename:** ${document.filename}
+**File Size:** ${formatFileSize(document.filesize)}
+**Uploaded:** ${formatDate(document.uploadedOn)}
+
+## Description
+
+${document.description}
+
+## Content
+
+This is mock content for ${document.filename}. Real file content will be served from Directus in Phase 7.
+
+The actual file would contain detailed information related to ${document.title.toLowerCase()}.
+`
+  } else if (extension === 'pdf' || extension === 'docx') {
+    // Plain text representation for PDF/Word
+    content = `${document.title}
+${'='.repeat(document.title.length)}
+
+Category: ${document.category}
+Filename: ${document.filename}
+File Size: ${formatFileSize(document.filesize)}
+Uploaded: ${formatDate(document.uploadedOn)}
+
+Description:
+${document.description}
+
+---
+
+This is mock content for ${document.filename}. Real file content will be served from Directus in Phase 7.
+
+The actual ${extension?.toUpperCase()} file would contain formatted content with proper styling, images, and structured information related to ${document.title.toLowerCase()}.
+`
+  } else {
+    // Default plain text
+    content = `${document.title}
+
+This is mock content for ${document.filename}. Real file content will be served from Directus in Phase 7.
+
+Document Information:
+- Category: ${document.category}
+- Filename: ${document.filename}
+- File Size: ${formatFileSize(document.filesize)}
+- Uploaded: ${formatDate(document.uploadedOn)}
+
+Description:
+${document.description}
+`
+  }
+
+  return new Blob([content], { type: mimeType })
+}
