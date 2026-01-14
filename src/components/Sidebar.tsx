@@ -1,4 +1,5 @@
 import { Building2, MessageSquare, BookOpen, Settings } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
@@ -18,25 +19,34 @@ export function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-white hover:bg-secondary/20 hover:text-white"
+          asChild
         >
-          <MessageSquare className="h-5 w-5" />
-          Chat
+          <Link to="/chat">
+            <MessageSquare className="h-5 w-5" />
+            Chat
+          </Link>
         </Button>
 
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-white hover:bg-secondary/20 hover:text-white"
+          asChild
         >
-          <BookOpen className="h-5 w-5" />
-          Knowledge Base
+          <Link to="/knowledge-base">
+            <BookOpen className="h-5 w-5" />
+            Knowledge Base
+          </Link>
         </Button>
 
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-white hover:bg-secondary/20 hover:text-white"
+          asChild
         >
-          <Settings className="h-5 w-5" />
-          Settings
+          <Link to="/settings">
+            <Settings className="h-5 w-5" />
+            Settings
+          </Link>
         </Button>
       </nav>
     </div>
