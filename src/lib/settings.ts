@@ -1,6 +1,7 @@
 export interface ApiSettings {
   directusUrl: string
   n8nWebhookUrl: string
+  messagePersistence: boolean
 }
 
 const STORAGE_KEY = 'api-settings'
@@ -31,7 +32,8 @@ export function loadSettings(): ApiSettings {
     if (!stored) {
       return {
         directusUrl: DEFAULT_DIRECTUS_URL,
-        n8nWebhookUrl: DEFAULT_N8N_WEBHOOK_URL
+        n8nWebhookUrl: DEFAULT_N8N_WEBHOOK_URL,
+        messagePersistence: true
       }
     }
 
@@ -40,13 +42,15 @@ export function loadSettings(): ApiSettings {
     // Return parsed settings with fallback to defaults for missing values
     return {
       directusUrl: parsed.directusUrl || DEFAULT_DIRECTUS_URL,
-      n8nWebhookUrl: parsed.n8nWebhookUrl || DEFAULT_N8N_WEBHOOK_URL
+      n8nWebhookUrl: parsed.n8nWebhookUrl || DEFAULT_N8N_WEBHOOK_URL,
+      messagePersistence: parsed.messagePersistence !== undefined ? parsed.messagePersistence : true
     }
   } catch (error) {
     console.error('Failed to load settings from localStorage:', error)
     return {
       directusUrl: DEFAULT_DIRECTUS_URL,
-      n8nWebhookUrl: DEFAULT_N8N_WEBHOOK_URL
+      n8nWebhookUrl: DEFAULT_N8N_WEBHOOK_URL,
+      messagePersistence: true
     }
   }
 }
