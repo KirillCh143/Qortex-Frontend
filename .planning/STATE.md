@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 
 ## Current Position
 
-Phase: 7 of 8 (API Integration Layer)
-Plan: 3 of 3 in current phase
+Phase: 7.1 of 8 (Additional fixes)
+Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-01-15 — Completed 07-03-PLAN.md (parallel execution)
+Last activity: 2026-01-16 — Completed 7.1-02-PLAN.md (sequential execution)
 
-Progress: ███████████████████ 87.5%
+Progress: ████████████████████ 95.5%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: ~6.6 min/plan
-- Total execution time: ~125 min
+- Total plans completed: 21
+- Average duration: ~7.4 min/plan
+- Total execution time: ~155 min
 
 **By Phase:**
 
@@ -34,10 +34,11 @@ Progress: ███████████████████ 87.5%
 | 5. Knowledge Base Interface | 2 | ~26 min | ~13 min | Sequential |
 | 6. Settings Panel | 2 | ~10 min | ~5 min | Sequential (file conflict + checkpoint) |
 | 7. API Integration Layer | 3 | ~6 min | ~2 min | Parallel (2 waves) |
+| 7.1. Additional fixes (INSERTED) | 2 | ~30 min | ~15 min | Sequential (2 checkpoints) |
 
 **Recent Trend:**
-- Last 5 plans: 06-01 (4m), 06-02 (6m), 07-01 (3m), 07-02 (4m), 07-03 (6m)
-- Trend: Phase 7 complete with API integration layer and mock/real toggle system
+- Last 5 plans: 07-01 (3m), 07-02 (4m), 07-03 (6m), 7.1-01 (25m), 7.1-02 (5m)
+- Trend: Phase 7.1 complete with user-specific chat history and session/DevTools fixes
 
 ## Accumulated Context
 
@@ -67,9 +68,24 @@ Recent decisions affecting current work:
 - Persistence check on mount clears stale localStorage when disabled
 - Separate "Chat Preferences" Card section for clear organization
 
+**Phase 7.1 Plan 1 (User-specific Chat History):**
+- Chat messages stored in Directus with user foreign key for privacy
+- React Query staleTime: 0 for chat to always fetch fresh history
+- Mock service uses in-memory Map keyed by userId to simulate user-specific storage
+- DirectusSchema added to lib/directus.ts to support custom collections
+
+**Phase 7.1 Plan 2 (Auth & DevTools Fixes):**
+- 7-day access tokens and 30-day refresh tokens for internal tool usage
+- VITE_SHOW_DEVTOOLS follows same pattern as VITE_USE_MOCK_DATA
+- DevTools excluded from bundle when env var is false (~50KB savings)
+
 ### Deferred Issues
 
 None yet.
+
+### Roadmap Evolution
+
+- Phase 7.1 inserted after Phase 7: Additional fixes (URGENT)
 
 ### Blockers/Concerns
 
@@ -77,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-14
-Stopped at: Phase 6 complete (Settings Panel with API configuration and message persistence controls)
+Last session: 2026-01-16
+Stopped at: Phase 7.1 complete (Additional fixes: user-specific chat history, session duration, DevTools toggle)
 Resume file: None

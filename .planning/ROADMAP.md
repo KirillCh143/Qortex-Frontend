@@ -22,7 +22,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Chat Interface - Mock Mode** - Build chat UI with RAG/LLM modes using mock data
 - [x] **Phase 5: Knowledge Base Interface** - Document browsing with view/download capabilities
 - [x] **Phase 6: Settings Panel** - API configuration and chat preference controls
-- [ ] **Phase 7: API Integration Layer** - Connect to Directus and n8n with real/mock toggle
+- [x] **Phase 7: API Integration Layer** - Connect to Directus and n8n with real/mock toggle
+- [x] **Phase 7.1: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7
 - [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
 
 ## Phase Details
@@ -110,9 +111,26 @@ Plans:
 - [x] 07-02: Build n8n webhook service for chat queries
 - [x] 07-03: Connect all features to real APIs with toggle system
 
+### Phase 7.1: Additional fixes (INSERTED) ✓
+**Goal**: Fix critical user-specific chat history bug and improve session/DevTools configuration
+**Depends on**: Phase 7
+**Plans**: 2/2 complete
+**Status**: Complete
+**Completed**: 2026-01-16
+
+Plans:
+- [x] 7.1-01: User-specific chat history in Directus
+- [x] 7.1-02: Session duration & DevTools toggle
+
+**Details:**
+Phase 7.1 addressed three urgent issues discovered after Phase 7:
+1. Chat history was shared across all users (localStorage) - fixed with user-scoped Directus storage
+2. Sessions expired after 15 minutes - extended to 7 days via Directus server config
+3. ReactQueryDevtools always included in bundle - added environment toggle
+
 ### Phase 8: Polish & Testing
 **Goal**: Production-ready application with verified end-to-end functionality
-**Depends on**: Phase 7
+**Depends on**: Phase 7.1
 **Research**: Unlikely (internal testing and refinement)
 **Plans**: TBD
 
@@ -123,7 +141,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -134,4 +152,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 5. Knowledge Base Interface | 2/2 | Complete | 2026-01-14 |
 | 6. Settings Panel | 2/2 | Complete | 2026-01-14 |
 | 7. API Integration Layer | 3/3 | Complete | 2026-01-15 |
+| 7.1. Additional fixes (INSERTED) | 2/2 | Complete | 2026-01-16 |
 | 8. Polish & Testing | 0/2 | Not started | - |
