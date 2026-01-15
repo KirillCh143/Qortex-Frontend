@@ -3,34 +3,20 @@ import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Button } from '@/components/ui/button'
 import { useChatQuery } from '@/hooks/useChatQuery'
-import { loadMessages, saveMessages, type Message } from '@/lib/chatStorage'
-import { loadSettings } from '@/lib/settings'
+import { useChatMessages, useSaveChatMessage, useClearChatHistory } from '@/hooks/useChat'
+import { useAuth } from '@/contexts/AuthContext'
 import { Trash2 } from 'lucide-react'
 
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([])
+  const { user } = useAuth()
   const [mode, setMode] = useState<'rag' | 'llm'>('rag')
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const chatMutation = useChatQuery()
 
-  // Load messages from localStorage on mount (conditionally based on persistence setting)
-  useEffect(() => {
-    const settings = loadSettings()
-
-    // If persistence is disabled, clear any stale messages from localStorage
-    if (!settings.messagePersistence) {
-      const staleMessages = localStorage.getItem('chat-messages')
-      if (staleMessages) {
-        localStorage.removeItem('chat-messages')
-      }
-      setMessages([])
-      return
-    }
-
-    // If persistence is enabled, load messages
-    const savedMessages = loadMessages()
-    setMessages(savedMessages)
-  }, [])
+  // Fetch chat messages from Directus (user-specific)
+  const { data: messages = [], isLoading, error } = useChatMessages(user?.id)
+  const saveMutation = useSaveChatMessage()
+  const clearMutation = useClearChatHistory()
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -43,78 +29,59 @@ export default function Chat() {
   }, [messages.length])
 
   const handleSend = (content: string) => {
-    const settings = loadSettings()
+    if (!user?.id) return
 
-    // Add user message
-    const userMessage: Message = {
-      role: 'user',
-      content,
-      timestamp: new Date()
-    }
-    const updatedMessages = [...messages, userMessage]
-    setMessages(updatedMessages)
-
-    // Only save if persistence is enabled
-    if (settings.messagePersistence) {
-      saveMessages(updatedMessages)
-    }
-
-    // Send query to webhook service (mock or real)
-    chatMutation.mutate(
+    // Save user message to Directus
+    saveMutation.mutate(
       {
-        question: content,
+        user: user.id,
+        role: 'user',
+        content,
         mode,
-        sessionId: crypto.randomUUID(),
-        history: messages.slice(-10).map(msg => ({
-          role: msg.role,
-          content: msg.content
-        }))
       },
       {
-        onSuccess: (data) => {
-          const assistantMessage: Message = {
-            role: 'assistant',
-            content: data.answer,
-            timestamp: new Date(),
-            mode
-          }
-          setMessages(prev => {
-            const newMessages = [...prev, assistantMessage]
-
-            // Only save if persistence is enabled
-            if (settings.messagePersistence) {
-              saveMessages(newMessages)
+        onSuccess: () => {
+          // Send query to webhook service (mock or real)
+          chatMutation.mutate(
+            {
+              question: content,
+              mode,
+              sessionId: crypto.randomUUID(),
+              history: messages.slice(-10).map((msg) => ({
+                role: msg.role,
+                content: msg.content,
+              })),
+            },
+            {
+              onSuccess: (data) => {
+                // Save assistant response to Directus
+                saveMutation.mutate({
+                  user: user.id,
+                  role: 'assistant',
+                  content: data.answer,
+                  mode,
+                })
+              },
+              onError: (error) => {
+                // Save error message to Directus
+                saveMutation.mutate({
+                  user: user.id,
+                  role: 'assistant',
+                  content: `Error: ${error.message}`,
+                  mode,
+                })
+              },
             }
-
-            return newMessages
-          })
+          )
         },
-        onError: (error) => {
-          const errorMessage: Message = {
-            role: 'assistant',
-            content: `Error: ${error.message}`,
-            timestamp: new Date(),
-            mode
-          }
-          setMessages(prev => {
-            const newMessages = [...prev, errorMessage]
-
-            // Only save if persistence is enabled
-            if (settings.messagePersistence) {
-              saveMessages(newMessages)
-            }
-
-            return newMessages
-          })
-        }
       }
     )
   }
 
   const handleClearHistory = () => {
+    if (!user?.id) return
     if (window.confirm('Clear all chat history? This cannot be undone.')) {
-      setMessages([])
-      saveMessages([])
+      clearMutation.mutate(user.id)
     }
   }
 
@@ -158,7 +125,15 @@ export default function Chat() {
 
       {/* Messages container with scroll */}
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
-        {messages.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full text-gray-500">
+            <p>Loading chat history...</p>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-full text-red-500">
+            <p>Error loading chat: {error.message}</p>
+          </div>
+        ) : messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             <p>Start a conversation by typing a message below</p>
           </div>
@@ -169,7 +144,7 @@ export default function Chat() {
                 key={index}
                 role={message.role}
                 content={message.content}
-                timestamp={message.timestamp}
+                timestamp={new Date(message.timestamp)}
                 mode={message.mode}
               />
             ))}
@@ -178,7 +153,7 @@ export default function Chat() {
       </div>
 
       {/* Chat input at bottom */}
-      <ChatInput onSend={handleSend} disabled={chatMutation.isPending} />
+      <ChatInput onSend={handleSend} disabled={chatMutation.isPending || saveMutation.isPending} />
     </div>
   )
 }
