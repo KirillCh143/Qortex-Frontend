@@ -8,6 +8,21 @@ export interface DirectusAuth {
   expires: number;
 }
 
+// Schema for custom collections
+interface ChatMessageItem {
+  id: string;
+  user: string;
+  role: 'user' | 'assistant';
+  content: string;
+  mode?: 'rag' | 'llm';
+  timestamp: string;
+  date_created: string;
+}
+
+interface DirectusSchema {
+  chat_messages: ChatMessageItem;
+}
+
 // Check if we're in mock mode - if so, skip Directus initialization to prevent CORS errors
 const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
@@ -27,7 +42,13 @@ const client = useMockData
         ((import.meta.env.VITE_DIRECTUS_URL as string) ??
         (DEV ? window.location.origin : 'http://localhost:8055'));
 
-      return createDirectus(BACKEND_URL)
+      // Debug: show which base URL the Directus client will use (helps troubleshoot CORS/proxy)
+      if (DEV) {
+        // eslint-disable-next-line no-console
+        console.debug('[directus] BACKEND_URL =', BACKEND_URL);
+      }
+
+      return createDirectus<DirectusSchema>(BACKEND_URL)
         .with(authentication('json'))
         .with(rest());
     })();
