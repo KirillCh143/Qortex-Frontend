@@ -24,6 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Settings Panel** - API configuration and chat preference controls
 - [x] **Phase 7: API Integration Layer** - Connect to Directus and n8n with real/mock toggle
 - [x] **Phase 7.1: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7
+- [ ] **Phase 7.2: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7.1
 - [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
 
 ## Phase Details
@@ -128,9 +129,24 @@ Phase 7.1 addressed three urgent issues discovered after Phase 7:
 2. Sessions expired after 15 minutes - extended to 7 days via Directus server config
 3. ReactQueryDevtools always included in bundle - added environment toggle
 
+### Phase 7.2: Additional fixes (INSERTED)
+**Goal**: Fix session persistence bug causing logout on page refresh
+**Depends on**: Phase 7.1
+**Plans**: 1 plan
+
+Plans:
+- [ ] 7.2-01: Fix Directus SDK authentication to use SDK-managed storage
+
+**Details:**
+Phase 7.2 addresses critical session persistence bug discovered after Phase 7.1:
+- Users get 401 "Invalid user credentials" on page refresh
+- Session doesn't persist across browser restarts
+- Root cause: Manual localStorage management conflicts with Directus SDK's internal auth storage
+- Solution: Let SDK fully manage authentication lifecycle (storage, restoration, auto-refresh)
+
 ### Phase 8: Polish & Testing
 **Goal**: Production-ready application with verified end-to-end functionality
-**Depends on**: Phase 7.1
+**Depends on**: Phase 7.2
 **Research**: Unlikely (internal testing and refinement)
 **Plans**: TBD
 
@@ -141,7 +157,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -153,4 +169,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 6. Settings Panel | 2/2 | Complete | 2026-01-14 |
 | 7. API Integration Layer | 3/3 | Complete | 2026-01-15 |
 | 7.1. Additional fixes (INSERTED) | 2/2 | Complete | 2026-01-16 |
+| 7.2. Additional fixes (INSERTED) | 0/1 | Planned | - |
 | 8. Polish & Testing | 0/2 | Not started | - |
