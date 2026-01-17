@@ -1,7 +1,7 @@
 import { createWebhookService } from '@/services/n8n/webhook.service'
 import { createMockWebhookService } from '@/services/mock/webhook.mock'
-import { createMockFilesService } from '@/services/mock/files.mock'
-import { createRealFilesService } from '@/services/directus/files.service'
+import { createMockFilesService, createMockFoldersService } from '@/services/mock/files.mock'
+import { createRealFilesService, createRealFoldersService } from '@/services/directus/files.service'
 import { createMockChatService } from '@/services/mock/chat.mock'
 import { createRealChatService } from '@/services/directus/chat.service'
 import directusClient from '@/lib/directus'
@@ -30,6 +30,15 @@ export const createFilesServiceInstance = () => {
   return createRealFilesService(directusClient)
 }
 
+// Create folders service based on mock/real toggle
+export const createFoldersServiceInstance = () => {
+  if (useMockData) {
+    return createMockFoldersService()
+  }
+
+  return createRealFoldersService(directusClient)
+}
+
 // Create chat service based on mock/real toggle
 export const createChatServiceInstance = () => {
   if (useMockData) {
@@ -42,4 +51,5 @@ export const createChatServiceInstance = () => {
 // Export singleton instances
 export const webhookService = createWebhookServiceInstance()
 export const filesService = createFilesServiceInstance()
+export const foldersService = createFoldersServiceInstance()
 export const chatService = createChatServiceInstance()
