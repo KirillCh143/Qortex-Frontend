@@ -108,7 +108,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-2xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#8466e4] hover:bg-[#7254d3] text-white font-bold h-14 rounded-2xl shadow-lg shadow-[#8466e4]/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? 'Signing in...' : 'Войти'}
           </button>
