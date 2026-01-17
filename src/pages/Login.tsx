@@ -81,7 +81,7 @@ export default function Login() {
               placeholder="example@nexus.ai"
               required
               disabled={submitting}
-              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-4.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
@@ -101,7 +101,7 @@ export default function Login() {
               placeholder="••••••••"
               required
               disabled={submitting}
-              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-4.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
