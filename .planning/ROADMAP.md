@@ -26,6 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.1: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7
 - [x] **Phase 7.2: Session Persistence Fix (INSERTED)** - Fix auth session persistence bug
 - [x] **Phase 7.3: Directory Structure Integration (INSERTED)** - Add folder hierarchy navigation and enhanced file management
+- [x] **Phase 7.4: Fix files download (INSERTED)** - Fix file download functionality
 - [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
 
 ## Phase Details
@@ -168,9 +169,25 @@ Phase 7.3 addresses Knowledge Base UX improvements requested after Phase 7.2:
    - Remove "Preview" button from file details modal
    - Implement functional "Download" button
 
+### Phase 7.4: Fix files download (INSERTED) ✓
+**Goal**: Fix file download functionality issues
+**Depends on**: Phase 7.3
+**Plans**: 1/1 complete
+**Status**: Complete
+**Completed**: 2026-01-17
+
+Plans:
+- [x] 7.4-01: Fix download URL path concatenation and authentication
+
+**Details:**
+Phase 7.4 addresses critical file download bugs discovered after Phase 7.3:
+1. Double-slash bug in URL construction (404 errors) - fixed by removing leading slash
+2. Missing authentication on asset requests (403 errors) - fixed by adding Bearer token header
+3. Downloads now work end-to-end with correct URL formatting and authentication
+
 ### Phase 8: Polish & Testing
 **Goal**: Production-ready application with verified end-to-end functionality
-**Depends on**: Phase 7.3
+**Depends on**: Phase 7.4
 **Research**: Unlikely (internal testing and refinement)
 **Plans**: TBD
 
@@ -181,7 +198,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -195,4 +212,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 7.1. Additional fixes (INSERTED) | 2/2 | Complete | 2026-01-16 |
 | 7.2. Session Persistence Fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 7.3. Directory Structure Integration (INSERTED) | 2/2 | Complete | 2026-01-17 |
+| 7.4. Fix files download (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 8. Polish & Testing | 0/2 | Not started | - |

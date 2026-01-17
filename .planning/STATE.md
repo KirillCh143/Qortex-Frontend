@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 
 ## Current Position
 
-Phase: 7.3 of 9 (Directory Structure Integration)
-Plan: 2 of 2 in current phase
+Phase: 7.4 of 9 (Fix Files Download)
+Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-01-17 — Completed 7.3-02-PLAN.md (with post-verification bug fix)
+Last activity: 2026-01-17 — Completed 7.4-01-PLAN.md
 
-Progress: ████████████████░░░░ 24/24 plans = 100% of current milestone
+Progress: █████████████████████ 25/25 plans = 100% of current milestone
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 24
-- Average duration: ~9.5 min/plan
-- Total execution time: ~229 min
+- Total plans completed: 25
+- Average duration: ~14.4 min/plan
+- Total execution time: ~360 min
 
 **By Phase:**
 
@@ -37,10 +37,11 @@ Progress: ████████████████░░░░ 24/24 pla
 | 7.1. Additional fixes (INSERTED) | 2 | ~30 min | ~15 min | Sequential (2 checkpoints) |
 | 7.2. Session Persistence Fix (INSERTED) | 1 | ~42 min | ~42 min | Sequential (1 checkpoint) |
 | 7.3. Directory Structure Integration (INSERTED) | 2 | ~32 min | ~16 min | Sequential (1 checkpoint + bug fix) |
+| 7.4. Fix Files Download (INSERTED) | 1 | ~131 min | ~131 min | Sequential (1 checkpoint) |
 
 **Recent Trend:**
-- Last 5 plans: 7.1-01 (25m), 7.1-02 (5m), 7.2-01 (42m), 7.3-01 (n/a), 7.3-02 (32m)
-- Trend: Phase 7.3 complete, all implementation phases finished, ready for Phase 8 polish/testing
+- Last 5 plans: 7.1-02 (5m), 7.2-01 (42m), 7.3-01 (n/a), 7.3-02 (32m), 7.4-01 (131m)
+- Trend: Phase 7.4 complete, all implementation phases finished, ready for Phase 8 polish/testing
 
 ## Accumulated Context
 
@@ -94,6 +95,11 @@ Recent decisions affecting current work:
 - View toggle buttons use outline variant with cyan accent (border-cyan-500 bg-cyan-50) when active
 - Download fetches blob directly from assets endpoint (removed duplicate metadata request)
 
+**Phase 7.4 Plan 1 (Fix Files Download):**
+- Direct localStorage access for auth token instead of passing through client SDK
+- Conditional Authorization header only included if token exists
+- Bearer token authentication pattern for asset downloads
+
 ### Deferred Issues
 
 None yet.
@@ -103,6 +109,7 @@ None yet.
 - Phase 7.1 inserted after Phase 7: Additional fixes (URGENT)
 - Phase 7.2 inserted after Phase 7.1: Session Persistence Fix (URGENT)
 - Phase 7.3 inserted after Phase 7.2: Directory Structure Integration (URGENT)
+- Phase 7.4 inserted after Phase 7.3: Fix files download (URGENT)
 
 ### Blockers/Concerns
 
@@ -111,5 +118,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: Phase 7.3 complete (Directory structure integration with folder sidebar, view toggle, and download bug fix)
+Stopped at: Phase 7.4 complete (Fixed file download URL and authentication - all implementation complete)
 Resume file: None
