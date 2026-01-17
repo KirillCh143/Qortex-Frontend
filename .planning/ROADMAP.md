@@ -27,6 +27,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.2: Session Persistence Fix (INSERTED)** - Fix auth session persistence bug
 - [x] **Phase 7.3: Directory Structure Integration (INSERTED)** - Add folder hierarchy navigation and enhanced file management
 - [x] **Phase 7.4: Fix files download (INSERTED)** - Fix file download functionality
+- [x] **Phase 7.5: Login page design overhaul and redirect fix (INSERTED)** - Urgent work discovered after Phase 7.4
 - [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
 
 ## Phase Details
@@ -185,9 +186,32 @@ Phase 7.4 addresses critical file download bugs discovered after Phase 7.3:
 2. Missing authentication on asset requests (403 errors) - fixed by adding Bearer token header
 3. Downloads now work end-to-end with correct URL formatting and authentication
 
+### Phase 7.5: Login page design overhaul and redirect fix (INSERTED) ✓
+**Goal**: Polish login page with modern purple theme and prevent authenticated users from accessing login
+**Depends on**: Phase 7.4
+**Plans**: 1/1 complete
+**Status**: Complete
+**Completed**: 2026-01-17
+
+Plans:
+- [x] 7.5-01: Login page redesign and authenticated redirect
+
+**Details:**
+Phase 7.5 addresses login page UX improvements requested after Phase 7.4:
+1. Complete visual redesign matching reference design (USER_IMPUT_FILES/Design/Login/):
+   - Modern purple/white theme (#8466e4) replacing old blue
+   - Atom icon in purple gradient circle
+   - Russian branding text (Nexus AI, Вход в систему, Войти)
+   - Consistent rounded-3xl styling and h-14 heights for all form elements
+   - Fixed footer with Russian copyright text
+2. Authenticated user redirect:
+   - Prevents logged-in users from accessing /login page
+   - Auto-redirects to /chat using React Router navigate with replace: true
+   - Fixes UX issue from USER_IMPUT_FILES/TO_DO.md
+
 ### Phase 8: Polish & Testing
 **Goal**: Production-ready application with verified end-to-end functionality
-**Depends on**: Phase 7.4
+**Depends on**: Phase 7.5
 **Research**: Unlikely (internal testing and refinement)
 **Plans**: TBD
 
@@ -198,7 +222,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -213,4 +237,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 7.2. Session Persistence Fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 7.3. Directory Structure Integration (INSERTED) | 2/2 | Complete | 2026-01-17 |
 | 7.4. Fix files download (INSERTED) | 1/1 | Complete | 2026-01-17 |
+| 7.5. Login page design overhaul and redirect fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 8. Polish & Testing | 0/2 | Not started | - |
