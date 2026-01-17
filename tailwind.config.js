@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1e3a8a',
+        primary: '#8466e4',
         secondary: '#3b82f6',
         accent: '#06b6d4',
         border: 'hsl(var(--border))',
