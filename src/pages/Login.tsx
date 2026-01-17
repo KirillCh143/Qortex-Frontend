@@ -2,7 +2,6 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Atom } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 export default function Login() {
@@ -82,7 +81,7 @@ export default function Login() {
               placeholder="example@nexus.ai"
               required
               disabled={submitting}
-              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-3.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-4.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
@@ -102,17 +101,17 @@ export default function Login() {
               placeholder="••••••••"
               required
               disabled={submitting}
-              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-3.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
+              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-4.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
-          <Button
+          <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98]"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-14 rounded-2xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? 'Signing in...' : 'Войти'}
-          </Button>
+          </button>
         </form>
       </div>
 
