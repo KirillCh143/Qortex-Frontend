@@ -23,8 +23,16 @@ export const createRealFilesService = (client: any): FilesService => ({
   },
 
   async downloadFile(id: string) {
+    // Get auth token from localStorage to authenticate the request
+    const authData = localStorage.getItem('directus-auth');
+    const token = authData ? JSON.parse(authData).access_token : null;
+
     // Fetch the actual file content directly from assets endpoint
-    const response = await fetch(`${client.url}/assets/${id}`);
+    const response = await fetch(`${client.url}assets/${id}`, {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` })
+      }
+    });
     if (!response.ok) {
       throw new Error(`Failed to download file: ${response.statusText}`);
     }
