@@ -23,11 +23,11 @@ export const createRealFilesService = (client: any): FilesService => ({
   },
 
   async downloadFile(id: string) {
-    // Get file metadata first
-    await client.request(readFile(id));
-
-    // Fetch the actual file content from assets endpoint
+    // Fetch the actual file content directly from assets endpoint
     const response = await fetch(`${client.url}/assets/${id}`);
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.statusText}`);
+    }
     return response.blob();
   }
 });
