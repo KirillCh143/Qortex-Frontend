@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 
 ## Current Position
 
-Phase: 7.2 of 8 (Session Persistence Fix)
-Plan: 1 of 1 in current phase
+Phase: 7.3 of 9 (Directory Structure Integration)
+Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-01-17 — Completed 7.2-01-PLAN.md
+Last activity: 2026-01-17 — Completed 7.3-02-PLAN.md (with post-verification bug fix)
 
-Progress: ████████████████████ 100%
+Progress: ████████████████░░░░ 24/24 plans = 100% of current milestone
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
-- Average duration: ~9.0 min/plan
-- Total execution time: ~197 min
+- Total plans completed: 24
+- Average duration: ~9.5 min/plan
+- Total execution time: ~229 min
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: ████████████████████ 100%
 | 7. API Integration Layer | 3 | ~6 min | ~2 min | Parallel (2 waves) |
 | 7.1. Additional fixes (INSERTED) | 2 | ~30 min | ~15 min | Sequential (2 checkpoints) |
 | 7.2. Session Persistence Fix (INSERTED) | 1 | ~42 min | ~42 min | Sequential (1 checkpoint) |
+| 7.3. Directory Structure Integration (INSERTED) | 2 | ~32 min | ~16 min | Sequential (1 checkpoint + bug fix) |
 
 **Recent Trend:**
-- Last 5 plans: 07-02 (4m), 07-03 (6m), 7.1-01 (25m), 7.1-02 (5m), 7.2-01 (42m)
-- Trend: All implementation phases complete, ready for Phase 8 polish/testing
+- Last 5 plans: 7.1-01 (25m), 7.1-02 (5m), 7.2-01 (42m), 7.3-01 (n/a), 7.3-02 (32m)
+- Trend: Phase 7.3 complete, all implementation phases finished, ready for Phase 8 polish/testing
 
 ## Accumulated Context
 
@@ -86,6 +87,13 @@ Recent decisions affecting current work:
 - SDK fully owns auth lifecycle (no manual localStorage manipulation)
 - Prevents storage conflicts that caused 401 errors on page refresh
 
+**Phase 7.3 Plan 2 (View Toggle & Layout Refinement):**
+- List view uses semantic table element for accessibility and screen reader support
+- Folder sidebar fixed width (w-64) on desktop with border-r and bg-gray-50, hidden on mobile
+- Detail panel simplified to Download-only (View button removed per roadmap requirement)
+- View toggle buttons use outline variant with cyan accent (border-cyan-500 bg-cyan-50) when active
+- Download fetches blob directly from assets endpoint (removed duplicate metadata request)
+
 ### Deferred Issues
 
 None yet.
@@ -93,7 +101,8 @@ None yet.
 ### Roadmap Evolution
 
 - Phase 7.1 inserted after Phase 7: Additional fixes (URGENT)
-- Phase 7.2 inserted after Phase 7.1: Additional fixes (URGENT)
+- Phase 7.2 inserted after Phase 7.1: Session Persistence Fix (URGENT)
+- Phase 7.3 inserted after Phase 7.2: Directory Structure Integration (URGENT)
 
 ### Blockers/Concerns
 
@@ -102,5 +111,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-17
-Stopped at: Phase 7.2 complete (Session persistence fix: SDK-managed auth with localStorage handlers)
+Stopped at: Phase 7.3 complete (Directory structure integration with folder sidebar, view toggle, and download bug fix)
 Resume file: None
