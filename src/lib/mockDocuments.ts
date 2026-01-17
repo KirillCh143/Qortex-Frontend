@@ -6,7 +6,22 @@ export interface Document {
   uploadedOn: Date
   description: string
   category: string
+  folder: string | null
 }
+
+// Mock folder hierarchy
+export const mockFolders = [
+  // Root folders
+  { id: 'folder-hr', name: 'HR', parent: null },
+  { id: 'folder-engineering', name: 'Engineering', parent: null },
+  { id: 'folder-operations', name: 'Operations', parent: null },
+  // HR subfolders
+  { id: 'folder-hr-policies', name: 'Policies', parent: 'folder-hr' },
+  { id: 'folder-hr-benefits', name: 'Benefits', parent: 'folder-hr' },
+  // Engineering subfolders
+  { id: 'folder-eng-docs', name: 'Documentation', parent: 'folder-engineering' },
+  { id: 'folder-eng-guidelines', name: 'Guidelines', parent: 'folder-engineering' }
+];
 
 export const mockDocuments: Document[] = [
   {
@@ -16,7 +31,8 @@ export const mockDocuments: Document[] = [
     filesize: 2450000,
     uploadedOn: new Date('2024-01-15'),
     description: 'Complete guide to company policies, benefits, code of conduct, and employee resources. Essential reading for all team members.',
-    category: 'HR'
+    category: 'HR',
+    folder: 'folder-hr-policies'
   },
   {
     id: '2',
@@ -25,7 +41,8 @@ export const mockDocuments: Document[] = [
     filesize: 85000,
     uploadedOn: new Date('2024-02-20'),
     description: 'Engineering best practices, coding standards, architecture patterns, and development workflow documentation.',
-    category: 'Engineering'
+    category: 'Engineering',
+    folder: 'folder-eng-guidelines'
   },
   {
     id: '3',
@@ -34,7 +51,8 @@ export const mockDocuments: Document[] = [
     filesize: 125000,
     uploadedOn: new Date('2024-01-10'),
     description: 'Step-by-step guide for new hires covering first week tasks, account setup, training schedule, and team introductions.',
-    category: 'HR'
+    category: 'HR',
+    folder: 'folder-hr-policies'
   },
   {
     id: '4',
@@ -43,7 +61,8 @@ export const mockDocuments: Document[] = [
     filesize: 1750000,
     uploadedOn: new Date('2024-03-05'),
     description: 'Comprehensive API reference including endpoints, authentication, request/response formats, and integration examples.',
-    category: 'Engineering'
+    category: 'Engineering',
+    folder: 'folder-eng-docs'
   },
   {
     id: '5',
@@ -52,7 +71,8 @@ export const mockDocuments: Document[] = [
     filesize: 320000,
     uploadedOn: new Date('2024-01-22'),
     description: 'Data protection protocols, access control procedures, incident response plan, and compliance requirements.',
-    category: 'Operations'
+    category: 'Operations',
+    folder: 'folder-operations'
   },
   {
     id: '6',
@@ -61,7 +81,8 @@ export const mockDocuments: Document[] = [
     filesize: 445000,
     uploadedOn: new Date('2024-02-15'),
     description: 'Project lifecycle management, sprint planning templates, stakeholder communication guidelines, and reporting standards.',
-    category: 'Operations'
+    category: 'Operations',
+    folder: 'folder-operations'
   },
   {
     id: '7',
@@ -70,7 +91,8 @@ export const mockDocuments: Document[] = [
     filesize: 62000,
     uploadedOn: new Date('2024-03-10'),
     description: 'Standards for conducting effective code reviews, PR templates, feedback best practices, and quality checklists.',
-    category: 'Engineering'
+    category: 'Engineering',
+    folder: 'folder-eng-guidelines'
   },
   {
     id: '8',
@@ -79,7 +101,8 @@ export const mockDocuments: Document[] = [
     filesize: 890000,
     uploadedOn: new Date('2024-01-05'),
     description: 'Detailed breakdown of health insurance plans, retirement options, PTO policy, and additional perks available to employees.',
-    category: 'HR'
+    category: 'HR',
+    folder: 'folder-hr-benefits'
   },
   {
     id: '9',
@@ -88,7 +111,8 @@ export const mockDocuments: Document[] = [
     filesize: 670000,
     uploadedOn: new Date('2024-02-28'),
     description: 'Step-by-step procedures for handling production incidents, escalation paths, communication templates, and post-mortem process.',
-    category: 'Operations'
+    category: 'Operations',
+    folder: 'folder-operations'
   },
   {
     id: '10',
@@ -97,7 +121,8 @@ export const mockDocuments: Document[] = [
     filesize: 155000,
     uploadedOn: new Date('2024-03-15'),
     description: 'Historical record of significant architectural decisions, technology choices, and design trade-offs with rationale.',
-    category: 'Engineering'
+    category: 'Engineering',
+    folder: 'folder-eng-docs'
   }
 ]
 

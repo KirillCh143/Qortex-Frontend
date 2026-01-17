@@ -1,3 +1,10 @@
+// DirectusFolder interface matching Directus Folders collection schema
+export interface DirectusFolder {
+  id: string;
+  name: string;
+  parent: string | null;
+}
+
 // DirectusFile interface matching Directus Files collection schema
 export interface DirectusFile {
   id: string;
@@ -7,11 +14,17 @@ export interface DirectusFile {
   title: string;
   description: string;
   uploaded_on: string;
+  folder: string | null;
+}
+
+// FoldersService interface for both mock and real implementations
+export interface FoldersService {
+  getFolders: () => Promise<DirectusFolder[]>;
 }
 
 // FilesService interface for both mock and real implementations
 export interface FilesService {
-  getFiles: (params?: { limit?: number; search?: string }) => Promise<DirectusFile[]>;
+  getFiles: (params?: { limit?: number; search?: string; folder?: string | 'root' }) => Promise<DirectusFile[]>;
   downloadFile: (id: string) => Promise<Blob>;
 }
 

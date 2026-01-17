@@ -1,5 +1,5 @@
-import { FilesService, DirectusFile } from '../directus/types';
-import { mockDocuments, generateMockFileContent } from '@/lib/mockDocuments';
+import { FilesService, DirectusFile, FoldersService, DirectusFolder } from '../directus/types';
+import { mockDocuments, mockFolders, generateMockFileContent } from '@/lib/mockDocuments';
 
 // Map Document type to DirectusFile type
 const mapDocumentsToDirectusFiles = (): DirectusFile[] => {
@@ -13,7 +13,8 @@ const mapDocumentsToDirectusFiles = (): DirectusFile[] => {
     filesize: doc.filesize,
     title: doc.title,
     description: doc.description,
-    uploaded_on: doc.uploadedOn.toISOString()
+    uploaded_on: doc.uploadedOn.toISOString(),
+    folder: doc.folder
   }));
 };
 
@@ -22,8 +23,17 @@ export const createMockFilesService = (): FilesService => {
   const mockFiles = mapDocumentsToDirectusFiles();
 
   return {
-    async getFiles({ limit = 50, search } = {}) {
+    async getFiles({ limit = 50, search, folder } = {}) {
       let results = [...mockFiles];
+
+      // Filter by folder if provided
+      if (folder) {
+        if (folder === 'root') {
+          results = results.filter(file => file.folder === null);
+        } else {
+          results = results.filter(file => file.folder === folder);
+        }
+      }
 
       // Filter by search if provided
       if (search) {
@@ -50,3 +60,10 @@ export const createMockFilesService = (): FilesService => {
     }
   };
 };
+
+// Mock folders service implementation
+export const createMockFoldersService = (): FoldersService => ({
+  async getFolders() {
+    return mockFolders as DirectusFolder[];
+  }
+});
