@@ -54,7 +54,21 @@ const client = useMockData
       }
 
       return createDirectus<DirectusSchema>(BACKEND_URL)
-        .with(authentication('json'))
+        .with(authentication('json', {
+          storage: {
+            get: () => {
+              const data = localStorage.getItem('directus-auth');
+              return data ? JSON.parse(data) : null;
+            },
+            set: (value) => {
+              if (value === null) {
+                localStorage.removeItem('directus-auth');
+              } else {
+                localStorage.setItem('directus-auth', JSON.stringify(value));
+              }
+            },
+          },
+        }))
         .with(rest());
     })();
 

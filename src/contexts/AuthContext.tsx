@@ -43,30 +43,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // Check if SDK has stored tokens (it stores in localStorage with key: directus-data)
-      const storedData = localStorage.getItem('directus-data');
-      if (!storedData) {
-        if (import.meta.env.DEV) {
-          console.debug('[auth] No stored session found');
-        }
-        setUser(null);
-        setLoading(false);
-        return;
+      // Let SDK handle token restoration and auto-refresh completely
+      // SDK will:
+      // 1. Check its internal storage for tokens
+      // 2. Auto-refresh expired access_token using refresh_token
+      // 3. Throw error if no valid session exists
+      if (import.meta.env.DEV) {
+        console.debug('[auth] Checking session (SDK will auto-restore/refresh if needed)');
       }
 
-      // SDK has tokens stored, try to use them
-      // The SDK will automatically refresh if access_token is expired
       const currentUser = await client.request(readMe());
       setUser(currentUser as User);
 
       if (import.meta.env.DEV) {
-        console.debug('[auth] Session restored from localStorage, user:', currentUser.email);
+        console.debug('[auth] Session valid, user:', currentUser.email);
       }
     } catch (error) {
-      // Token invalid or expired and refresh failed
+      // No valid session (no tokens, or refresh failed)
       setUser(null);
       if (import.meta.env.DEV) {
-        console.error('[auth] Session restore failed:', error);
+        console.debug('[auth] No valid session found');
       }
     } finally {
       setLoading(false);
@@ -79,12 +75,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await client.login({ email, password });
 
       if (import.meta.env.DEV) {
-        console.debug('[auth] Login successful, checking storage...');
-        console.debug('[auth] directus-data:', localStorage.getItem('directus-data') ? 'present' : 'missing');
+        console.debug('[auth] Login successful, SDK stored tokens automatically');
       }
 
-      // Give SDK a moment to store tokens, then fetch user
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Fetch user info now that we're authenticated
       await checkAuth();
     } catch (error) {
       if (import.meta.env.DEV) {
