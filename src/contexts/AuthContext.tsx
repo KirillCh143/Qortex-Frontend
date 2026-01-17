@@ -6,7 +6,7 @@ import {
   ReactNode,
 } from 'react';
 import client from '../lib/directus';
-import { readMe, logout as directusLogout } from '@directus/sdk';
+import { readMe } from '@directus/sdk';
 
 interface User {
   id: string;
@@ -39,53 +39,70 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Skip real auth check if using mock data
       const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
       if (useMockData) {
-        // Clear any stored Directus auth to prevent SDK auto-refresh attempts
-        localStorage.removeItem('directus_auth');
         setLoading(false);
         return;
       }
 
-      const authData = localStorage.getItem('directus_auth');
-      if (!authData) {
+      // Check if SDK has stored tokens (it stores in localStorage with key: directus-data)
+      const storedData = localStorage.getItem('directus-data');
+      if (!storedData) {
+        if (import.meta.env.DEV) {
+          console.debug('[auth] No stored session found');
+        }
+        setUser(null);
         setLoading(false);
         return;
       }
 
-      // Validate stored token by calling readMe()
+      // SDK has tokens stored, try to use them
+      // The SDK will automatically refresh if access_token is expired
       const currentUser = await client.request(readMe());
       setUser(currentUser as User);
+
+      if (import.meta.env.DEV) {
+        console.debug('[auth] Session restored from localStorage, user:', currentUser.email);
+      }
     } catch (error) {
-      // Token invalid or expired - clear storage
-      localStorage.removeItem('directus_auth');
+      // Token invalid or expired and refresh failed
       setUser(null);
+      if (import.meta.env.DEV) {
+        console.error('[auth] Session restore failed:', error);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
-    // Use client.login() for JSON auth mode - SDK handles token storage
-    const result = await client.login({ email, password });
-    localStorage.setItem('directus_auth', JSON.stringify(result));
-    await checkAuth();
+    try {
+      // SDK handles token storage automatically
+      await client.login({ email, password });
+
+      if (import.meta.env.DEV) {
+        console.debug('[auth] Login successful, checking storage...');
+        console.debug('[auth] directus-data:', localStorage.getItem('directus-data') ? 'present' : 'missing');
+      }
+
+      // Give SDK a moment to store tokens, then fetch user
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await checkAuth();
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('[auth] Login failed:', error);
+      }
+      throw error;
+    }
   };
 
   const logout = async () => {
     try {
-      const authData = localStorage.getItem('directus_auth');
-      if (authData) {
-        const parsedAuth = JSON.parse(authData);
-        // Call logout with refresh_token and consistent JSON mode
-        await client.request(
-          directusLogout({ refresh_token: parsedAuth.refresh_token, mode: 'json' })
-        );
-      }
+      // SDK handles token cleanup automatically
+      await client.logout();
     } catch (error) {
       // Even if logout API fails, clear local state
       console.error('Logout error:', error);
     } finally {
-      // Always clear localStorage and user state
-      localStorage.removeItem('directus_auth');
+      // SDK already cleared tokens, just clear user state
       setUser(null);
     }
   };

@@ -10,4 +10,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // No proxy needed - SDK makes direct requests to http://localhost:8080 (nginx)
+  // nginx handles CORS with Access-Control-Allow-Origin: http://localhost:5173
 })

@@ -31,16 +31,21 @@ const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 const client = useMockData
   ? null
   : (() => {
-      // Directus URL precedence: user settings > env var > dev/prod defaults
-      // 1. User settings from localStorage (highest priority)
-      // 2. VITE_DIRECTUS_URL environment variable
-      // 3. Dev mode: window.location.origin (for Vite proxy)
-      // 4. Production: http://localhost:8055 (fallback)
+      // Directus URL precedence:
+      // DEV mode: VITE_DIRECTUS_URL env var > user settings > fallback
+      // PROD mode: user settings > VITE_DIRECTUS_URL > fallback
       const DEV = import.meta.env.DEV as boolean;
       const userSettings = loadSettings();
-      const BACKEND_URL = userSettings.directusUrl ||
-        ((import.meta.env.VITE_DIRECTUS_URL as string) ??
-        (DEV ? window.location.origin : 'http://localhost:8055'));
+      const envUrl = import.meta.env.VITE_DIRECTUS_URL as string;
+
+      let BACKEND_URL: string;
+      if (DEV) {
+        // In development: env var takes priority (for .env configuration)
+        BACKEND_URL = envUrl || userSettings.directusUrl || 'http://localhost:8080';
+      } else {
+        // In production: user settings take priority
+        BACKEND_URL = userSettings.directusUrl || envUrl || 'http://localhost:8055';
+      }
 
       // Debug: show which base URL the Directus client will use (helps troubleshoot CORS/proxy)
       if (DEV) {
