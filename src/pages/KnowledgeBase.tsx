@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Eye, Loader2 } from 'lucide-react'
+import { Search, X, Download, Eye, Loader2, LayoutGrid, List } from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import type { DirectusFile } from '@/services/directus/types'
+import FileListView from '@/components/FileListView'
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   // Fetch files using React Query with search filter
   const { data: files = [], isLoading, error } = useFiles({ search: searchQuery })
@@ -89,6 +91,28 @@ export default function KnowledgeBase() {
           />
         </div>
 
+        {/* View toggle */}
+        <div className="flex gap-2 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setViewMode('grid')}
+            className={viewMode === 'grid' ? 'border-cyan-500 bg-cyan-50' : ''}
+          >
+            <LayoutGrid className="h-4 w-4 mr-2" />
+            Grid
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setViewMode('list')}
+            className={viewMode === 'list' ? 'border-cyan-500 bg-cyan-50' : ''}
+          >
+            <List className="h-4 w-4 mr-2" />
+            List
+          </Button>
+        </div>
+
         {/* Document list */}
         {isLoading ? (
           <div className="text-center py-12">
@@ -103,7 +127,7 @@ export default function KnowledgeBase() {
           <div className="text-center py-12 text-gray-500">
             <p>No documents found</p>
           </div>
-        ) : (
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {files.map((file) => (
               <Card
@@ -131,6 +155,8 @@ export default function KnowledgeBase() {
               </Card>
             ))}
           </div>
+        ) : (
+          <FileListView files={files} onSelectFile={setSelectedDoc} />
         )}
       </div>
 
