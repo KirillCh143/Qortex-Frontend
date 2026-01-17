@@ -2,19 +2,23 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Eye, Loader2, LayoutGrid, List } from 'lucide-react'
+import { Search, X, Download, Loader2, LayoutGrid, List } from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
+import { useFolders } from '@/hooks/useFolders'
 import type { DirectusFile } from '@/services/directus/types'
 import FileListView from '@/components/FileListView'
+import { FolderTree } from '@/components/FolderTree'
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
 
-  // Fetch files using React Query with search filter
-  const { data: files = [], isLoading, error } = useFiles({ search: searchQuery })
+  // Fetch folders and files using React Query
+  const { data: folders = [] } = useFolders()
+  const { data: files = [], isLoading, error } = useFiles({ search: searchQuery, folder: selectedFolderId })
 
   // Download mutation
   const downloadMutation = useDownloadFile()
@@ -31,23 +35,10 @@ export default function KnowledgeBase() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedDoc])
 
-  const handleView = async () => {
-    if (!selectedDoc) return
-
-    // Use download mutation to get file blob
-    downloadMutation.mutate(selectedDoc.id, {
-      onSuccess: (blob) => {
-        // Create blob URL and open in new tab
-        const url = URL.createObjectURL(blob)
-        window.open(url, '_blank')
-
-        // Clean up blob URL after short delay
-        setTimeout(() => {
-          URL.revokeObjectURL(url)
-        }, 100)
-      }
-    })
-  }
+  // Get current folder name for header
+  const currentFolderName = selectedFolderId === null
+    ? 'All Documents'
+    : folders.find(f => f.id === selectedFolderId)?.name || 'Unknown Folder'
 
   const handleDownload = () => {
     if (!selectedDoc) return
@@ -71,13 +62,30 @@ export default function KnowledgeBase() {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
-          <p className="mt-2 text-gray-600">Browse Internal Documentation</p>
+    <div className="h-full flex">
+      {/* Folder Sidebar */}
+      <div className="hidden md:block w-64 border-r border-gray-200 bg-gray-50 overflow-y-auto">
+        <div className="p-4">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3">Folders</h2>
+          <FolderTree
+            folders={folders}
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={setSelectedFolderId}
+          />
         </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
+            <p className="mt-2 text-gray-600">Browse Internal Documentation</p>
+            <div className="mt-2 text-sm text-gray-600">
+              {currentFolderName} • {files.length} documents
+            </div>
+          </div>
 
         {/* Search bar */}
         <div className="relative mb-6">
@@ -158,6 +166,7 @@ export default function KnowledgeBase() {
         ) : (
           <FileListView files={files} onSelectFile={setSelectedDoc} />
         )}
+        </div>
       </div>
 
       {/* Detail Panel */}
@@ -217,18 +226,11 @@ export default function KnowledgeBase() {
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleView}
-                  className="flex-1 bg-cyan-500 hover:bg-cyan-600"
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  View
-                </Button>
+              <div>
                 <Button
                   variant="outline"
                   onClick={handleDownload}
-                  className="flex-1"
+                  className="w-full"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Download
