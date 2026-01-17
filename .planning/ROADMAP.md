@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 6: Settings Panel** - API configuration and chat preference controls
 - [x] **Phase 7: API Integration Layer** - Connect to Directus and n8n with real/mock toggle
 - [x] **Phase 7.1: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7
-- [ ] **Phase 7.2: Additional fixes (INSERTED)** - Urgent work discovered after Phase 7.1
+- [x] **Phase 7.2: Session Persistence Fix (INSERTED)** - Fix auth session persistence bug
 - [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
 
 ## Phase Details
@@ -129,13 +129,14 @@ Phase 7.1 addressed three urgent issues discovered after Phase 7:
 2. Sessions expired after 15 minutes - extended to 7 days via Directus server config
 3. ReactQueryDevtools always included in bundle - added environment toggle
 
-### Phase 7.2: Additional fixes (INSERTED)
+### Phase 7.2: Session Persistence Fix (INSERTED)
 **Goal**: Fix session persistence bug causing logout on page refresh
 **Depends on**: Phase 7.1
 **Plans**: 1 plan
+**Status**: Complete (2026-01-17)
 
 Plans:
-- [ ] 7.2-01: Fix Directus SDK authentication to use SDK-managed storage
+- [x] 7.2-01: Fix Directus SDK authentication to use SDK-managed storage
 
 **Details:**
 Phase 7.2 addresses critical session persistence bug discovered after Phase 7.1:
@@ -169,5 +170,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 6. Settings Panel | 2/2 | Complete | 2026-01-14 |
 | 7. API Integration Layer | 3/3 | Complete | 2026-01-15 |
 | 7.1. Additional fixes (INSERTED) | 2/2 | Complete | 2026-01-16 |
-| 7.2. Additional fixes (INSERTED) | 0/1 | Planned | - |
+| 7.2. Session Persistence Fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 8. Polish & Testing | 0/2 | Not started | - |
