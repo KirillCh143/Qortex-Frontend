@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2 } from 'lucide-react';
+import { Atom } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,14 +37,16 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-primary">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-white">
+      <div className="w-full max-w-[440px] rounded-3xl bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 p-10">
         {/* Company Branding */}
-        <div className="mb-8 flex flex-col items-center gap-3">
-          <Building2 className="h-12 w-12 text-primary" />
-          <h1 className="text-2xl font-bold text-primary">Company Name</h1>
-          <p className="text-sm text-gray-600">
-            Sign in to access your account
+        <div className="mb-10 flex flex-col items-center">
+          <div className="size-14 rounded-2xl bg-gradient-to-br from-primary to-[#a18cf0] flex items-center justify-center text-white shadow-xl shadow-primary/20 mb-5">
+            <Atom className="h-8 w-8" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight mb-1">Nexus AI</h1>
+          <p className="text-slate-500 font-medium">
+            Вход в систему
           </p>
         </div>
 
@@ -56,9 +58,9 @@ export default function Login() {
         )}
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2 ml-1">
               Email
             </label>
             <Input
@@ -70,16 +72,16 @@ export default function Login() {
                 // Clear error on new input
                 if (error) setError('');
               }}
-              placeholder="your.email@company.com"
+              placeholder="example@nexus.ai"
               required
               disabled={submitting}
-              className="w-full"
+              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-3.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-2 ml-1">
+              Пароль
             </label>
             <Input
               id="password"
@@ -90,22 +92,29 @@ export default function Login() {
                 // Clear error on new input
                 if (error) setError('');
               }}
-              placeholder="Enter your password"
+              placeholder="••••••••"
               required
               disabled={submitting}
-              className="w-full"
+              className="w-full bg-slate-50/50 border border-slate-200/60 rounded-2xl px-5 py-3.5 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all"
             />
           </div>
 
           <Button
             type="submit"
             disabled={submitting}
-            className="w-full bg-secondary hover:bg-secondary/90"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98]"
           >
-            {submitting ? 'Signing in...' : 'Sign in'}
+            {submitting ? 'Signing in...' : 'Войти'}
           </Button>
         </form>
       </div>
+
+      {/* Footer */}
+      <footer className="fixed bottom-6 right-8 z-10">
+        <p className="text-slate-400 text-[11px] font-medium tracking-widest uppercase">
+          © 2024 NEXUS AI. ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+        </p>
+      </footer>
     </div>
   );
 }
