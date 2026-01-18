@@ -20,18 +20,6 @@ export const useFiles = (params?: { search?: string; folder?: string | null }) =
 export const useDownloadFile = () => {
   return useMutation({
     mutationFn: (fileId: string) => filesService.downloadFile(fileId),
-    onSuccess: (blob, fileId) => {
-      // Create blob URL and trigger browser download
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileId; // Will be replaced with actual filename from component
-      document.body.appendChild(a);
-      a.click();
-
-      // Clean up
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
+    // Let component handle download logic to avoid double downloads
   });
 };

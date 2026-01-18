@@ -16,6 +16,7 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --radius: 0.5rem;
+    --ice-color: 244 52% 95%;
   }
 
   .dark {
@@ -43,4 +44,137 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
+}
+
+/* =========================================
+   CUSTOM BACKGROUND STYLES
+   Добавлено ниже, чтобы не ломать существующую логику
+   ========================================= */
+
+:root {
+  /* Цвета для градиентных пятен (blobs) */
+  --dynamic-left-1: #8743b6;
+  --dynamic-left-2: #854fab;
+  --dynamic-right-1: #af61d0;
+  --dynamic-right-2: #aa6cc5;
+}
+
+/* Контейнер фона */
+.site-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  /* Используем переменную темы для цвета подложки */
+  background-color: hsl(var(--background));
+  pointer-events: none; /* Чтобы фон не перехватывал клики */
+}
+
+/* Основной градиент */
+.bg-gradient-main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Градиент уходит в прозрачность, чтобы смешиваться с цветом темы */
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background)),
+    hsl(var(--background)) 70%,
+    transparent
+  );
+}
+
+/* Размытые круги */
+.bg-blur-circle {
+  position: absolute;
+  width: 605px;
+  height: 460px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.6;
+  z-index: 0;
+  transform: translateZ(0); /* GPU ускорение */
+  animation: safari-layer-keepalive 1ms linear infinite;
+}
+
+/* Позиции кругов */
+.bg-blur-left-orange {
+  left: -200px;
+  top: 10px;
+  background-color: var(--dynamic-left-1);
+}
+.bg-blur-left-pink {
+  left: -80px;
+  top: 380px;
+  background-color: var(--dynamic-left-2);
+}
+.bg-blur-right-cyan {
+  right: -200px;
+  top: auto; /* Обязательно сбрасываем top */
+  bottom: 250px; /* Поднимаем чуть выше нижнего края */
+  background-color: var(--dynamic-right-1);
+}
+
+.bg-blur-right-green {
+  right: -300px;
+  top: auto; /* Обязательно сбрасываем top */
+  bottom: -50px; /* Прижимаем к самому низу (можно использовать отрицательное значение) */
+  background-color: var(--dynamic-right-2);
+}
+
+/* Вертикальные линии (сетка) */
+.bg-fade-bar {
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 1;
+  /* Адаптация цвета линий под тему (используем цвет границы --border) */
+  border-left: 1px solid hsl(var(--border) / 0.3);
+  opacity: var(--opacity);
+
+  /* Маска для плавного исчезновения вниз */
+  mask-image: linear-gradient(180deg, black, black 70%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, black, black 70%, transparent);
+}
+
+.left-bar {
+  left: var(--offset);
+  border-right: 1px solid hsl(var(--border) / 0.3);
+  border-left: none;
+  background: linear-gradient(90deg, hsl(var(--foreground) / 0.03), transparent);
+}
+
+.right-bar {
+  right: var(--offset);
+  border-left: 1px solid hsl(var(--border) / 0.3);
+  background: linear-gradient(-90deg, hsl(var(--foreground) / 0.03), transparent);
+}
+
+@keyframes safari-layer-keepalive {
+  0% {
+    transform: translateZ(0) scale(1);
+  }
+  100% {
+    transform: translateZ(0) scale(1.000001);
+  }
+}
+
+/* Адаптация для мобильных и темной темы */
+@media (max-width: 768px) {
+  .bg-fade-bar {
+    display: none;
+  }
+  .bg-blur-circle {
+    filter: blur(80px);
+    opacity: 0.4;
+  }
+}
+
+/* Уменьшаем яркость пятен в темной теме, если класс .dark добавлен на html/body */
+.dark .bg-blur-circle {
+  opacity: 0.3;
 }
