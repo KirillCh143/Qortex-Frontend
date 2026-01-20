@@ -1,4 +1,4 @@
-import { readFiles, readFolders, createFolder } from '@directus/sdk';
+import { readFiles, readFolders, createFolder, uploadFiles } from '@directus/sdk';
 import { FilesService, DirectusFile, FoldersService, DirectusFolder } from './types';
 
 // Real implementation using Directus SDK
@@ -37,6 +37,26 @@ export const createRealFilesService = (client: any): FilesService => ({
       throw new Error(`Failed to download file: ${response.statusText}`);
     }
     return response.blob();
+  },
+
+  async uploadFile(data: { file: File; title?: string; description?: string; folder: string | null }) {
+    const formData = new FormData();
+    formData.append('file', data.file);
+
+    if (data.title) {
+      formData.append('title', data.title);
+    }
+    if (data.description) {
+      formData.append('description', data.description);
+    }
+    if (data.folder) {
+      formData.append('folder', data.folder);
+    }
+
+    const result = await client.request(uploadFiles(formData));
+    // The SDK may return a single file or an array
+    if (Array.isArray(result)) return result[0] as DirectusFile;
+    return result as DirectusFile;
   }
 });
 

@@ -57,6 +57,22 @@ export const createMockFilesService = (): FilesService => {
 
       // Generate mock file content using existing function
       return generateMockFileContent(document);
+    },
+
+    async uploadFile(data: { file: File; title?: string; description?: string; folder: string | null }) {
+      // In mock mode, just return a mock file
+      const newFile: DirectusFile = {
+        id: `file-${Date.now()}`,
+        filename_download: data.file.name,
+        type: data.file.type,
+        filesize: data.file.size,
+        title: data.title || data.file.name,
+        description: data.description || '',
+        uploaded_on: new Date().toISOString(),
+        folder: data.folder
+      };
+      console.log('Mock: Uploaded file', newFile);
+      return newFile;
     }
   };
 };

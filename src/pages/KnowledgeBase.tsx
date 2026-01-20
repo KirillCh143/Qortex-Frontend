@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Loader2, LayoutGrid, List, Plus } from 'lucide-react'
+import { Search, X, Download, Loader2, LayoutGrid, List, Plus, Upload } from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
@@ -10,6 +10,7 @@ import type { DirectusFile } from '@/services/directus/types'
 import FileListView from '@/components/FileListView'
 import { FolderTree } from '@/components/FolderTree'
 import { CreateFolderDialog } from '@/components/CreateFolderDialog'
+import { UploadFileDialog } from '@/components/UploadFileDialog'
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
@@ -17,6 +18,7 @@ export default function KnowledgeBase() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
   const [createFolderOpen, setCreateFolderOpen] = useState(false)
+  const [uploadFileOpen, setUploadFileOpen] = useState(false)
 
   // Fetch folders and files using React Query
   const { data: folders = [] } = useFolders()
@@ -100,16 +102,26 @@ export default function KnowledgeBase() {
             </div>
           </div>
 
-        {/* Search bar */}
-        <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Search documents..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+        {/* Search bar and Upload button */}
+        <div className="flex gap-3 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Search documents..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button
+            onClick={() => setUploadFileOpen(true)}
+            disabled={selectedFolderId === null}
+            title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload File
+          </Button>
         </div>
 
         {/* View toggle */}
@@ -260,6 +272,14 @@ export default function KnowledgeBase() {
         onOpenChange={setCreateFolderOpen}
         folders={folders}
         defaultParentId={selectedFolderId}
+      />
+
+      {/* Upload File Dialog */}
+      <UploadFileDialog
+        open={uploadFileOpen}
+        onOpenChange={setUploadFileOpen}
+        selectedFolderId={selectedFolderId}
+        folders={folders}
       />
     </div>
   )

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { filesService } from '@/lib/config';
 
 // Hook for fetching files with optional search and folder filter
@@ -21,5 +21,22 @@ export const useDownloadFile = () => {
   return useMutation({
     mutationFn: (fileId: string) => filesService.downloadFile(fileId),
     // Let component handle download logic to avoid double downloads
+  });
+};
+
+// Hook for uploading files
+export const useUploadFile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { file: File; title?: string; description?: string; folder: string | null }) =>
+      filesService.uploadFile(data),
+    onSuccess: () => {
+      // Invalidate files query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['files'] });
+    },
+    onError: (error) => {
+      console.error('Failed to upload file:', error);
+    }
   });
 };
