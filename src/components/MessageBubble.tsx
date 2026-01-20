@@ -1,5 +1,7 @@
 import { User, Bot, FileSearch, MessageSquare } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant'
@@ -15,7 +17,7 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     })
   }
 
@@ -51,7 +53,15 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
               )}
             </div>
           )}
-          <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
+          {isUser ? (
+            <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
+          ) : (
+            <div className="text-sm break-words prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-li:text-gray-900 prose-code:bg-gray-200 prose-code:px-1 prose-code:rounded prose-pre:bg-gray-800 prose-pre:text-white">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {content}
+              </ReactMarkdown>
+            </div>
+          )}
         </div>
         {timestamp && (
           <span className="text-xs text-gray-500 mt-1">
