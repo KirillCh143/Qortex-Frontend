@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -39,6 +39,11 @@ export function CreateFolderDialog({
   const [error, setError] = useState<string | null>(null)
 
   const createFolderMutation = useCreateFolder()
+
+  // Update parent folder when defaultParentId changes
+  useEffect(() => {
+    setParentFolderId(defaultParentId)
+  }, [defaultParentId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
