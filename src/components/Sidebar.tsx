@@ -1,4 +1,4 @@
-import { Building2, MessageSquare, BookOpen, Settings } from 'lucide-react'
+import { MessageSquare, BookOpen, Settings } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom' // 1. Импортируем хук
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -20,12 +20,17 @@ export function Sidebar() {
     // Важно: поменял bg-primary на bg-white, чтобы черный текст был виден
     <div className="flex h-screen w-64 flex-col bg-white border-r text-black">
       {/* Branding Section */}
-      <div className="flex items-center gap-3 p-6">
-        <Building2 className="h-8 w-8 text-[#7049f3]" />
-        <h1 className="text-xl font-bold">ИРБ ПРО</h1>
+      <div className="flex items-center gap-4 p-5">
+        <div className="size-10 rounded-xl bg-gradient-to-br from-[#7e5bf4] to-[#7049f3] flex items-center justify-center text-white shadow-xl shadow-primary/50">
+          <img src="/logo.svg" alt="Logo" className="h-7 w-7" />
+        </div>
+        <h1 className="text-lg font-bold">База знаний</h1>
       </div>
 
-      <Separator className="bg-gray-200" />
+      <Separator className="bg-white" />
+
+      {/* "Меню" text */}
+      <div className="text-xs uppercase text-gray-500 font-semibold ml-8 mt-4">Меню</div>
 
       {/* Navigation Section */}
       <nav className="flex flex-col items-start gap-2 p-4">
@@ -37,7 +42,7 @@ export function Sidebar() {
         >
           <Link to="/chat">
             <MessageSquare className="h-5 w-5" />
-            Chat
+            ИИ Чат
           </Link>
         </Button>
 
@@ -51,7 +56,7 @@ export function Sidebar() {
         >
           <Link to="/knowledge-base">
             <BookOpen className="h-5 w-5" />
-            Knowledge Base
+            Докумненты
           </Link>
         </Button>
 
@@ -63,7 +68,7 @@ export function Sidebar() {
         >
           <Link to="/settings">
             <Settings className="h-5 w-5" />
-            Settings
+            Настройки
           </Link>
         </Button>
       </nav>

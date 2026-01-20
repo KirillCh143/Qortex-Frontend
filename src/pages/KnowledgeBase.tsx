@@ -2,19 +2,21 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Loader2, LayoutGrid, List } from 'lucide-react'
+import { Search, X, Download, Loader2, LayoutGrid, List, Plus } from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
 import type { DirectusFile } from '@/services/directus/types'
 import FileListView from '@/components/FileListView'
 import { FolderTree } from '@/components/FolderTree'
+import { CreateFolderDialog } from '@/components/CreateFolderDialog'
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
+  const [createFolderOpen, setCreateFolderOpen] = useState(false)
 
   // Fetch folders and files using React Query
   const { data: folders = [] } = useFolders()
@@ -66,7 +68,18 @@ export default function KnowledgeBase() {
       {/* Folder Sidebar */}
       <div className="hidden md:block w-64 border-r border-gray-200 bg-gray-50 overflow-y-auto">
         <div className="p-4">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3">Folders</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-700">Folders</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCreateFolderOpen(true)}
+              className="h-8 w-8 p-0"
+              title="New Folder"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
           <FolderTree
             folders={folders}
             selectedFolderId={selectedFolderId}
@@ -240,6 +253,14 @@ export default function KnowledgeBase() {
           </div>
         </>
       )}
+
+      {/* Create Folder Dialog */}
+      <CreateFolderDialog
+        open={createFolderOpen}
+        onOpenChange={setCreateFolderOpen}
+        folders={folders}
+        defaultParentId={selectedFolderId}
+      />
     </div>
   )
 }

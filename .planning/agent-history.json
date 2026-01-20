@@ -431,6 +431,109 @@
       ],
       "completion_timestamp": "2026-01-17T14:27:48Z",
       "deviations": []
+    },
+    {
+      "agent_id": "ae32276",
+      "task_description": "Parallel: Execute 08-01-PLAN.md (Settings removal)",
+      "phase": "08",
+      "plan": "01",
+      "parallel_group": "pg-20260120183933-90550f66",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-20T15:39:36Z",
+      "status": "completed",
+      "files_modified": [
+        "src/pages/Settings.tsx",
+        "src/lib/settings.ts",
+        "src/lib/config.ts",
+        "src/lib/directus.ts",
+        ".env",
+        "USER_IMPUT_FILES/nginx.conf",
+        ".planning/phases/08-configuration-refactoring-ux-enhancements/08-01-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-20T15:45:39Z",
+      "deviations": []
+    },
+    {
+      "agent_id": "a87fb26",
+      "task_description": "Parallel: Execute 08-02-PLAN.md (Markdown rendering)",
+      "phase": "08",
+      "plan": "02",
+      "parallel_group": "pg-20260120183933-90550f66",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-20T15:39:36Z",
+      "status": "completed",
+      "files_modified": [
+        "package.json",
+        "package-lock.json",
+        "src/components/MessageBubble.tsx",
+        ".planning/phases/08-configuration-refactoring-ux-enhancements/08-02-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-20T15:45:39Z",
+      "deviations": []
+    },
+    {
+      "agent_id": "aaa7d6d",
+      "task_description": "Parallel: Execute 08-03-PLAN.md (Isolate contexts)",
+      "phase": "08",
+      "plan": "03",
+      "parallel_group": "pg-20260120183933-90550f66",
+      "granularity": "plan",
+      "wave": 1,
+      "depends_on": [],
+      "timestamp": "2026-01-20T15:39:36Z",
+      "status": "completed",
+      "files_modified": [
+        "src/services/directus/types.ts",
+        "src/services/directus/chat.service.ts",
+        "src/services/mock/chat.mock.ts",
+        "src/hooks/useChat.ts",
+        "src/pages/Chat.tsx",
+        ".planning/phases/08-configuration-refactoring-ux-enhancements/08-03-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-20T15:45:39Z",
+      "deviations": []
+    },
+    {
+      "agent_id": "aab5dd5",
+      "task_description": "Parallel: Execute 08-04-PLAN.md (Fix layout/scrolling)",
+      "phase": "08",
+      "plan": "04",
+      "parallel_group": "pg-20260120183933-90550f66",
+      "granularity": "plan",
+      "wave": 2,
+      "depends_on": [
+        "08-03"
+      ],
+      "timestamp": "2026-01-20T15:46:35Z",
+      "status": "completed",
+      "files_modified": [
+        "src/components/Layout.tsx",
+        "src/pages/Settings.tsx",
+        ".planning/phases/08-configuration-refactoring-ux-enhancements/08-04-SUMMARY.md"
+      ],
+      "completion_timestamp": "2026-01-20T15:48:11Z",
+      "deviations": []
+    },
+    {
+      "agent_id": "af70373",
+      "task_description": "Parallel: Execute 08-05-PLAN.md (File management)",
+      "phase": "08",
+      "plan": "05",
+      "parallel_group": "pg-20260120183933-90550f66",
+      "granularity": "plan",
+      "wave": 3,
+      "depends_on": [
+        "08-04"
+      ],
+      "timestamp": "2026-01-20T15:49:27Z",
+      "status": "spawned",
+      "files_modified": [],
+      "completion_timestamp": null,
+      "deviations": []
     }
   ]
 }

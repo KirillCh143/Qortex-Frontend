@@ -65,5 +65,18 @@ export const createMockFilesService = (): FilesService => {
 export const createMockFoldersService = (): FoldersService => ({
   async getFolders() {
     return mockFolders as DirectusFolder[];
+  },
+
+  async createFolder(data: { name: string; parent: string | null }) {
+    // In mock mode, just return a mock folder
+    const newFolder: DirectusFolder = {
+      id: `folder-${Date.now()}`,
+      name: data.name,
+      parent: data.parent
+    };
+    // In real implementation, this would persist to mockFolders
+    // For now, just return the new folder without persisting
+    console.log('Mock: Created folder', newFolder);
+    return newFolder;
   }
 });

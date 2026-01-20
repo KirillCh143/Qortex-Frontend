@@ -1,4 +1,4 @@
-import { readFiles, readFolders } from '@directus/sdk';
+import { readFiles, readFolders, createFolder } from '@directus/sdk';
 import { FilesService, DirectusFile, FoldersService, DirectusFolder } from './types';
 
 // Real implementation using Directus SDK
@@ -53,5 +53,15 @@ export const createRealFoldersService = (client: any): FoldersService => ({
     if (Array.isArray(result)) return result as DirectusFolder[];
     if (result && Array.isArray((result as any).data)) return (result as any).data as DirectusFolder[];
     return [] as DirectusFolder[];
+  },
+
+  async createFolder(data: { name: string; parent: string | null }) {
+    const result = await client.request(
+      createFolder({
+        name: data.name,
+        parent: data.parent
+      })
+    );
+    return result as DirectusFolder;
   }
 });

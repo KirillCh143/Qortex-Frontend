@@ -20,6 +20,7 @@ export interface DirectusFile {
 // FoldersService interface for both mock and real implementations
 export interface FoldersService {
   getFolders: () => Promise<DirectusFolder[]>;
+  createFolder: (data: { name: string; parent: string | null }) => Promise<DirectusFolder>;
 }
 
 // FilesService interface for both mock and real implementations
