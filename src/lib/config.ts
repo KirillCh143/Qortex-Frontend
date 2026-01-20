@@ -5,7 +5,6 @@ import { createRealFilesService, createRealFoldersService } from '@/services/dir
 import { createMockChatService } from '@/services/mock/chat.mock'
 import { createRealChatService } from '@/services/directus/chat.service'
 import directusClient from '@/lib/directus'
-import { loadSettings } from './settings'
 
 // Determine if mock data should be used based on environment variable
 export const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true'
@@ -16,9 +15,9 @@ export const createWebhookServiceInstance = () => {
     return createMockWebhookService()
   }
 
-  // Load webhook URL from user settings
-  const settings = loadSettings()
-  return createWebhookService(settings.n8nWebhookUrl)
+  // Load webhook URL from environment variable
+  const n8nWebhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL as string || 'http://localhost:8081/webhook/chat'
+  return createWebhookService(n8nWebhookUrl)
 }
 
 // Create files service based on mock/real toggle
