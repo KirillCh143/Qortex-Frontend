@@ -8,11 +8,11 @@ interface LayoutProps {
 
 export function Layout({ children, title }: LayoutProps) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen">
       <Sidebar />
-      <div className="flex flex-1 flex-col bg-gray-50">
+      <div className="flex flex-1 flex-col h-screen">
         <Header title={title} />
-        <main className="flex-1 p-6">
+        <main className="flex-1 overflow-hidden">
           {children}
         </main>
       </div>
