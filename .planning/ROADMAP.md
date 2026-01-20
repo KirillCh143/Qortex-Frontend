@@ -28,7 +28,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.3: Directory Structure Integration (INSERTED)** - Add folder hierarchy navigation and enhanced file management
 - [x] **Phase 7.4: Fix files download (INSERTED)** - Fix file download functionality
 - [x] **Phase 7.5: Login page design overhaul and redirect fix (INSERTED)** - Urgent work discovered after Phase 7.4
-- [ ] **Phase 8: Polish & Testing** - End-to-end testing, refinement, and optimization
+- [ ] **Phase 8: Configuration Refactoring & UX Enhancements** - Remove settings UI, add markdown support, isolate chat contexts, fix layout, add file management
+- [ ] **Phase 9: UI-Overhaul (taks will specify later)** - UI improvements to be defined
 
 ## Phase Details
 
@@ -209,20 +210,51 @@ Phase 7.5 addresses login page UX improvements requested after Phase 7.4:
    - Auto-redirects to /chat using React Router navigate with replace: true
    - Fixes UX issue from USER_IMPUT_FILES/TO_DO.md
 
-### Phase 8: Polish & Testing
-**Goal**: Production-ready application with verified end-to-end functionality
+### Phase 8: Configuration Refactoring & UX Enhancements
+**Goal**: Simplify configuration architecture and improve user experience across chat and knowledge base
 **Depends on**: Phase 7.5
-**Research**: Unlikely (internal testing and refinement)
+**Research**: Unlikely (internal refactoring and UI improvements)
 **Plans**: TBD
 
 Plans:
-- [ ] 08-01: End-to-end testing with real Directus and n8n backends
-- [ ] 08-02: UI refinements and performance optimization
+- [ ] 08-01: Remove Settings Page API configuration, migrate to .env with Nginx-based routing
+- [ ] 08-02: Add Markdown rendering for chat responses
+- [ ] 08-03: Isolate chat contexts (separate history per mode)
+- [ ] 08-04: Fix layout and scrolling (fixed sidebar/header, scrollable content)
+- [ ] 08-05: Add file management to Knowledge Base (create folders, upload files)
+
+**Details:**
+Phase 8 addresses architectural improvements and UX enhancements:
+1. Configuration Refactoring:
+   - Remove frontend Settings page API configuration section (Phase 6)
+   - Move endpoint config to .env with single Nginx base URL
+   - Rely on Nginx routing rules for Directus/n8n traffic
+2. Chat UX Improvements:
+   - Markdown renderer for LLM/RAG responses (headers, lists, code blocks)
+   - Isolated chat contexts (separate history for RAG vs LLM modes)
+3. Layout & Scrolling Fix:
+   - Fixed sidebar, header, and page container (non-scrollable)
+   - Scrollable content areas only (chat messages, knowledge base documents)
+4. Knowledge Base File Management:
+   - Create folders via frontend
+   - Upload files directly to Directus
+
+### Phase 9: UI-Overhaul (taks will specify later)
+**Goal**: [To be planned]
+**Depends on**: Phase 8
+**Research**: TBD
+**Plans**: 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 9 to break down)
+
+**Details:**
+[To be added during planning]
 
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -238,4 +270,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 7.3. Directory Structure Integration (INSERTED) | 2/2 | Complete | 2026-01-17 |
 | 7.4. Fix files download (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 7.5. Login page design overhaul and redirect fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
-| 8. Polish & Testing | 0/2 | Not started | - |
+| 8. Configuration Refactoring & UX Enhancements | 0/5 | Not started | - |
+| 9. UI-Overhaul (taks will specify later) | 0/0 | Not started | - |
