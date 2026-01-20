@@ -40,7 +40,7 @@ export interface ChatMessage {
 
 // ChatService interface for both mock and real implementations
 export interface ChatService {
-  getMessages: (userId: string) => Promise<ChatMessage[]>;
+  getMessages: (userId: string, mode?: 'rag' | 'llm') => Promise<ChatMessage[]>;
   saveMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => Promise<ChatMessage>;
-  clearMessages: (userId: string) => Promise<void>;
+  clearMessages: (userId: string, mode?: 'rag' | 'llm') => Promise<void>;
 }

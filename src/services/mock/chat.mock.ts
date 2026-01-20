@@ -5,10 +5,14 @@ const mockStore = new Map<string, ChatMessage[]>();
 
 export function createMockChatService(): ChatService {
   return {
-    async getMessages(userId: string): Promise<ChatMessage[]> {
+    async getMessages(userId: string, mode?: 'rag' | 'llm'): Promise<ChatMessage[]> {
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 300));
-      return mockStore.get(userId) || [];
+      const messages = mockStore.get(userId) || [];
+      if (mode) {
+        return messages.filter((msg) => msg.mode === mode);
+      }
+      return messages;
     },
 
     async saveMessage(
@@ -28,10 +32,20 @@ export function createMockChatService(): ChatService {
       return newMessage;
     },
 
-    async clearMessages(userId: string): Promise<void> {
+    async clearMessages(userId: string, mode?: 'rag' | 'llm'): Promise<void> {
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 100));
-      mockStore.delete(userId);
+      if (mode) {
+        const messages = mockStore.get(userId) || [];
+        const filteredMessages = messages.filter((msg) => msg.mode !== mode);
+        if (filteredMessages.length > 0) {
+          mockStore.set(userId, filteredMessages);
+        } else {
+          mockStore.delete(userId);
+        }
+      } else {
+        mockStore.delete(userId);
+      }
     },
   };
 }

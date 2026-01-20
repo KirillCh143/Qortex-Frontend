@@ -5,11 +5,16 @@ import type { ChatMessage, ChatService } from './types';
 // Using any type for client since DirectusClient type doesn't reflect .with() extensions
 export function createRealChatService(directusClient: any): ChatService {
   return {
-    async getMessages(userId: string): Promise<ChatMessage[]> {
+    async getMessages(userId: string, mode?: 'rag' | 'llm'): Promise<ChatMessage[]> {
+      const filter: any = { user: { _eq: userId } };
+      if (mode) {
+        filter.mode = { _eq: mode };
+      }
+
       const messages = await directusClient.request(
         // @ts-ignore - Custom collection not in SDK types
         readItems('chat_messages', {
-          filter: { user: { _eq: userId } },
+          filter,
           sort: ['timestamp'],
           limit: -1, // all messages
         })
@@ -33,11 +38,16 @@ export function createRealChatService(directusClient: any): ChatService {
       return created as ChatMessage;
     },
 
-    async clearMessages(userId: string): Promise<void> {
+    async clearMessages(userId: string, mode?: 'rag' | 'llm'): Promise<void> {
+      const filter: any = { user: { _eq: userId } };
+      if (mode) {
+        filter.mode = { _eq: mode };
+      }
+
       await directusClient.request(
         // @ts-ignore - Custom collection not in SDK types
         deleteItems('chat_messages', {
-          filter: { user: { _eq: userId } },
+          filter,
         })
       );
     },
