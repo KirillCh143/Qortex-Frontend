@@ -13,8 +13,8 @@ export default function Chat() {
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const chatMutation = useChatQuery()
 
-  // Fetch chat messages from Directus (user-specific)
-  const { data: messages = [], isLoading, error } = useChatMessages(user?.id)
+  // Fetch chat messages from Directus (user-specific and mode-specific)
+  const { data: messages = [], isLoading, error } = useChatMessages(user?.id, mode)
   const saveMutation = useSaveChatMessage()
   const clearMutation = useClearChatHistory()
 
@@ -80,8 +80,9 @@ export default function Chat() {
 
   const handleClearHistory = () => {
     if (!user?.id) return
-    if (window.confirm('Clear all chat history? This cannot be undone.')) {
-      clearMutation.mutate(user.id)
+    const modeName = mode === 'rag' ? 'RAG Search' : 'LLM Chat'
+    if (window.confirm(`Clear ${modeName} history? This cannot be undone.`)) {
+      clearMutation.mutate({ userId: user.id, mode })
     }
   }
 
