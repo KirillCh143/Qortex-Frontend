@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
+import { Header } from '@/components/Header'
 import { Button } from '@/components/ui/button'
 import { useChatQuery } from '@/hooks/useChatQuery'
 import { useChatMessages, useSaveChatMessage, useClearChatHistory } from '@/hooks/useChat'
@@ -88,43 +89,22 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Mode toggle */}
-      <div className="border-b border-gray-200 p-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
-              <Button
-                variant={mode === 'rag' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setMode('rag')}
-                className={
-                  mode === 'rag' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'
-                }
-              >
-                RAG Search
-              </Button>
-              <Button
-                variant={mode === 'llm' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setMode('llm')}
-                className={
-                  mode === 'llm' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'
-                }
-              >
-                LLM Chat
-              </Button>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleClearHistory}
-              disabled={messages.length === 0}
-              className="flex items-center gap-2 hover:border-gray-400"
-            >
-              <Trash2 className="h-4 w-4" />
-              Clear History
-            </Button>
-          </div>
+      {/* Header with mode toggle */}
+      <Header title="Chat" mode={mode} onModeChange={setMode} />
+
+      {/* Clear History button */}
+      <div className="border-b border-gray-200 px-4 py-2 bg-white">
+        <div className="max-w-4xl mx-auto flex justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleClearHistory}
+            disabled={messages.length === 0}
+            className="flex items-center gap-2 hover:border-gray-400"
+          >
+            <Trash2 className="h-4 w-4" />
+            Clear History
+          </Button>
         </div>
       </div>
 
