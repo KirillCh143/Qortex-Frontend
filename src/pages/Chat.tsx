@@ -89,7 +89,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-full">
       {/* Mode toggle */}
-      <div className="border-b border-gray-200 p-4">
+      <div className="border-b border-gray-200 p-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
@@ -97,7 +97,7 @@ export default function Chat() {
                 variant={mode === 'rag' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setMode('rag')}
-                className={mode === 'rag' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
+                className={mode === 'rag' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'}
               >
                 RAG Search
               </Button>
@@ -105,7 +105,7 @@ export default function Chat() {
                 variant={mode === 'llm' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setMode('llm')}
-                className={mode === 'llm' ? 'bg-cyan-500 hover:bg-cyan-600' : ''}
+                className={mode === 'llm' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'}
               >
                 LLM Chat
               </Button>
@@ -115,7 +115,7 @@ export default function Chat() {
               size="sm"
               onClick={handleClearHistory}
               disabled={messages.length === 0}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 hover:border-gray-400"
             >
               <Trash2 className="h-4 w-4" />
               Clear History
@@ -125,7 +125,7 @@ export default function Chat() {
       </div>
 
       {/* Messages container with scroll */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 bg-white">
         {isLoading ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             <p>Loading chat history...</p>
