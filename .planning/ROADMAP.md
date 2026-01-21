@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.4: Fix files download (INSERTED)** - Fix file download functionality
 - [x] **Phase 7.5: Login page design overhaul and redirect fix (INSERTED)** - Urgent work discovered after Phase 7.4
 - [x] **Phase 8: Configuration Refactoring & UX Enhancements** - Remove settings UI, add markdown support, isolate chat contexts, fix layout, add file management
-- [ ] **Phase 9: UI-Overhaul (taks will specify later)** - UI improvements to be defined
+- [x] **Phase 9: UI Overhaul** - Purple theme, Russian localization, file type icons, and modern visual polish
 
 ## Phase Details
 
@@ -241,17 +241,51 @@ Phase 8 addresses architectural improvements and UX enhancements:
    - Create folders via frontend
    - Upload files directly to Directus
 
-### Phase 9: UI-Overhaul (taks will specify later)
-**Goal**: [To be planned]
+### Phase 9: UI Overhaul ✓
+**Goal**: Apply purple theme (#8466e4), Russian localization, file type icons, and modern visual polish across all UI components
 **Depends on**: Phase 8
-**Research**: TBD
-**Plans**: 0 plans
+**Research**: None (visual design implementation)
+**Plans**: 5/5 complete
+**Status**: Complete
+**Completed**: 2026-01-21
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 9 to break down)
+- [x] 09-01: Sidebar user section redesign - Move user controls to sidebar bottom with initials
+- [x] 09-02: Chat page visual overhaul - Purple theme for messages, buttons, and mode toggles
+- [x] 09-03: Knowledge Base grid view - File type icons with colored backgrounds and checkboxes
+- [x] 09-04: Knowledge Base list view - Table with checkboxes, icons, and polished styling
+- [x] 09-05: Dialog components redesign - Purple theme and Russian labels for folder/file dialogs
 
 **Details:**
-[To be added during planning]
+Phase 9 completed comprehensive UI overhaul with purple theme and Russian localization:
+
+1. **Purple Brand Color (#8466e4):**
+   - Applied consistently across all primary actions (buttons, focus states, active states)
+   - Darker purple (#7049f3) for hover states
+   - Replaces previous cyan/blue accents
+
+2. **Layout Improvements:**
+   - User section relocated from header to sidebar bottom
+   - Avatar displays user initials (first + last name)
+   - Header simplified to title-only display
+   - Message bubbles with sharp corners (user: top-right, assistant: top-left)
+   - Larger avatars (10x10) with refined borders
+
+3. **Russian Localization:**
+   - Dialog buttons: "Создать", "Отмена", "Загрузить"
+   - Form labels: "Название папки", "Родительская папка", "Корневая папка"
+   - Folder/file management UI in Russian
+
+4. **File Type Visualization:**
+   - Icons with colored backgrounds: PDF (red), DOCX (blue), XLSX (green), text (gray)
+   - Selection checkboxes in grid and list views (visual only, no state management)
+   - Polished table styling with light gray headers and hover states
+
+5. **Modern Visual Polish:**
+   - Circular purple send button in chat
+   - Clean white backgrounds with subtle shadows
+   - Consistent spacing and padding throughout
+   - Professional, modern appearance
 
 ## Progress
 
@@ -273,4 +307,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 7.4. Fix files download (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 7.5. Login page design overhaul and redirect fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 8. Configuration Refactoring & UX Enhancements | 5/5 | Complete | 2026-01-20 |
-| 9. UI-Overhaul (taks will specify later) | 0/0 | Not started | - |
+| 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
