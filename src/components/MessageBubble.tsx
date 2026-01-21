@@ -56,7 +56,7 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
           {isUser ? (
             <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
           ) : (
-            <div className="text-sm break-words prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-li:text-gray-900 prose-code:bg-gray-200 prose-code:px-1 prose-code:rounded prose-pre:bg-gray-800 prose-pre:text-white">
+            <div className="text-sm break-words prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-p:my-2 prose-strong:text-gray-900 prose-strong:font-semibold prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-ol:my-2 prose-ol:list-decimal prose-ol:pl-5 prose-li:text-gray-900 prose-li:my-1 prose-code:bg-gray-200 prose-code:px-1 prose-code:rounded prose-pre:bg-gray-800 prose-pre:text-white prose-pre:my-2">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {content}
               </ReactMarkdown>
