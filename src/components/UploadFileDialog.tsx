@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Upload } from 'lucide-react'
 import { useUploadFile } from '@/hooks/useFiles'
 import { formatFileSize } from '@/lib/mockDocuments'
 import type { DirectusFolder } from '@/services/directus/types'
@@ -102,18 +102,18 @@ export function UploadFileDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Upload File</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Загрузить файл</DialogTitle>
             <DialogDescription>
-              Upload a file to the knowledge base. Files will be stored in the selected folder.
+              Загрузите файл в базу знаний. Файлы будут сохранены в выбранной папке.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-6 py-6">
             <div className="grid gap-2">
               <Label htmlFor="file-input">
-                File <span className="text-red-500">*</span>
+                Файл <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="file-input"
@@ -122,6 +122,7 @@ export function UploadFileDialog({
                 onChange={handleFileChange}
                 disabled={uploadFileMutation.isPending}
                 aria-required="true"
+                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
               />
               {selectedFile && (
                 <div className="text-sm text-gray-600">
@@ -137,33 +138,35 @@ export function UploadFileDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="file-title">Title</Label>
+              <Label htmlFor="file-title">Название</Label>
               <Input
                 id="file-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter file title (optional)"
+                placeholder="Введите название (необязательно)"
                 disabled={uploadFileMutation.isPending}
+                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
               />
               <p className="text-xs text-gray-500">
-                Leave blank to use filename
+                Оставьте пустым, чтобы использовать имя файла
               </p>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="file-description">Description</Label>
+              <Label htmlFor="file-description">Описание</Label>
               <Textarea
                 id="file-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter file description (optional)"
+                placeholder="Введите описание (необязательно)"
                 disabled={uploadFileMutation.isPending}
                 rows={3}
+                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
               />
             </div>
 
             <div className="grid gap-2">
-              <Label>Folder</Label>
+              <Label>Папка</Label>
               <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-md border">
                 {selectedFolderName}
               </div>
@@ -182,16 +185,19 @@ export function UploadFileDialog({
               onClick={() => handleOpenChange(false)}
               disabled={uploadFileMutation.isPending}
             >
-              Cancel
+              Отмена
             </Button>
             <Button
               type="submit"
               disabled={uploadFileMutation.isPending || !selectedFile}
+              className="bg-[#8466e4] hover:bg-[#7049f3] text-white"
             >
-              {uploadFileMutation.isPending && (
+              {uploadFileMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="mr-2 h-4 w-4" />
               )}
-              Upload
+              Загрузить
             </Button>
           </DialogFooter>
         </form>
