@@ -44,22 +44,11 @@ export const createRealFilesService = (client: any): FilesService => ({
     const authData = localStorage.getItem('directus-auth');
     const token = authData ? JSON.parse(authData).access_token : null;
 
+    // Step 1: Upload the file
     const formData = new FormData();
     formData.append('file', data.file);
 
-    // Always append title (use filename if not provided)
-    formData.append('title', data.title || data.file.name);
-
-    // Always append description (empty string if not provided)
-    formData.append('description', data.description || '');
-
-    // Always append folder (even if null for root)
-    if (data.folder) {
-      formData.append('folder', data.folder);
-    }
-
-    // Use direct fetch instead of SDK to ensure metadata is handled correctly
-    const response = await fetch(`${client.url}files`, {
+    const uploadResponse = await fetch(`${client.url}files`, {
       method: 'POST',
       headers: {
         ...(token && { Authorization: `Bearer ${token}` })
@@ -67,14 +56,46 @@ export const createRealFilesService = (client: any): FilesService => ({
       body: formData
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.errors?.[0]?.message || `Failed to upload file: ${response.statusText}`);
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json().catch(() => ({}));
+      throw new Error(errorData.errors?.[0]?.message || `Failed to upload file: ${uploadResponse.statusText}`);
     }
 
-    const result = await response.json();
-    // Directus API returns { data: { ... } }
-    return (result.data || result) as DirectusFile;
+    const uploadResult = await uploadResponse.json();
+    const fileData = uploadResult.data || uploadResult;
+    const fileId = fileData.id;
+
+    // Step 2: Update the file metadata (title, description, folder)
+    const metadata: any = {};
+
+    if (data.title) {
+      metadata.title = data.title;
+    }
+    if (data.description) {
+      metadata.description = data.description;
+    }
+    if (data.folder) {
+      metadata.folder = data.folder;
+    }
+
+    const updateResponse = await fetch(`${client.url}files/${fileId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: JSON.stringify(metadata)
+    });
+
+    if (!updateResponse.ok) {
+      const errorData = await updateResponse.json().catch(() => ({}));
+      throw new Error(errorData.errors?.[0]?.message || `Failed to update file metadata: ${updateResponse.statusText}`);
+    }
+
+    const finalResult = await updateResponse.json();
+
+    // Return the updated file data
+    return (finalResult.data || finalResult) as DirectusFile;
   }
 });
 
