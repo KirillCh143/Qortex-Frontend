@@ -57,28 +57,36 @@ export default function ChatInput({ onSend, onClearHistory, messageCount = 0, di
           </Button>
         )}
 
-        {/* Text input area */}
-        <textarea
-          ref={textareaRef}
-          value={message}
-          onChange={handleInput}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-          className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8466e4] focus:border-transparent overflow-y-auto"
-          rows={1}
-          style={{ minHeight: '40px', maxHeight: '96px' }}
-          disabled={disabled}
-        />
+        {/* Input capsule with textarea and send button */}
+        <div className="flex-1 flex items-end gap-2 rounded-xl border border-gray-300 px-3 py-2 focus-within:ring-2 focus-within:ring-[#8466e4] focus-within:border-transparent bg-white">
+          {/* Text input area */}
+          <textarea
+            ref={textareaRef}
+            value={message}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
+            className="flex-1 resize-none text-sm focus:outline-none overflow-y-auto bg-transparent border-0 p-0"
+            rows={1}
+            style={{ minHeight: '24px', maxHeight: '72px' }}
+            disabled={disabled}
+          />
 
-        {/* Send button (right side) */}
-        <Button
-          onClick={handleSend}
-          disabled={!message.trim() || disabled}
-          className="bg-[#8466e4] hover:bg-[#7049f3] text-white rounded-full h-10 w-10 p-0 flex items-center justify-center"
-        >
-          <Send size={18} />
-        </Button>
+          {/* Send button inside capsule (right side) */}
+          <Button
+            onClick={handleSend}
+            disabled={!message.trim() || disabled}
+            className="bg-[#8466e4] hover:bg-[#7049f3] text-white rounded-full h-8 w-8 p-0 flex items-center justify-center shrink-0"
+          >
+            <Send size={16} />
+          </Button>
+        </div>
       </div>
+
+      {/* Disclaimer text */}
+      <p className="text-xs text-gray-500 text-center mt-2">
+        AI может ошибаться. Проверяйте важную информацию.
+      </p>
     </div>
   )
 }
