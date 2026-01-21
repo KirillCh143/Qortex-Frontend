@@ -1,13 +1,15 @@
 import { useState, useRef, KeyboardEvent } from 'react'
-import { Send } from 'lucide-react'
+import { Send, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface ChatInputProps {
   onSend: (message: string) => void
+  onClearHistory?: () => void
+  messageCount?: number
   disabled?: boolean
 }
 
-export default function ChatInput({ onSend, disabled = false }: ChatInputProps) {
+export default function ChatInput({ onSend, onClearHistory, messageCount = 0, disabled = false }: ChatInputProps) {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -41,6 +43,21 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
   return (
     <div className="border-t border-gray-200 bg-white p-4">
       <div className="flex gap-2 items-end">
+        {/* Clear History button (left side) */}
+        {onClearHistory && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClearHistory}
+            disabled={messageCount === 0}
+            className="flex items-center gap-2 hover:border-gray-400 h-10"
+          >
+            <Trash2 className="h-4 w-4" />
+            Clear History
+          </Button>
+        )}
+
+        {/* Text input area */}
         <textarea
           ref={textareaRef}
           value={message}
@@ -52,6 +69,8 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
           style={{ minHeight: '40px', maxHeight: '96px' }}
           disabled={disabled}
         />
+
+        {/* Send button (right side) */}
         <Button
           onClick={handleSend}
           disabled={!message.trim() || disabled}
