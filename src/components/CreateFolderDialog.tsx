@@ -17,7 +17,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
+import { Loader2, FolderPlus } from 'lucide-react'
 import { useCreateFolder } from '@/hooks/useFolders'
 import type { DirectusFolder } from '@/services/directus/types'
 
@@ -87,40 +87,41 @@ export function CreateFolderDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] bg-white">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create Folder</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Создать новую папку</DialogTitle>
             <DialogDescription>
-              Create a new folder to organize your documents.
+              Создайте новую папку для организации ваших документов.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-6 py-6">
             <div className="grid gap-2">
               <Label htmlFor="folder-name">
-                Folder Name <span className="text-red-500">*</span>
+                Название папки <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="folder-name"
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
-                placeholder="Enter folder name"
+                placeholder="Введите название..."
                 disabled={createFolderMutation.isPending}
                 aria-required="true"
+                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="parent-folder">Parent Folder</Label>
+              <Label htmlFor="parent-folder">Родительская папка</Label>
               <Select
                 value={parentFolderId || 'root'}
                 onValueChange={(value) => setParentFolderId(value === 'root' ? null : value)}
                 disabled={createFolderMutation.isPending}
               >
-                <SelectTrigger id="parent-folder">
-                  <SelectValue placeholder="Select parent folder" />
+                <SelectTrigger id="parent-folder" className="bg-white">
+                  <SelectValue placeholder="Выберите папку" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="root">Root (No Parent)</SelectItem>
+                <SelectContent className="bg-white">
+                  <SelectItem value="root">Корневая папка</SelectItem>
                   {folders.map((folder) => (
                     <SelectItem key={folder.id} value={folder.id}>
                       {folder.name}
@@ -142,16 +143,19 @@ export function CreateFolderDialog({
               onClick={() => handleOpenChange(false)}
               disabled={createFolderMutation.isPending}
             >
-              Cancel
+              Отмена
             </Button>
             <Button
               type="submit"
               disabled={createFolderMutation.isPending || !folderName.trim()}
+              className="bg-[#8466e4] hover:bg-[#7049f3] text-white"
             >
-              {createFolderMutation.isPending && (
+              {createFolderMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <FolderPlus className="mr-2 h-4 w-4" />
               )}
-              Create
+              Создать
             </Button>
           </DialogFooter>
         </form>
