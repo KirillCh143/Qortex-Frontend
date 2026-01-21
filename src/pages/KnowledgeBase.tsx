@@ -115,10 +115,7 @@ export default function KnowledgeBase() {
             />
           </div>
           <Button
-            onClick={() => {
-              console.log('Upload button clicked, selectedFolderId:', selectedFolderId)
-              setUploadFileOpen(true)
-            }}
+            onClick={() => setUploadFileOpen(true)}
             disabled={selectedFolderId === null}
             title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
           >
