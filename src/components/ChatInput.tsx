@@ -47,7 +47,7 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
           onChange={handleInput}
           onKeyDown={handleKeyDown}
           placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
-          className="flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent overflow-y-auto"
+          className="flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8466e4] focus:border-transparent overflow-y-auto"
           rows={1}
           style={{ minHeight: '40px', maxHeight: '96px' }}
           disabled={disabled}
@@ -55,7 +55,7 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
         <Button
           onClick={handleSend}
           disabled={!message.trim() || disabled}
-          className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 h-10"
+          className="bg-[#8466e4] hover:bg-[#7049f3] text-white rounded-full h-10 w-10 p-0 flex items-center justify-center"
         >
           <Send size={18} />
         </Button>
