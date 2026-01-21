@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, X, Download, Loader2, LayoutGrid, List, Plus, Upload } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Search, X, Download, Loader2, LayoutGrid, List, Plus, FileText, FileType, Sheet, File as FileIcon } from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
@@ -11,6 +12,46 @@ import FileListView from '@/components/FileListView'
 import { FolderTree } from '@/components/FolderTree'
 import { CreateFolderDialog } from '@/components/CreateFolderDialog'
 import { UploadFileDialog } from '@/components/UploadFileDialog'
+
+// Helper function to get file type icon and color
+const getFileTypeInfo = (mimeType: string) => {
+  if (mimeType.includes('pdf')) {
+    return {
+      icon: FileText,
+      bgColor: 'bg-red-100',
+      iconColor: 'text-red-500',
+      label: 'PDF'
+    }
+  } else if (mimeType.includes('word') || mimeType.includes('document')) {
+    return {
+      icon: FileType,
+      bgColor: 'bg-blue-100',
+      iconColor: 'text-blue-500',
+      label: 'DOCX'
+    }
+  } else if (mimeType.includes('sheet') || mimeType.includes('excel')) {
+    return {
+      icon: Sheet,
+      bgColor: 'bg-green-100',
+      iconColor: 'text-green-500',
+      label: 'XLSX'
+    }
+  } else if (mimeType.includes('text')) {
+    return {
+      icon: FileText,
+      bgColor: 'bg-gray-100',
+      iconColor: 'text-gray-500',
+      label: 'TXT'
+    }
+  } else {
+    return {
+      icon: FileIcon,
+      bgColor: 'bg-gray-100',
+      iconColor: 'text-gray-500',
+      label: 'FILE'
+    }
+  }
+}
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
@@ -118,9 +159,10 @@ export default function KnowledgeBase() {
             onClick={() => setUploadFileOpen(true)}
             disabled={selectedFolderId === null}
             title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
+            className="bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-gray-300 disabled:text-gray-500"
           >
-            <Upload className="h-4 w-4 mr-2" />
-            Upload File
+            <Plus className="h-4 w-4 mr-2" />
+            Добавить
           </Button>
         </div>
 
@@ -162,31 +204,45 @@ export default function KnowledgeBase() {
           </div>
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {files.map((file) => (
-              <Card
-                key={file.id}
-                className="cursor-pointer transition-colors hover:border-cyan-500"
-                onClick={() => setSelectedDoc(file)}
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg">{file.title}</CardTitle>
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded whitespace-nowrap">
-                      {file.type.split('/')[0]}
-                    </span>
+            {files.map((file) => {
+              const fileTypeInfo = getFileTypeInfo(file.type)
+              const FileIcon = fileTypeInfo.icon
+
+              return (
+                <Card
+                  key={file.id}
+                  className="relative cursor-pointer transition-all border border-gray-200 shadow-sm hover:border-[#8466e4]"
+                  onClick={() => setSelectedDoc(file)}
+                >
+                  {/* Checkbox in top-right corner */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <Checkbox
+                      onClick={(e) => e.stopPropagation()}
+                      className="border-gray-300 data-[state=checked]:bg-[#8466e4] data-[state=checked]:border-[#8466e4]"
+                    />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="line-clamp-2 mb-3">
-                    {file.description}
-                  </CardDescription>
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{formatFileSize(file.filesize)}</span>
-                    <span>{formatDate(new Date(file.uploaded_on))}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+
+                  <CardContent className="p-6">
+                    <div className="flex flex-col items-center text-center">
+                      {/* Large file icon with colored background */}
+                      <div className={`w-16 h-16 rounded-lg ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}>
+                        <FileIcon className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
+                      </div>
+
+                      {/* File name */}
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                        {file.title}
+                      </h3>
+
+                      {/* Metadata */}
+                      <p className="text-sm text-gray-500">
+                        Изменено {formatDate(new Date(file.uploaded_on))} • System Admin
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         ) : (
           <FileListView files={files} onSelectFile={setSelectedDoc} />

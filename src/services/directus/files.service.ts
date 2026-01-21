@@ -1,4 +1,4 @@
-import { readFiles, readFolders, createFolder, uploadFiles } from '@directus/sdk';
+import { readFiles, readFolders, createFolder } from '@directus/sdk';
 import { FilesService, DirectusFile, FoldersService, DirectusFolder } from './types';
 
 // Real implementation using Directus SDK

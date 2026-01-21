@@ -10,7 +10,7 @@ interface MessageBubbleProps {
   mode?: 'rag' | 'llm'
 }
 
-export default function MessageBubble({ role, content, timestamp, mode }: MessageBubbleProps) {
+export default function MessageBubble({ role, content, timestamp }: MessageBubbleProps) {
   const isUser = role === 'user'
 
   const formatTime = (date: Date) => {
@@ -50,12 +50,14 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
                   li: ({ children }) => <li className="text-gray-900">{children}</li>,
                   strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
                   em: ({ children }) => <em className="italic text-gray-900">{children}</em>,
-                  code: ({ inline, children }) =>
-                    inline ? (
+                  code: ({ children, className }) => {
+                    const isInline = !className?.includes('language-')
+                    return isInline ? (
                       <code className="bg-gray-200 text-gray-900 px-1 py-0.5 rounded text-sm font-mono">{children}</code>
                     ) : (
                       <code className="block bg-gray-800 text-white p-3 rounded my-3 text-sm font-mono overflow-x-auto">{children}</code>
-                    ),
+                    )
+                  },
                   pre: ({ children }) => <pre className="my-3">{children}</pre>,
                   h1: ({ children }) => <h1 className="text-xl font-bold mb-3 text-gray-900">{children}</h1>,
                   h2: ({ children }) => <h2 className="text-lg font-bold mb-2 text-gray-900">{children}</h2>,
