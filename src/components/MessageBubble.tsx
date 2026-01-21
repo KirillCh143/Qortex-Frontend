@@ -1,4 +1,4 @@
-import { User, Bot, FileSearch, MessageSquare } from 'lucide-react'
+import { User, Bot } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -31,28 +31,12 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
 
       <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[70%]`}>
         <div
-          className={`relative rounded-lg px-4 py-2 ${
+          className={`rounded-lg px-4 py-2 ${
             isUser
               ? 'bg-cyan-500 text-white'
               : 'bg-gray-100 text-gray-900'
           }`}
         >
-          {/* Mode badge for assistant messages */}
-          {!isUser && mode && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">
-              {mode === 'rag' ? (
-                <>
-                  <FileSearch size={12} />
-                  <span>RAG</span>
-                </>
-              ) : (
-                <>
-                  <MessageSquare size={12} />
-                  <span>LLM</span>
-                </>
-              )}
-            </div>
-          )}
           {isUser ? (
             <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
           ) : (
