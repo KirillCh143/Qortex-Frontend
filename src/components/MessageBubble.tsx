@@ -56,8 +56,28 @@ export default function MessageBubble({ role, content, timestamp, mode }: Messag
           {isUser ? (
             <p className="text-sm whitespace-pre-wrap break-words">{content}</p>
           ) : (
-            <div className="text-sm break-words prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-p:my-2 prose-strong:text-gray-900 prose-strong:font-semibold prose-ul:my-2 prose-ul:list-disc prose-ul:pl-5 prose-ol:my-2 prose-ol:list-decimal prose-ol:pl-5 prose-li:text-gray-900 prose-li:my-1 prose-code:bg-gray-200 prose-code:px-1 prose-code:rounded prose-pre:bg-gray-800 prose-pre:text-white prose-pre:my-2">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <div className="text-sm break-words">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ children }) => <p className="mb-3 last:mb-0 text-gray-900">{children}</p>,
+                  ul: ({ children }) => <ul className="list-disc pl-5 mb-3 space-y-1 text-gray-900">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal pl-5 mb-3 space-y-1 text-gray-900">{children}</ol>,
+                  li: ({ children }) => <li className="text-gray-900">{children}</li>,
+                  strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+                  em: ({ children }) => <em className="italic text-gray-900">{children}</em>,
+                  code: ({ inline, children }) =>
+                    inline ? (
+                      <code className="bg-gray-200 text-gray-900 px-1 py-0.5 rounded text-sm font-mono">{children}</code>
+                    ) : (
+                      <code className="block bg-gray-800 text-white p-3 rounded my-3 text-sm font-mono overflow-x-auto">{children}</code>
+                    ),
+                  pre: ({ children }) => <pre className="my-3">{children}</pre>,
+                  h1: ({ children }) => <h1 className="text-xl font-bold mb-3 text-gray-900">{children}</h1>,
+                  h2: ({ children }) => <h2 className="text-lg font-bold mb-2 text-gray-900">{children}</h2>,
+                  h3: ({ children }) => <h3 className="text-base font-bold mb-2 text-gray-900">{children}</h3>,
+                }}
+              >
                 {content}
               </ReactMarkdown>
             </div>
