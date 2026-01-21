@@ -172,7 +172,7 @@ export default function KnowledgeBase() {
             variant="outline"
             size="sm"
             onClick={() => setViewMode('grid')}
-            className={viewMode === 'grid' ? 'border-cyan-500 bg-cyan-50' : ''}
+            className={viewMode === 'grid' ? 'border-[#8466e4] bg-[#8466e4]/10 text-[#8466e4]' : 'border-gray-300 text-gray-700'}
           >
             <LayoutGrid className="h-4 w-4 mr-2" />
             Grid
@@ -181,7 +181,7 @@ export default function KnowledgeBase() {
             variant="outline"
             size="sm"
             onClick={() => setViewMode('list')}
-            className={viewMode === 'list' ? 'border-cyan-500 bg-cyan-50' : ''}
+            className={viewMode === 'list' ? 'border-[#8466e4] bg-[#8466e4]/10 text-[#8466e4]' : 'border-gray-300 text-gray-700'}
           >
             <List className="h-4 w-4 mr-2" />
             List
@@ -206,7 +206,7 @@ export default function KnowledgeBase() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {files.map((file) => {
               const fileTypeInfo = getFileTypeInfo(file.type)
-              const FileIcon = fileTypeInfo.icon
+              const IconComponent = fileTypeInfo.icon
 
               return (
                 <Card
@@ -217,7 +217,7 @@ export default function KnowledgeBase() {
                   {/* Checkbox in top-right corner */}
                   <div className="absolute top-3 right-3 z-10">
                     <Checkbox
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       className="border-gray-300 data-[state=checked]:bg-[#8466e4] data-[state=checked]:border-[#8466e4]"
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function KnowledgeBase() {
                     <div className="flex flex-col items-center text-center">
                       {/* Large file icon with colored background */}
                       <div className={`w-16 h-16 rounded-lg ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}>
-                        <FileIcon className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
+                        <IconComponent className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
                       </div>
 
                       {/* File name */}
