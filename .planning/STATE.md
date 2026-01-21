@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 
 Phase: 8 of 9 (Configuration Refactoring & UX Enhancements)
 Plan: 5 of 5 in current phase
-Status: Phase complete (parallel execution)
-Last activity: 2026-01-20 — Completed Phase 8 (all 5 plans)
+Status: Phase complete and verified (parallel execution + UAT)
+Last activity: 2026-01-21 — Completed Phase 8 UAT with 9 fixes
 
 Progress: ███████████████████████████ 31/31 plans = 100% of current milestone
 
@@ -111,6 +111,14 @@ Recent decisions affecting current work:
 - Russian text throughout (Nexus AI, Вход в систему, Войти) matching reference design
 - Native button element instead of Button component for full style control
 
+**Phase 8 UAT (User Acceptance Testing) Fixes:**
+- Custom ReactMarkdown component renderers instead of prose classes for reliable markdown rendering
+- Explicit Tailwind utilities (list-disc, pl-5, mb-3) ensure bullet points and spacing work consistently
+- Dialog and Select components use explicit bg-white instead of CSS variables for solid backgrounds
+- Two-step file upload: POST /files for binary, PATCH /files/{id} for metadata (title, description, folder)
+- Directus multipart/form-data limitation requires separate metadata update after file upload
+- Mode badge removed from message bubbles (redundant with isolated chat contexts per mode)
+
 ### Deferred Issues
 
 None yet.
@@ -129,6 +137,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-17
-Stopped at: Phase 7.5 complete (Login page redesigned with purple theme and authenticated redirect - ALL INSERTED phases complete)
+Last session: 2026-01-21
+Stopped at: Phase 8 complete and verified through UAT (9 fixes applied and tested)
 Resume file: None
