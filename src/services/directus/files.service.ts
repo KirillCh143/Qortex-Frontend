@@ -40,23 +40,41 @@ export const createRealFilesService = (client: any): FilesService => ({
   },
 
   async uploadFile(data: { file: File; title?: string; description?: string; folder: string | null }) {
+    // Get auth token from localStorage
+    const authData = localStorage.getItem('directus-auth');
+    const token = authData ? JSON.parse(authData).access_token : null;
+
     const formData = new FormData();
     formData.append('file', data.file);
 
-    if (data.title) {
-      formData.append('title', data.title);
-    }
-    if (data.description) {
-      formData.append('description', data.description);
-    }
+    // Always append title (use filename if not provided)
+    formData.append('title', data.title || data.file.name);
+
+    // Always append description (empty string if not provided)
+    formData.append('description', data.description || '');
+
+    // Always append folder (even if null for root)
     if (data.folder) {
       formData.append('folder', data.folder);
     }
 
-    const result = await client.request(uploadFiles(formData));
-    // The SDK may return a single file or an array
-    if (Array.isArray(result)) return result[0] as DirectusFile;
-    return result as DirectusFile;
+    // Use direct fetch instead of SDK to ensure metadata is handled correctly
+    const response = await fetch(`${client.url}files`, {
+      method: 'POST',
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.errors?.[0]?.message || `Failed to upload file: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    // Directus API returns { data: { ... } }
+    return (result.data || result) as DirectusFile;
   }
 });
 
