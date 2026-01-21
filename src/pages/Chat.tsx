@@ -23,7 +23,7 @@ export default function Chat() {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
         top: messagesContainerRef.current.scrollHeight,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }, [messages.length])
@@ -97,7 +97,9 @@ export default function Chat() {
                 variant={mode === 'rag' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setMode('rag')}
-                className={mode === 'rag' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'}
+                className={
+                  mode === 'rag' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'
+                }
               >
                 RAG Search
               </Button>
@@ -105,7 +107,9 @@ export default function Chat() {
                 variant={mode === 'llm' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setMode('llm')}
-                className={mode === 'llm' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'}
+                className={
+                  mode === 'llm' ? 'bg-[#8466e4] hover:bg-[#7049f3] rounded-lg' : 'rounded-lg'
+                }
               >
                 LLM Chat
               </Button>
@@ -125,7 +129,7 @@ export default function Chat() {
       </div>
 
       {/* Messages container with scroll */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 bg-white">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 bg-[#f8f9fc]">
         {isLoading ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             <p>Loading chat history...</p>
