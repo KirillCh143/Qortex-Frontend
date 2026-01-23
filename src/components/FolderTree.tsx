@@ -25,7 +25,7 @@ const FolderNode = ({
   isSelected,
   onToggle,
   onSelect,
-  children
+  children,
 }: FolderNodeProps) => {
   const handleClick = () => {
     onToggle()
@@ -37,9 +37,7 @@ const FolderNode = ({
       <div
         onClick={handleClick}
         className={`flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md transition-colors ${
-          isSelected
-            ? 'bg-cyan-500/10 text-cyan-600'
-            : 'text-gray-700 hover:bg-gray-100'
+          isSelected ? 'bg-cyan-500/10 text-cyan-600' : 'text-gray-700 hover:bg-gray-100'
         }`}
         style={{ paddingLeft: `${level * 16 + 12}px` }}
       >
@@ -65,14 +63,13 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
 
   // Build folder hierarchy
   const folderMap = new Map<string, DirectusFolder>()
-  folders.forEach(folder => folderMap.set(folder.id, folder))
+  folders.forEach((folder) => folderMap.set(folder.id, folder))
 
-  const rootFolders = folders.filter(f => f.parent === null)
-  const getChildren = (parentId: string) =>
-    folders.filter(f => f.parent === parentId)
+  const rootFolders = folders.filter((f) => f.parent === null)
+  const getChildren = (parentId: string) => folders.filter((f) => f.parent === parentId)
 
   const toggleExpand = (folderId: string) => {
-    setExpandedIds(prev => {
+    setExpandedIds((prev) => {
       const next = new Set(prev)
       if (next.has(folderId)) {
         next.delete(folderId)
@@ -99,7 +96,7 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
         onToggle={() => toggleExpand(folder.id)}
         onSelect={() => onSelectFolder(folder.id)}
       >
-        {hasChildren && children.map(child => renderFolder(child, level + 1))}
+        {hasChildren && children.map((child) => renderFolder(child, level + 1))}
       </FolderNode>
     )
   }
@@ -116,11 +113,11 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
         }`}
       >
         <Folder className="w-4 h-4 flex-shrink-0" />
-        <span className="text-sm font-medium">All Documents</span>
+        <span className="text-sm font-medium">Все документы</span>
       </div>
 
       {/* Folder hierarchy */}
-      {rootFolders.map(folder => renderFolder(folder, 0))}
+      {rootFolders.map((folder) => renderFolder(folder, 0))}
     </div>
   )
 }

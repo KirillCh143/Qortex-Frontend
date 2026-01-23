@@ -14,7 +14,7 @@ export function Header({ title, mode, onModeChange }: HeaderProps) {
 
       {/* Mode toggle - Segmented Control (only shown when mode props are provided) */}
       {mode && onModeChange && (
-        <div className="relative flex items-center gap-2 bg-gray-100 rounded-xl p-1">
+        <div className="relative flex items-center gap-2 bg-slate-100 rounded-xl p-1">
           {/* Sliding background */}
           <div
             className={`absolute top-1 bottom-1 w-32 bg-white rounded-[10px] shadow-sm transition-all duration-300 ease-in-out ${

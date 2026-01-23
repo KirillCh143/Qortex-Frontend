@@ -26,7 +26,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
       <Avatar className="h-10 w-10 shrink-0">
         <AvatarFallback
           className={
-            isUser ? 'bg-[#8466e4] text-white' : 'bg-white text-gray-900 border border-[#cbd1d8]'
+            isUser ? 'bg-[#8466e4] text-white' : 'bg-white text-gray-900 border border-slate-300'
           }
         >
           {isUser ? <User size={20} /> : <Bot size={20} />}
@@ -35,10 +35,10 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
 
       <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[50%]`}>
         <div
-          className={`rounded-2xl px-4 py-3 ${
+          className={`rounded-xl px-4 py-3 ${
             isUser
               ? 'rounded-tr-none bg-[#8466e4] text-white' // Прямой угол справа сверху
-              : 'rounded-tl-none bg-white text-gray-900 shadow-sm shadow-black/5 border border-[#e2e8f0]' // Прямой угол слева сверху
+              : 'rounded-tl-none bg-white text-gray-900 border border-slate-200' // Прямой угол слева сверху
           }`}
         >
           {isUser ? (

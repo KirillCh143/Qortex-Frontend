@@ -3,7 +3,19 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Search, X, Download, Loader2, LayoutGrid, List, Plus, FileText, FileType, Sheet, File as FileIcon } from 'lucide-react'
+import {
+  Search,
+  X,
+  Download,
+  Loader2,
+  LayoutGrid,
+  List,
+  Plus,
+  FileText,
+  FileType,
+  Sheet,
+  File as FileIcon,
+} from 'lucide-react'
 import { formatFileSize, formatDate } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
@@ -20,35 +32,35 @@ const getFileTypeInfo = (mimeType: string) => {
       icon: FileText,
       bgColor: 'bg-red-100',
       iconColor: 'text-red-500',
-      label: 'PDF'
+      label: 'PDF',
     }
   } else if (mimeType.includes('word') || mimeType.includes('document')) {
     return {
       icon: FileType,
       bgColor: 'bg-blue-100',
       iconColor: 'text-blue-500',
-      label: 'DOCX'
+      label: 'DOCX',
     }
   } else if (mimeType.includes('sheet') || mimeType.includes('excel')) {
     return {
       icon: Sheet,
       bgColor: 'bg-green-100',
       iconColor: 'text-green-500',
-      label: 'XLSX'
+      label: 'XLSX',
     }
   } else if (mimeType.includes('text')) {
     return {
       icon: FileText,
       bgColor: 'bg-gray-100',
       iconColor: 'text-gray-500',
-      label: 'TXT'
+      label: 'TXT',
     }
   } else {
     return {
       icon: FileIcon,
       bgColor: 'bg-gray-100',
       iconColor: 'text-gray-500',
-      label: 'FILE'
+      label: 'FILE',
     }
   }
 }
@@ -63,7 +75,11 @@ export default function KnowledgeBase() {
 
   // Fetch folders and files using React Query
   const { data: folders = [] } = useFolders()
-  const { data: files = [], isLoading, error } = useFiles({ search: searchQuery, folder: selectedFolderId })
+  const {
+    data: files = [],
+    isLoading,
+    error,
+  } = useFiles({ search: searchQuery, folder: selectedFolderId })
 
   // Download mutation
   const downloadMutation = useDownloadFile()
@@ -81,9 +97,10 @@ export default function KnowledgeBase() {
   }, [selectedDoc])
 
   // Get current folder name for header
-  const currentFolderName = selectedFolderId === null
-    ? 'All Documents'
-    : folders.find(f => f.id === selectedFolderId)?.name || 'Unknown Folder'
+  const currentFolderName =
+    selectedFolderId === null
+      ? 'All Documents'
+      : folders.find((f) => f.id === selectedFolderId)?.name || 'Unknown Folder'
 
   const handleDownload = () => {
     if (!selectedDoc) return
@@ -102,151 +119,165 @@ export default function KnowledgeBase() {
         // Clean up
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
-      }
+      },
     })
   }
 
   return (
-    <div className="h-full flex">
-      {/* Folder Sidebar */}
-      <div className="hidden md:block w-64 border-r border-gray-200 bg-gray-50 overflow-y-auto">
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-700">Folders</h2>
+    <div className="h-full flex flex-col bg-[#f8f9fc]">
+      <div className="p-5 h-full flex flex-col max-w-7xl mx-auto w-full">
+        {/* Header Section - Full Width */}
+        <div className="px-6 pt-6 pb-6 border bg-white rounded-xl">
+          {/* Search bar and Upload button */}
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Поиск по документам..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
             <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCreateFolderOpen(true)}
-              className="h-8 w-8 p-0"
-              title="New Folder"
+              onClick={() => setUploadFileOpen(true)}
+              disabled={selectedFolderId === null}
+              title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
+              className="bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-gray-300 disabled:text-gray-500"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4 mr-2" />
+              Добавить
             </Button>
           </div>
-          <FolderTree
-            folders={folders}
-            selectedFolderId={selectedFolderId}
-            onSelectFolder={setSelectedFolderId}
-          />
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
-            <p className="mt-2 text-gray-600">Browse Internal Documentation</p>
-            <div className="mt-2 text-sm text-gray-600">
-              {currentFolderName} • {files.length} documents
+        {/* Two Column Layout */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Folder Sidebar */}
+          <div className="hidden md:block w-64 border-r border-gray-200 overflow-y-auto">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCreateFolderOpen(true)}
+                  className="h-8 w-8 p-0"
+                  title="New Folder"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <FolderTree
+                folders={folders}
+                selectedFolderId={selectedFolderId}
+                onSelectFolder={setSelectedFolderId}
+              />
             </div>
           </div>
 
-        {/* Search bar and Upload button */}
-        <div className="flex gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search documents..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Button
-            onClick={() => setUploadFileOpen(true)}
-            disabled={selectedFolderId === null}
-            title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
-            className="bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-gray-300 disabled:text-gray-500"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Добавить
-          </Button>
-        </div>
+          {/* Document List Section */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {/* Folder info and View toggle */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm text-gray-600">
+                {currentFolderName} • {files.length} documents
+              </div>
 
-        {/* View toggle */}
-        <div className="flex gap-2 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setViewMode('grid')}
-            className={viewMode === 'grid' ? 'border-[#8466e4] bg-[#8466e4]/10 text-[#8466e4]' : 'border-gray-300 text-gray-700'}
-          >
-            <LayoutGrid className="h-4 w-4 mr-2" />
-            Grid
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setViewMode('list')}
-            className={viewMode === 'list' ? 'border-[#8466e4] bg-[#8466e4]/10 text-[#8466e4]' : 'border-gray-300 text-gray-700'}
-          >
-            <List className="h-4 w-4 mr-2" />
-            List
-          </Button>
-        </div>
+              {/* View toggle - Segmented Control */}
+              <div className="relative inline-flex items-center gap-2 bg-gray-100 rounded-xl p-1">
+                {/* Sliding background */}
+                <div
+                  className={`absolute top-1 bottom-1 w-24 bg-white rounded-[10px] shadow-sm transition-all duration-300 ease-in-out ${
+                    viewMode === 'grid' ? 'left-1' : 'left-[100px]'
+                  }`}
+                />
 
-        {/* Document list */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-cyan-500 mx-auto" />
-            <p className="mt-4 text-gray-500">Loading documents...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12 text-red-500">
-            <p>Error loading documents: {error instanceof Error ? error.message : 'Unknown error'}</p>
-          </div>
-        ) : files.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <p>No documents found</p>
-          </div>
-        ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {files.map((file) => {
-              const fileTypeInfo = getFileTypeInfo(file.type)
-              const IconComponent = fileTypeInfo.icon
-
-              return (
-                <Card
-                  key={file.id}
-                  className="relative cursor-pointer transition-all border border-gray-200 shadow-sm hover:border-[#8466e4]"
-                  onClick={() => setSelectedDoc(file)}
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`relative z-10 w-24 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
+                    viewMode === 'grid' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
+                  }`}
                 >
-                  {/* Checkbox in top-right corner */}
-                  <div className="absolute top-3 right-3 z-10">
-                    <Checkbox
-                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                      className="border-gray-300 data-[state=checked]:bg-[#8466e4] data-[state=checked]:border-[#8466e4]"
-                    />
-                  </div>
+                  <LayoutGrid className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`relative z-10 w-24 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
+                    viewMode === 'list' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
 
-                  <CardContent className="p-6">
-                    <div className="flex flex-col items-center text-center">
-                      {/* Large file icon with colored background */}
-                      <div className={`w-16 h-16 rounded-lg ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}>
-                        <IconComponent className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
+            {/* Document list */}
+            {isLoading ? (
+              <div className="text-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-cyan-500 mx-auto" />
+                <p className="mt-4 text-gray-500">Loading documents...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12 text-red-500">
+                <p>
+                  Error loading documents:{' '}
+                  {error instanceof Error ? error.message : 'Unknown error'}
+                </p>
+              </div>
+            ) : files.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <p>No documents found</p>
+              </div>
+            ) : viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {files.map((file) => {
+                  const fileTypeInfo = getFileTypeInfo(file.type)
+                  const IconComponent = fileTypeInfo.icon
+
+                  return (
+                    <Card
+                      key={file.id}
+                      className="relative cursor-pointer transition-all border border-gray-200 shadow-sm hover:border-[#8466e4]"
+                      onClick={() => setSelectedDoc(file)}
+                    >
+                      {/* Checkbox in top-right corner */}
+                      <div className="absolute top-3 right-3 z-10">
+                        <Checkbox
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                          className="border-gray-300 data-[state=checked]:bg-[#8466e4] data-[state=checked]:border-[#8466e4]"
+                        />
                       </div>
 
-                      {/* File name */}
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                        {file.title}
-                      </h3>
+                      <CardContent className="p-6">
+                        <div className="flex flex-col items-center text-center">
+                          {/* Large file icon with colored background */}
+                          <div
+                            className={`w-16 h-16 rounded-lg ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}
+                          >
+                            <IconComponent className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
+                          </div>
 
-                      {/* Metadata */}
-                      <p className="text-sm text-gray-500">
-                        Изменено {formatDate(new Date(file.uploaded_on))} • System Admin
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
+                          {/* File name */}
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                            {file.title}
+                          </h3>
+
+                          {/* Metadata */}
+                          <p className="text-sm text-gray-500">
+                            Изменено {formatDate(new Date(file.uploaded_on))} • System Admin
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
+            ) : (
+              <FileListView files={files} onSelectFile={setSelectedDoc} />
+            )}
           </div>
-        ) : (
-          <FileListView files={files} onSelectFile={setSelectedDoc} />
-        )}
         </div>
       </div>
 
@@ -254,10 +285,7 @@ export default function KnowledgeBase() {
       {selectedDoc && (
         <>
           {/* Overlay */}
-          <div
-            className="fixed inset-0 bg-black/50 z-50"
-            onClick={() => setSelectedDoc(null)}
-          />
+          <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setSelectedDoc(null)} />
 
           {/* Panel */}
           <div className="fixed right-0 top-0 h-full w-full md:w-1/2 bg-white shadow-xl z-50 overflow-y-auto transition-transform duration-300">
@@ -273,9 +301,7 @@ export default function KnowledgeBase() {
 
               {/* Document header */}
               <div className="mb-6 pr-12">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  {selectedDoc.title}
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h2>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
                     {selectedDoc.type}
@@ -292,7 +318,9 @@ export default function KnowledgeBase() {
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">File size:</span>
-                  <span className="text-sm text-gray-600">{formatFileSize(selectedDoc.filesize)}</span>
+                  <span className="text-sm text-gray-600">
+                    {formatFileSize(selectedDoc.filesize)}
+                  </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">Uploaded by:</span>
@@ -308,11 +336,7 @@ export default function KnowledgeBase() {
 
               {/* Action buttons */}
               <div>
-                <Button
-                  variant="outline"
-                  onClick={handleDownload}
-                  className="w-full"
-                >
+                <Button variant="outline" onClick={handleDownload} className="w-full">
                   <Download className="h-4 w-4 mr-2" />
                   Download
                 </Button>
