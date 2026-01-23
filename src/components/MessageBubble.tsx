@@ -33,7 +33,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
         </AvatarFallback>
       </Avatar>
 
-      <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[70%]`}>
+      <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[50%]`}>
         <div
           className={`rounded-2xl px-4 py-3 ${
             isUser

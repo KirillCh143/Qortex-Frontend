@@ -30,7 +30,7 @@ function App() {
         path="/chat"
         element={
           <ProtectedRoute>
-            <Layout title="Chat">
+            <Layout hideHeader>
               <Chat />
             </Layout>
           </ProtectedRoute>

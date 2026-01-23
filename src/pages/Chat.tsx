@@ -88,7 +88,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-full">
       {/* Header with mode toggle */}
-      <Header title="Chat" mode={mode} onModeChange={setMode} />
+      <Header mode={mode} onModeChange={setMode} />
 
       {/* Messages container with scroll */}
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 bg-[#f8f9fc]">
@@ -105,7 +105,7 @@ export default function Chat() {
             <p>Start a conversation by typing a message below</p>
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             {messages.map((message, index) => (
               <MessageBubble
                 key={index}

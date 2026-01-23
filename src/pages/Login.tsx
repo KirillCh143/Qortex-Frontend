@@ -143,7 +143,7 @@ export default function Login() {
               placeholder="example@mail.com"
               required
               disabled={submitting}
-              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 hover:border-slate-300 rounded-xl px-5 text-slate-900 placeholder-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#8466e4] transition-all"
+              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 hover:border-slate-300 rounded-xl px-5 text-slate-900 placeholder-slate-400 focus-visible:ring-0 focus:border-[#8466e4] transition-all"
             />
           </div>
 
@@ -166,7 +166,7 @@ export default function Login() {
               placeholder="••••••••"
               required
               disabled={submitting}
-              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 hover:border-slate-300 rounded-xl px-5 text-slate-900 placeholder-slate-400 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#8466e4] transition-all"
+              className="w-full h-14 bg-slate-50/50 border border-slate-200/60 hover:border-slate-300 rounded-xl px-5 text-slate-900 placeholder-slate-400 focus-visible:ring-0 focus:border-[#8466e4] transition-all"
             />
           </div>
 
