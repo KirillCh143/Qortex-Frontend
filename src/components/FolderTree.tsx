@@ -36,8 +36,10 @@ const FolderNode = ({
     <div>
       <div
         onClick={handleClick}
-        className={`flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md transition-colors ${
-          isSelected ? 'bg-cyan-500/10 text-cyan-600' : 'text-gray-700 hover:bg-gray-100'
+        className={`flex items-center mb-2 gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
+          isSelected
+            ? 'bg-[#7049f3]/90 text-white shadow-lg shadow-indigo-500/20'
+            : 'text-gray-700 hover:bg-indigo-100'
         }`}
         style={{ paddingLeft: `${level * 16 + 12}px` }}
       >
@@ -106,10 +108,10 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
       {/* All Documents option */}
       <div
         onClick={() => onSelectFolder(null)}
-        className={`flex items-center gap-2 px-3 py-2 cursor-pointer rounded-md transition-colors ${
+        className={`flex mb-2 items-center gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
           selectedFolderId === null
-            ? 'bg-cyan-500/10 text-cyan-600'
-            : 'text-gray-700 hover:bg-gray-100'
+            ? 'bg-[#7049f3]/90 text-white shadow-lg shadow-indigo-500/20'
+            : 'text-gray-700 hover:bg-indigo-100'
         }`}
       >
         <Folder className="w-4 h-4 flex-shrink-0" />

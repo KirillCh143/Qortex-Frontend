@@ -30,6 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.5: Login page design overhaul and redirect fix (INSERTED)** - Urgent work discovered after Phase 7.4
 - [x] **Phase 8: Configuration Refactoring & UX Enhancements** - Remove settings UI, add markdown support, isolate chat contexts, fix layout, add file management
 - [x] **Phase 9: UI Overhaul** - Purple theme, Russian localization, file type icons, and modern visual polish
+- [ ] **Phase 10: Knowledgebase page edits** - TBD
 
 ## Phase Details
 
@@ -287,10 +288,21 @@ Phase 9 completed comprehensive UI overhaul with purple theme and Russian locali
    - Consistent spacing and padding throughout
    - Professional, modern appearance
 
+### Phase 10: Knowledgebase page edits
+**Goal**: [To be planned]
+**Depends on**: Phase 9
+**Plans**: 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 10 to break down)
+
+**Details:**
+[To be added during planning]
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9 → 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -308,3 +320,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 7.5. Login page design overhaul and redirect fix (INSERTED) | 1/1 | Complete | 2026-01-17 |
 | 8. Configuration Refactoring & UX Enhancements | 5/5 | Complete | 2026-01-20 |
 | 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
+| 10. Knowledgebase page edits | 0/0 | Not planned | - |

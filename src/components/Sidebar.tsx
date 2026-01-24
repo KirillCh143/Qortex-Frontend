@@ -1,7 +1,6 @@
 import { MessageSquare, BookOpen, Settings, LogOut } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom' // 1. Импортируем хук
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -14,11 +13,12 @@ export function Sidebar() {
   // Общие стили для всех кнопок (отступы, ширина, скругление)
   const baseClasses = 'w-full justify-start gap-3 rounded-[8px]'
 
-  // Стили для АКТИВНОЙ кнопки (Фиолетовый фон, белый текст)
-  const activeClasses = 'bg-[#7049f3] text-white hover:bg-[#7049f3]/90'
+  // Стили для АКТИВНОЙ кнопки (Фиолетовый фон, белый текст, )
+  const activeClasses =
+    'bg-[#7049f3] text-white hover:bg-[#7049f3]/90 shadow-lg shadow-indigo-500/20'
 
   // Стили для ОБЫЧНОЙ кнопки (Прозрачный фон, черный текст, серый при наведении)
-  const inactiveClasses = 'bg-transparent text-black hover:bg-gray-100'
+  const inactiveClasses = 'bg-transparent text-black hover:bg-indigo-100'
 
   const handleLogout = async () => {
     try {
@@ -40,17 +40,15 @@ export function Sidebar() {
 
   return (
     // Важно: поменял bg-primary на bg-white, чтобы черный текст был виден
-    <div className="flex h-screen w-64 flex-col justify-between bg-white border-r text-black">
+    <div className="flex h-screen w-64 flex-col justify-between bg-[#f9fafb] border-r text-black">
       <div>
         {/* Branding Section */}
         <div className="flex items-center gap-4 p-5">
-          <div className="size-10 rounded-xl bg-gradient-to-br from-[#7e5bf4] to-[#7049f3] flex items-center justify-center text-white shadow-xl shadow-primary/50">
+          <div className="size-10 rounded-xl bg-gradient-to-br from-[#7e5bf4] to-[#7049f3] flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
             <img src="/logo.svg" alt="Logo" className="h-7 w-7" />
           </div>
           <h1 className="text-lg font-bold">База знаний</h1>
         </div>
-
-        <Separator className="bg-white" />
 
         {/* "Меню" text */}
         <div className="text-xs uppercase text-gray-500 font-semibold ml-8 mt-4">Меню</div>
@@ -98,8 +96,7 @@ export function Sidebar() {
       </div>
 
       {/* User Section at Bottom */}
-      <div className="p-4">
-        <Separator className="mb-4" />
+      <div className="p-4 pt-6 pb-6 border-t">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback className="bg-gradient-to-br from-[#8466e4] to-[#7049f3] text-white font-semibold">
@@ -115,10 +112,10 @@ export function Sidebar() {
             variant="ghost"
             size="icon"
             onClick={handleLogout}
-            className="hover:bg-gray-100 flex-shrink-0"
+            className="hover:bg-indigo-50 flex-shrink-0"
             title="Выйти"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </div>

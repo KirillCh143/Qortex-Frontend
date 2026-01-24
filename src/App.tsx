@@ -41,7 +41,10 @@ function App() {
         path="/knowledge-base"
         element={
           <ProtectedRoute>
-            <Layout title="Knowledge Base">
+            <Layout
+              title="Документы"
+              subtitle="Централизованное хранилище корпоративных документов"
+            >
               <KnowledgeBase />
             </Layout>
           </ProtectedRoute>
@@ -52,7 +55,7 @@ function App() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <Layout title="Settings">
+            <Layout title="Settings" subtitle="Manage your account preferences">
               <Settings />
             </Layout>
           </ProtectedRoute>

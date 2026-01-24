@@ -163,6 +163,16 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Используем переменную, если она есть. Если нет - сдвигаем на 100% (fallback) */
+    transform: translateX(var(--marquee-x, -100%));
+  }
+}
+
 /* Адаптация для мобильных и темной темы */
 @media (max-width: 768px) {
   .bg-fade-bar {

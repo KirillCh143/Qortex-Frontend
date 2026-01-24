@@ -1,20 +1,26 @@
 interface HeaderProps {
   title?: string
+  subtitle?: string
   mode?: 'rag' | 'llm'
   onModeChange?: (mode: 'rag' | 'llm') => void
 }
 
-export function Header({ title, mode, onModeChange }: HeaderProps) {
+export function Header({ title, subtitle, mode, onModeChange }: HeaderProps) {
   return (
     <header
-      className={`w-full h-20 bg-white border-b flex items-center px-6 py-4 ${title ? 'justify-between' : 'justify-center'}`}
+      className={`w-full h-20 bg-[#fdfefe] border-b flex items-center px-6 py-4 ${title ? 'justify-between' : 'justify-center'}`}
     >
       {/* Page title section */}
-      {title && <h1 className="text-2xl font-semibold text-[#1e3a8a]">{title}</h1>}
+      {title && (
+        <div>
+          <h1 className="text-xl font-bold text-[#242424]">{title}</h1>
+          {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+        </div>
+      )}
 
       {/* Mode toggle - Segmented Control (only shown when mode props are provided) */}
       {mode && onModeChange && (
-        <div className="relative flex items-center gap-2 bg-slate-100 rounded-xl p-1">
+        <div className="relative flex items-center gap-2 bg-indigo-100 rounded-xl p-1">
           {/* Sliding background */}
           <div
             className={`absolute top-1 bottom-1 w-32 bg-white rounded-[10px] shadow-sm transition-all duration-300 ease-in-out ${

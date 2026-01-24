@@ -46,7 +46,7 @@ export default function ChatInput({
   }
 
   return (
-    <div className="bg-[#ffffff] p-5 border-t">
+    <div className="p-5 bg-[#fdfefe]">
       {/* Constrain content to match message area width */}
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-2 items-end">
@@ -55,14 +55,15 @@ export default function ChatInput({
             <Button
               onClick={onClearHistory}
               disabled={messageCount === 0}
-              className="rounded-xl w-14 h-14 flex items-center justify-center bg-white border border-slate-300 text-slate-400 hover:border-[#f47c7c] hover:text-[#f15757] transition-all"
+              title="Очистить историю чата"
+              className="mb-[1px] shadow-xl shadow-indigo-50 rounded-xl w-14 h-14 flex items-center justify-center bg-white/70 backdrop-blur-sm border border-slate-300 text-slate-400 hover:bg-[#fef2f2] hover:border-[#f47c7c] hover:text-[#f15757] transition-all"
             >
-              <Trash2 size={16} />
+              <Trash2 className="h-5 w-5" />
             </Button>
           )}
 
           {/* Input capsule with textarea and send button */}
-          <div className="mb-[2px] flex-1 flex items-end gap-2 rounded-xl px-3 py-2 bg-white border border-slate-300 hover:border-slate-400 focus-within:border-[#8466e4] focus-within:hover:border-[#8466e4] transition-all">
+          <div className="shadow-xl shadow-indigo-50 mb-[2px] flex-1 flex items-end gap-2 rounded-xl px-2 py-2 bg-white/70 backdrop-blur-sm border border-slate-300 hover:border-slate-400 focus-within:border-[#8466e4] focus-within:hover:border-[#8466e4] transition-all">
             {/* Text input area */}
             <textarea
               ref={textareaRef}

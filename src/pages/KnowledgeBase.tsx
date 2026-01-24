@@ -3,6 +3,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   Search,
   X,
   Download,
@@ -15,9 +23,10 @@ import {
   FileType,
   Sheet,
   File as FileIcon,
+  Trash2,
 } from 'lucide-react'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
-import { useFiles, useDownloadFile } from '@/hooks/useFiles'
+import { useFiles, useDownloadFile, useDeleteFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
 import type { DirectusFile } from '@/services/directus/types'
 import FileListView from '@/components/FileListView'
@@ -88,6 +97,8 @@ const getPluralForm = (count: number) => {
 
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
@@ -102,14 +113,32 @@ export default function KnowledgeBase() {
     error,
   } = useFiles({ search: searchQuery, folder: selectedFolderId })
 
-  // Download mutation
+  // Mutations
   const downloadMutation = useDownloadFile()
+  const deleteMutation = useDeleteFile()
+
+  // Trigger panel animation when selectedDoc changes
+  useEffect(() => {
+    if (selectedDoc) {
+      // Small delay to ensure CSS transition applies
+      setTimeout(() => setIsPanelOpen(true), 10)
+    } else {
+      setIsPanelOpen(false)
+    }
+  }, [selectedDoc])
+
+  // Handle closing detail panel with animation
+  const handleClosePanel = () => {
+    setIsPanelOpen(false)
+    // Wait for animation to complete before clearing selectedDoc
+    setTimeout(() => setSelectedDoc(null), 300)
+  }
 
   // Handle escape key to close detail panel
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && selectedDoc) {
-        setSelectedDoc(null)
+        handleClosePanel()
       }
     }
 
@@ -140,6 +169,22 @@ export default function KnowledgeBase() {
         // Clean up
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
+      },
+    })
+  }
+
+  const handleDelete = () => {
+    if (!selectedDoc) return
+
+    deleteMutation.mutate(selectedDoc.id, {
+      onSuccess: () => {
+        console.log('File deleted successfully')
+        setDeleteDialogOpen(false)
+        handleClosePanel()
+      },
+      onError: (error) => {
+        console.error('Failed to delete file:', error)
+        setDeleteDialogOpen(false)
       },
     })
   }
@@ -308,27 +353,41 @@ export default function KnowledgeBase() {
       {/* Detail Panel */}
       {selectedDoc && (
         <>
-          {/* Overlay */}
-          <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setSelectedDoc(null)} />
+          {/* Overlay with fade animation */}
+          <div
+            className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${
+              isPanelOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={handleClosePanel}
+          />
 
-          {/* Panel */}
-          <div className="fixed right-0 top-0 h-full w-full md:w-1/2 bg-white shadow-xl z-50 overflow-y-auto transition-transform duration-300">
+          {/* Panel with slide-in animation */}
+          <div
+            className={`fixed right-0 top-0 h-full w-full md:w-1/2 bg-white shadow-xl z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+              isPanelOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          >
             <div className="p-6">
               {/* Close button */}
               <button
-                onClick={() => setSelectedDoc(null)}
+                onClick={handleClosePanel}
                 className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
                 aria-label="Close"
               >
                 <X className="h-5 w-5 text-gray-500" />
               </button>
 
-              {/* Document header */}
+              {/* Panel header */}
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">Информация о файле</h2>
+              </div>
+
+              {/* Document title and file type badge */}
               <div className="mb-6 pr-12">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h2>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h3>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
-                    {selectedDoc.type}
+                    {getFileTypeInfo(selectedDoc.type).label}
                   </span>
                   <span>{formatDateRussian(new Date(selectedDoc.uploaded_on))}</span>
                 </div>
@@ -337,17 +396,17 @@ export default function KnowledgeBase() {
               {/* Metadata section */}
               <div className="mb-6 space-y-2">
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Filename:</span>
+                  <span className="text-sm font-medium text-gray-700">Имя файла:</span>
                   <span className="text-sm text-gray-600">{selectedDoc.filename_download}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">File size:</span>
+                  <span className="text-sm font-medium text-gray-700">Размер:</span>
                   <span className="text-sm text-gray-600">
                     {formatFileSize(selectedDoc.filesize)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Uploaded by:</span>
+                  <span className="text-sm font-medium text-gray-700">Загрузил:</span>
                   <span className="text-sm text-gray-600">
                     {selectedDoc.user_created
                       ? `${selectedDoc.user_created.first_name} ${selectedDoc.user_created.last_name}`
@@ -358,21 +417,74 @@ export default function KnowledgeBase() {
 
               {/* Description section */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Описание</h3>
                 <p className="text-gray-700 leading-relaxed">{selectedDoc.description}</p>
               </div>
 
               {/* Action buttons */}
-              <div>
-                <Button variant="outline" onClick={handleDownload} className="w-full">
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleDownload}
+                  disabled={downloadMutation.isPending}
+                  className="flex-1"
+                >
+                  {downloadMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Скачать
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  disabled={deleteMutation.isPending}
+                  className="flex-1"
+                >
+                  {deleteMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4 mr-2" />
+                  )}
+                  Удалить
                 </Button>
               </div>
             </div>
           </div>
         </>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Удалить файл?</DialogTitle>
+            <DialogDescription>
+              Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleteMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Удаление...
+                </>
+              ) : (
+                'Удалить'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Create Folder Dialog */}
       <CreateFolderDialog
