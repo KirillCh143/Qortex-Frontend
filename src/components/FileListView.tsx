@@ -54,8 +54,8 @@ export default function FileListView({ files, onSelectFile }: FileListViewProps)
     <div className="flex flex-col gap-3">
       {files.map((file) => {
         const { Icon, bgColor, textColor, label } = getFileTypeInfo(file.type)
-        const uploaderName = file.user_created
-          ? `${file.user_created.first_name} ${file.user_created.last_name}`
+        const uploaderName = file.uploaded_by
+          ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name}`
           : 'Неизвестный'
 
         return (

@@ -306,8 +306,8 @@ export default function KnowledgeBase() {
                 {files.map((file) => {
                   const fileTypeInfo = getFileTypeInfo(file.type)
                   const IconComponent = fileTypeInfo.icon
-                  const uploaderName = file.user_created
-                    ? `${file.user_created.first_name} ${file.user_created.last_name}`
+                  const uploaderName = file.uploaded_by
+                    ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name}`
                     : 'Неизвестный'
 
                   return (
@@ -408,8 +408,8 @@ export default function KnowledgeBase() {
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">Загрузил:</span>
                   <span className="text-sm text-gray-600">
-                    {selectedDoc.user_created
-                      ? `${selectedDoc.user_created.first_name} ${selectedDoc.user_created.last_name}`
+                    {selectedDoc.uploaded_by
+                      ? `${selectedDoc.uploaded_by.first_name} ${selectedDoc.uploaded_by.last_name}`
                       : 'Неизвестный'}
                   </span>
                 </div>
