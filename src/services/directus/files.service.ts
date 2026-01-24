@@ -96,6 +96,24 @@ export const createRealFilesService = (client: any): FilesService => ({
 
     // Return the updated file data
     return (finalResult.data || finalResult) as DirectusFile;
+  },
+
+  async deleteFile(id: string) {
+    // Get auth token from localStorage
+    const authData = localStorage.getItem('directus-auth');
+    const token = authData ? JSON.parse(authData).access_token : null;
+
+    const response = await fetch(`${client.url}files/${id}`, {
+      method: 'DELETE',
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` })
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.errors?.[0]?.message || `Failed to delete file: ${response.statusText}`);
+    }
   }
 });
 

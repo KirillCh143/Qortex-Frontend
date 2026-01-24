@@ -75,6 +75,16 @@ export const createMockFilesService = (): FilesService => {
       };
       console.log('Mock: Uploaded file', newFile);
       return newFile;
+    },
+
+    async deleteFile(id: string) {
+      // In mock mode, find and remove file from mockFiles array
+      const index = mockFiles.findIndex(file => file.id === id);
+      if (index === -1) {
+        throw new Error(`File not found: ${id}`);
+      }
+      mockFiles.splice(index, 1);
+      console.log('Mock: Deleted file', id);
     }
   };
 };

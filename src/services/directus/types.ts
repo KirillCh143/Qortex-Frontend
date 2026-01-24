@@ -29,6 +29,7 @@ export interface FilesService {
   getFiles: (params?: { limit?: number; search?: string; folder?: string | 'root' }) => Promise<DirectusFile[]>;
   downloadFile: (id: string) => Promise<Blob>;
   uploadFile: (data: { file: File; title?: string; description?: string; folder: string | null }) => Promise<DirectusFile>;
+  deleteFile: (id: string) => Promise<void>;
 }
 
 // ChatMessage interface matching Directus chat_messages collection schema

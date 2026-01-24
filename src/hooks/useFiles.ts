@@ -40,3 +40,19 @@ export const useUploadFile = () => {
     }
   });
 };
+
+// Hook for deleting files
+export const useDeleteFile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => filesService.deleteFile(id),
+    onSuccess: () => {
+      // Invalidate files query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['files'] });
+    },
+    onError: (error) => {
+      console.error('Failed to delete file:', error);
+    }
+  });
+};
