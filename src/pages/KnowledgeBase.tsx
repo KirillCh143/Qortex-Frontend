@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Search,
   X,
@@ -10,13 +9,14 @@ import {
   Loader2,
   LayoutGrid,
   List,
-  Plus,
+  FilePlus,
+  FolderPlus,
   FileText,
   FileType,
   Sheet,
   File as FileIcon,
 } from 'lucide-react'
-import { formatFileSize, formatDate } from '@/lib/mockDocuments'
+import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
 import type { DirectusFile } from '@/services/directus/types'
@@ -24,6 +24,7 @@ import FileListView from '@/components/FileListView'
 import { FolderTree } from '@/components/FolderTree'
 import { CreateFolderDialog } from '@/components/CreateFolderDialog'
 import { UploadFileDialog } from '@/components/UploadFileDialog'
+import AutoScrollTitle from '@/components/AutoScrollTitle'
 
 // Helper function to get file type icon and color
 const getFileTypeInfo = (mimeType: string) => {
@@ -65,6 +66,26 @@ const getFileTypeInfo = (mimeType: string) => {
   }
 }
 
+// Helper function for Russian pluralization of file count
+const getPluralForm = (count: number) => {
+  const lastDigit = count % 10
+  const lastTwoDigits = count % 100
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return 'файлов'
+  }
+
+  if (lastDigit === 1) {
+    return 'файл'
+  }
+
+  if (lastDigit >= 2 && lastDigit <= 4) {
+    return 'файла'
+  }
+
+  return 'файлов'
+}
+
 export default function KnowledgeBase() {
   const [selectedDoc, setSelectedDoc] = useState<DirectusFile | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -99,7 +120,7 @@ export default function KnowledgeBase() {
   // Get current folder name for header
   const currentFolderName =
     selectedFolderId === null
-      ? 'All Documents'
+      ? ' Все документы'
       : folders.find((f) => f.id === selectedFolderId)?.name || 'Unknown Folder'
 
   const handleDownload = () => {
@@ -124,92 +145,97 @@ export default function KnowledgeBase() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-[#f8f9fc]">
-      <div className="p-5 h-full flex flex-col max-w-7xl mx-auto w-full">
-        {/* Header Section - Full Width */}
-        <div className="px-6 pt-6 pb-6 border bg-white rounded-xl">
-          {/* Search bar and Upload button */}
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Поиск по документам..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+    <div className="h-full flex bg-[#fdfefe]">
+      {/* Folder Sidebar - Far Left */}
+      <div className="hidden md:block w-74 border-r border-slate-300 overflow-y-auto bg-[#fdfefe]">
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
             <Button
-              onClick={() => setUploadFileOpen(true)}
-              disabled={selectedFolderId === null}
-              title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
-              className="bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-gray-300 disabled:text-gray-500"
+              size="sm"
+              onClick={() => setCreateFolderOpen(true)}
+              className="h-10 w-10 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3] text-white hover:bg-[#7049f3]/90"
+              title="New Folder"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Добавить
+              <FolderPlus className="h-4 w-4" />
             </Button>
           </div>
+          <FolderTree
+            folders={folders}
+            selectedFolderId={selectedFolderId}
+            onSelectFolder={setSelectedFolderId}
+          />
         </div>
+      </div>
 
-        {/* Two Column Layout */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Folder Sidebar */}
-          <div className="hidden md:block w-64 border-r border-gray-200 overflow-y-auto">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCreateFolderOpen(true)}
-                  className="h-8 w-8 p-0"
-                  title="New Folder"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+      {/* Main Content Area - Centered with max-w-7xl */}
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full flex flex-col max-w-7xl mx-auto w-full p-5 pb-8">
+          {/* Header Section - Search Bar with Upload Button */}
+          <div className="pb-6 pt-2 ">
+            <div className="flex gap-3 items-center">
+              <div className="relative flex-1 shadow-lg shadow-indigo-500/10 rounded-xl">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Поиск по документам..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-              <FolderTree
-                folders={folders}
-                selectedFolderId={selectedFolderId}
-                onSelectFolder={setSelectedFolderId}
-              />
+
+              {/* Upload button */}
+              <Button
+                onClick={() => setUploadFileOpen(true)}
+                disabled={selectedFolderId === null}
+                title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
+                className="p-7 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-200 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/30"
+              >
+                <FilePlus className="h-5 w-5 mr-2 ml-1" />
+                Добавить
+              </Button>
             </div>
           </div>
 
           {/* Document List Section */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto pt-2 rounded-xl bg-[#fdfefe]">
             {/* Folder info and View toggle */}
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm text-gray-600">
-                {currentFolderName} • {files.length} documents
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-bold text-[#242424]">{currentFolderName}</h1>
+                <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-medium rounded-full">
+                  {files.length} {getPluralForm(files.length)}
+                </span>
               </div>
 
-              {/* View toggle - Segmented Control */}
-              <div className="relative inline-flex items-center gap-2 bg-gray-100 rounded-xl p-1">
-                {/* Sliding background */}
-                <div
-                  className={`absolute top-1 bottom-1 w-24 bg-white rounded-[10px] shadow-sm transition-all duration-300 ease-in-out ${
-                    viewMode === 'grid' ? 'left-1' : 'left-[100px]'
-                  }`}
-                />
+              <div className="flex items-center gap-3">
+                {/* View toggle - Segmented Control */}
+                <div className="w-26 relative inline-flex items-center gap-2 bg-indigo-100 rounded-xl p-1">
+                  {/* Sliding background */}
+                  <div
+                    className={`absolute top-1 bottom-1 w-12 bg-white rounded-[10px] shadow-sm transition-all duration-300 ease-in-out ${
+                      viewMode === 'grid' ? 'left-1' : 'left-[52px]'
+                    }`}
+                  />
 
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`relative z-10 w-24 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
-                    viewMode === 'grid' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`relative z-10 w-24 px-4 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
-                    viewMode === 'list' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
-                  }`}
-                >
-                  <List className="h-4 w-4" />
-                </button>
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`relative ml-[3px] z-10 w-14 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center ${
+                      viewMode === 'grid' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`relative mr-[2px] z-10 w-14 py-2 rounded-[10px] text-sm font-medium transition-colors duration-200 flex items-center justify-center ${
+                      viewMode === 'list' ? 'text-gray-900' : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -231,42 +257,40 @@ export default function KnowledgeBase() {
                 <p>No documents found</p>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {files.map((file) => {
                   const fileTypeInfo = getFileTypeInfo(file.type)
                   const IconComponent = fileTypeInfo.icon
+                  const uploaderName = file.user_created
+                    ? `${file.user_created.first_name} ${file.user_created.last_name}`
+                    : 'Неизвестный'
 
                   return (
                     <Card
                       key={file.id}
-                      className="relative cursor-pointer transition-all border border-gray-200 shadow-sm hover:border-[#8466e4]"
+                      className="group relative rounded-xl shadow-none cursor-pointer transition-all bg-white border border-indigo-200 hover:border-[#8466e4]"
                       onClick={() => setSelectedDoc(file)}
                     >
-                      {/* Checkbox in top-right corner */}
-                      <div className="absolute top-3 right-3 z-10">
-                        <Checkbox
-                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                          className="border-gray-300 data-[state=checked]:bg-[#8466e4] data-[state=checked]:border-[#8466e4]"
-                        />
-                      </div>
-
                       <CardContent className="p-6">
-                        <div className="flex flex-col items-center text-center">
+                        <div className="flex flex-col items-start text-start">
                           {/* Large file icon with colored background */}
                           <div
-                            className={`w-16 h-16 rounded-lg ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}
+                            className={`w-16 h-16 rounded-xl ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}
                           >
                             <IconComponent className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
                           </div>
 
                           {/* File name */}
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                            {file.title}
-                          </h3>
+                          <AutoScrollTitle text={file.title} />
 
-                          {/* Metadata */}
-                          <p className="text-sm text-gray-500">
-                            Изменено {formatDate(new Date(file.uploaded_on))} • System Admin
+                          {/* Uploader name */}
+                          <p className="text-sm text-gray-600 font-medium">
+                            Загрузил: {uploaderName}
+                          </p>
+
+                          {/* Date, size, and type */}
+                          <p className="text-xs text-gray-500">
+                            {formatDateRussian(new Date(file.uploaded_on))} • {formatFileSize(file.filesize)} • {fileTypeInfo.label}
                           </p>
                         </div>
                       </CardContent>
@@ -306,7 +330,7 @@ export default function KnowledgeBase() {
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
                     {selectedDoc.type}
                   </span>
-                  <span>{formatDate(new Date(selectedDoc.uploaded_on))}</span>
+                  <span>{formatDateRussian(new Date(selectedDoc.uploaded_on))}</span>
                 </div>
               </div>
 
@@ -324,7 +348,11 @@ export default function KnowledgeBase() {
                 </div>
                 <div className="flex justify-between py-2 border-b border-gray-100">
                   <span className="text-sm font-medium text-gray-700">Uploaded by:</span>
-                  <span className="text-sm text-gray-600">System Admin</span>
+                  <span className="text-sm text-gray-600">
+                    {selectedDoc.user_created
+                      ? `${selectedDoc.user_created.first_name} ${selectedDoc.user_created.last_name}`
+                      : 'Неизвестный'}
+                  </span>
                 </div>
               </div>
 
