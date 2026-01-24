@@ -144,7 +144,19 @@ export function formatFileSize(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
-// Helper function to format date
+// Helper function to format date in Russian
+export function formatDateRussian(date: Date): string {
+  const months = [
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+  ]
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+  return `${day} ${month} ${year}`
+}
+
+// Legacy English date formatter - kept for backward compatibility
 export function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', {
     month: 'short',
