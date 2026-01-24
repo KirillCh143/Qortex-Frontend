@@ -12,7 +12,7 @@ export const createRealFilesService = (client: any): FilesService => ({
         ...(folder && folder === 'root' && { filter: { folder: { _null: true } } }),
         ...(folder && folder !== 'root' && { filter: { folder: { _eq: folder } } }),
         sort: ['-uploaded_on'],
-        fields: ['id', 'filename_download', 'type', 'filesize', 'title', 'description', 'uploaded_on', 'folder']
+        fields: ['id', 'filename_download', 'type', 'filesize', 'title', 'description', 'uploaded_on', 'folder', 'user_created.id', 'user_created.first_name', 'user_created.last_name'] as any
       })
     );
     // The SDK may return an object with a `data` array (and meta). Normalize

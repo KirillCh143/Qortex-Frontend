@@ -15,6 +15,7 @@ export interface DirectusFile {
   description: string;
   uploaded_on: string;
   folder: string | null;
+  user_created: { id: string; first_name: string; last_name: string } | null;
 }
 
 // FoldersService interface for both mock and real implementations

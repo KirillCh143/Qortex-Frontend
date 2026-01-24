@@ -4,6 +4,7 @@ export interface Document {
   filename: string
   filesize: number
   uploadedOn: Date
+  uploadedBy: string
   description: string
   category: string
   folder: string | null
@@ -30,6 +31,7 @@ export const mockDocuments: Document[] = [
     filename: 'employee-handbook.pdf',
     filesize: 2450000,
     uploadedOn: new Date('2024-01-15'),
+    uploadedBy: 'System Admin',
     description: 'Complete guide to company policies, benefits, code of conduct, and employee resources. Essential reading for all team members.',
     category: 'HR',
     folder: 'folder-hr-policies'
@@ -40,6 +42,7 @@ export const mockDocuments: Document[] = [
     filename: 'technical-guidelines.md',
     filesize: 85000,
     uploadedOn: new Date('2024-02-20'),
+    uploadedBy: 'System Admin',
     description: 'Engineering best practices, coding standards, architecture patterns, and development workflow documentation.',
     category: 'Engineering',
     folder: 'folder-eng-guidelines'
@@ -50,6 +53,7 @@ export const mockDocuments: Document[] = [
     filename: 'onboarding-checklist.docx',
     filesize: 125000,
     uploadedOn: new Date('2024-01-10'),
+    uploadedBy: 'System Admin',
     description: 'Step-by-step guide for new hires covering first week tasks, account setup, training schedule, and team introductions.',
     category: 'HR',
     folder: 'folder-hr-policies'
@@ -60,6 +64,7 @@ export const mockDocuments: Document[] = [
     filename: 'api-docs.pdf',
     filesize: 1750000,
     uploadedOn: new Date('2024-03-05'),
+    uploadedBy: 'System Admin',
     description: 'Comprehensive API reference including endpoints, authentication, request/response formats, and integration examples.',
     category: 'Engineering',
     folder: 'folder-eng-docs'
@@ -70,6 +75,7 @@ export const mockDocuments: Document[] = [
     filename: 'security-policy.pdf',
     filesize: 320000,
     uploadedOn: new Date('2024-01-22'),
+    uploadedBy: 'System Admin',
     description: 'Data protection protocols, access control procedures, incident response plan, and compliance requirements.',
     category: 'Operations',
     folder: 'folder-operations'
@@ -80,6 +86,7 @@ export const mockDocuments: Document[] = [
     filename: 'pm-handbook.docx',
     filesize: 445000,
     uploadedOn: new Date('2024-02-15'),
+    uploadedBy: 'System Admin',
     description: 'Project lifecycle management, sprint planning templates, stakeholder communication guidelines, and reporting standards.',
     category: 'Operations',
     folder: 'folder-operations'
@@ -90,6 +97,7 @@ export const mockDocuments: Document[] = [
     filename: 'code-review-guide.md',
     filesize: 62000,
     uploadedOn: new Date('2024-03-10'),
+    uploadedBy: 'System Admin',
     description: 'Standards for conducting effective code reviews, PR templates, feedback best practices, and quality checklists.',
     category: 'Engineering',
     folder: 'folder-eng-guidelines'
@@ -100,6 +108,7 @@ export const mockDocuments: Document[] = [
     filename: 'benefits-2024.pdf',
     filesize: 890000,
     uploadedOn: new Date('2024-01-05'),
+    uploadedBy: 'System Admin',
     description: 'Detailed breakdown of health insurance plans, retirement options, PTO policy, and additional perks available to employees.',
     category: 'HR',
     folder: 'folder-hr-benefits'
@@ -110,6 +119,7 @@ export const mockDocuments: Document[] = [
     filename: 'incident-response.pdf',
     filesize: 670000,
     uploadedOn: new Date('2024-02-28'),
+    uploadedBy: 'System Admin',
     description: 'Step-by-step procedures for handling production incidents, escalation paths, communication templates, and post-mortem process.',
     category: 'Operations',
     folder: 'folder-operations'
@@ -120,6 +130,7 @@ export const mockDocuments: Document[] = [
     filename: 'adr-collection.md',
     filesize: 155000,
     uploadedOn: new Date('2024-03-15'),
+    uploadedBy: 'System Admin',
     description: 'Historical record of significant architectural decisions, technology choices, and design trade-offs with rationale.',
     category: 'Engineering',
     folder: 'folder-eng-docs'

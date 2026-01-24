@@ -14,7 +14,8 @@ const mapDocumentsToDirectusFiles = (): DirectusFile[] => {
     title: doc.title,
     description: doc.description,
     uploaded_on: doc.uploadedOn.toISOString(),
-    folder: doc.folder
+    folder: doc.folder,
+    user_created: { id: 'mock-user-1', first_name: 'System', last_name: 'Admin' }
   }));
 };
 
@@ -69,7 +70,8 @@ export const createMockFilesService = (): FilesService => {
         title: data.title || data.file.name,
         description: data.description || '',
         uploaded_on: new Date().toISOString(),
-        folder: data.folder
+        folder: data.folder,
+        user_created: { id: 'mock-user-1', first_name: 'System', last_name: 'Admin' }
       };
       console.log('Mock: Uploaded file', newFile);
       return newFile;
