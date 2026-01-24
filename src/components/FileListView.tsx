@@ -65,11 +65,10 @@ export default function FileListView({ files, onSelectFile }: FileListViewProps)
             className="cursor-pointer hover:border-[#8466e4] transition-all rounded-xl shadow-none bg-white border border-indigo-200"
           >
             <CardContent className="p-4 flex items-center gap-4">
-              {/* Checkbox on far left */}
-              <Checkbox onClick={(e) => e.stopPropagation()} />
-
               {/* File icon */}
-              <div className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center shrink-0`}>
+              <div
+                className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center shrink-0`}
+              >
                 <Icon className={`h-6 w-6 ${textColor}`} />
               </div>
 
@@ -78,7 +77,8 @@ export default function FileListView({ files, onSelectFile }: FileListViewProps)
                 <h3 className="font-semibold text-gray-900 truncate">{file.title}</h3>
                 <p className="text-sm text-gray-600 font-medium">Загрузил: {uploaderName}</p>
                 <p className="text-xs text-gray-500">
-                  {formatDateRussian(new Date(file.uploaded_on))} • {formatFileSize(file.filesize)} • {label}
+                  {formatDateRussian(new Date(file.uploaded_on))} • {formatFileSize(file.filesize)}{' '}
+                  • {label}
                 </p>
               </div>
 

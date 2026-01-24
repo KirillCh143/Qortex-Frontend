@@ -329,13 +329,12 @@ export default function KnowledgeBase() {
                           <AutoScrollTitle text={file.title} />
 
                           {/* Uploader name */}
-                          <p className="text-sm text-gray-600 font-medium">
-                            Загрузил: {uploaderName}
-                          </p>
+                          <p className="text-sm text-gray-600 font-medium">Автор: {uploaderName}</p>
 
                           {/* Date, size, and type */}
                           <p className="text-xs text-gray-500">
-                            {formatDateRussian(new Date(file.uploaded_on))} • {formatFileSize(file.filesize)} • {fileTypeInfo.label}
+                            {formatDateRussian(new Date(file.uploaded_on))} •{' '}
+                            {formatFileSize(file.filesize)} • {fileTypeInfo.label}
                           </p>
                         </div>
                       </CardContent>
