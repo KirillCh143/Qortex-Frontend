@@ -299,10 +299,28 @@ Plans:
 **Details:**
 [To be added during planning]
 
+### Phase 11: Table with Containers statuses from Portainer
+**Goal**: Transform Settings page into container monitoring dashboard with Portainer integration
+**Depends on**: Phase 10
+**Research**: Likely (Portainer API integration)
+**Plans**: 2/2 created
+
+Plans:
+- [ ] 11-01: Portainer API Integration (service layer + React Query hook)
+- [ ] 11-02: Container Monitoring UI (Settings page transformation + refresh controls)
+
+**Details:**
+Phase 11 repurposes the Settings page into a container monitoring dashboard. Removes Chat Preferences section and replaces with a table showing Docker container statuses from Portainer. Features include:
+- Portainer API service layer with real/mock toggle (following established patterns)
+- Container status table with color-coded indicators (green/red/yellow)
+- Manual refresh button with timestamp showing last update
+- Purple theme and Russian localization matching Phase 9 design
+- Read-only monitoring (no container actions)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9 → 10
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9 → 10 → 11
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -321,3 +339,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 8. Configuration Refactoring & UX Enhancements | 5/5 | Complete | 2026-01-20 |
 | 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
 | 10. Knowledgebase page edits | 0/0 | Not planned | - |
+| 11. Table with Containers statuses from Portainer | 0/0 | Not planned | - |
