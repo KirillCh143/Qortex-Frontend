@@ -1,76 +1,132 @@
 import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
-import { saveSettings, loadSettings, type ApiSettings } from '@/lib/settings'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
+import { RefreshCw } from 'lucide-react'
+import { useContainers } from '@/hooks/useContainers'
 
 export default function Settings() {
-  const [formValues, setFormValues] = useState<ApiSettings>({
-    messagePersistence: true
-  })
+  const { data: containers, isLoading, error, refetch } = useContainers()
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  // Load initial values from localStorage on mount
+  // Set lastUpdated on initial data load
   useEffect(() => {
-    const settings = loadSettings()
-    setFormValues(settings)
-  }, [])
+    if (containers && !lastUpdated) {
+      setLastUpdated(new Date())
+    }
+  }, [containers, lastUpdated])
 
-  const handleSave = () => {
-    saveSettings(formValues)
-    console.log('Settings saved successfully!')
+  const handleRefresh = () => {
+    refetch()
+    setLastUpdated(new Date())
   }
 
-  const handleReset = () => {
-    localStorage.removeItem('api-settings')
-    const defaults = loadSettings()
-    setFormValues(defaults)
-    console.log('Settings reset to defaults')
+  const formatTimestamp = (date: Date | null) => {
+    if (!date) return '—'
+    return new Intl.DateTimeFormat('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(date)
+  }
+
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case 'running':
+        return (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-green-700">Запущен</span>
+          </div>
+        )
+      case 'stopped':
+        return (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500" />
+            <span className="text-red-700">Остановлен</span>
+          </div>
+        )
+      case 'paused':
+        return (
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-yellow-500" />
+            <span className="text-yellow-700">Приостановлен</span>
+          </div>
+        )
+      default:
+        return status
+    }
+  }
+
+  const getHealthDisplay = (health: string) => {
+    switch (health) {
+      case 'healthy':
+        return <span className="text-green-700">Здоровый</span>
+      case 'unhealthy':
+        return <span className="text-red-700">Нездоровый</span>
+      case 'none':
+        return <span className="text-gray-400">—</span>
+      default:
+        return <span className="text-gray-400">—</span>
+    }
   }
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-8 max-w-2xl">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Settings</h1>
+      <div className="p-8 max-w-4xl">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Контейнеры</h1>
 
         <Card>
           <CardHeader>
-            <CardTitle>Chat Preferences</CardTitle>
+            <CardTitle>Статус контейнеров</CardTitle>
             <CardDescription>
-              Control how chat messages are stored and persisted
+              Мониторинг состояния Docker контейнеров в Portainer
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <label htmlFor="messagePersistence" className="text-sm font-medium text-gray-900">
-                  Persist Message History
-                </label>
-                <p className="text-sm text-gray-500">
-                  When enabled, chat messages are saved and restored across sessions. When disabled, chat clears on page refresh.
-                </p>
+          <CardContent>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm text-gray-600">
+                Последнее обновление: {formatTimestamp(lastUpdated)}
               </div>
-              <Switch
-                id="messagePersistence"
-                checked={formValues.messagePersistence}
-                onCheckedChange={(checked) => setFormValues({ ...formValues, messagePersistence: checked })}
-              />
+              <Button
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="bg-[#8466e4] hover:bg-[#7049f3] text-white gap-2"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                Обновить
+              </Button>
             </div>
 
-            <div className="flex gap-3 pt-4">
-              <Button
-                onClick={handleSave}
-                className="bg-cyan-500 hover:bg-cyan-600 text-white"
-              >
-                Save Settings
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={handleReset}
-              >
-                Reset to Defaults
-              </Button>
-            </div>
+            {isLoading && !containers ? (
+              <div className="text-center py-8 text-gray-500">Загрузка...</div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-600">
+                Ошибка загрузки данных: {error.message}
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead>Имя</TableHead>
+                    <TableHead>Статус</TableHead>
+                    <TableHead>Время работы</TableHead>
+                    <TableHead>Здоровье</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {containers?.map((container) => (
+                    <TableRow key={container.id} className="hover:bg-gray-50">
+                      <TableCell className="font-medium">{container.name}</TableCell>
+                      <TableCell>{getStatusDisplay(container.status)}</TableCell>
+                      <TableCell>{container.uptime}</TableCell>
+                      <TableCell>{getHealthDisplay(container.health)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
       </div>
