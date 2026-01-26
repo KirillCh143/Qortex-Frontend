@@ -4,6 +4,8 @@ import { createMockFilesService, createMockFoldersService } from '@/services/moc
 import { createRealFilesService, createRealFoldersService } from '@/services/directus/files.service'
 import { createMockChatService } from '@/services/mock/chat.mock'
 import { createRealChatService } from '@/services/directus/chat.service'
+import { createMockPortainerService } from '@/services/mock/portainer.mock'
+import { createRealPortainerService } from '@/services/portainer/portainer.service'
 import directusClient from '@/lib/directus'
 
 // Determine if mock data should be used based on environment variable
@@ -47,8 +49,18 @@ export const createChatServiceInstance = () => {
   return createRealChatService(directusClient)
 }
 
+// Create portainer service based on mock/real toggle
+export const createPortainerServiceInstance = () => {
+  if (useMockData) {
+    return createMockPortainerService()
+  }
+
+  return createRealPortainerService()
+}
+
 // Export singleton instances
 export const webhookService = createWebhookServiceInstance()
 export const filesService = createFilesServiceInstance()
 export const foldersService = createFoldersServiceInstance()
 export const chatService = createChatServiceInstance()
+export const portainerService = createPortainerServiceInstance()
