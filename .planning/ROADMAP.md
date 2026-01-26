@@ -30,7 +30,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7.5: Login page design overhaul and redirect fix (INSERTED)** - Urgent work discovered after Phase 7.4
 - [x] **Phase 8: Configuration Refactoring & UX Enhancements** - Remove settings UI, add markdown support, isolate chat contexts, fix layout, add file management
 - [x] **Phase 9: UI Overhaul** - Purple theme, Russian localization, file type icons, and modern visual polish
-- [ ] **Phase 10: Knowledgebase page edits** - TBD
+- [x] **Phase 10: Knowledgebase page edits** - TBD
+- [x] **Phase 11: Table with Containers statuses from Portainer** - Container monitoring dashboard with status table
 
 ## Phase Details
 
@@ -299,15 +300,17 @@ Plans:
 **Details:**
 [To be added during planning]
 
-### Phase 11: Table with Containers statuses from Portainer
+### Phase 11: Table with Containers statuses from Portainer ✓
 **Goal**: Transform Settings page into container monitoring dashboard with Portainer integration
 **Depends on**: Phase 10
 **Research**: Likely (Portainer API integration)
-**Plans**: 2/2 created
+**Plans**: 2/2 complete
+**Status**: Complete
+**Completed**: 2026-01-26
 
 Plans:
-- [ ] 11-01: Portainer API Integration (service layer + React Query hook)
-- [ ] 11-02: Container Monitoring UI (Settings page transformation + refresh controls)
+- [x] 11-01: Portainer API Integration (service layer + React Query hook)
+- [x] 11-02: Container Monitoring UI (Settings page transformation + refresh controls)
 
 **Details:**
 Phase 11 repurposes the Settings page into a container monitoring dashboard. Removes Chat Preferences section and replaces with a table showing Docker container statuses from Portainer. Features include:
