@@ -14,6 +14,9 @@ interface PortainerContainer {
   State: string
   Status: string
   Created: number
+  Health?: {
+    Status: string
+  }
 }
 
 interface PortainerContainerDetail {
@@ -70,7 +73,7 @@ export const createRealPortainerService = (): PortainerService => {
 
         const containers: PortainerContainer[] = await response.json()
 
-        // For each container, we need to get detailed info to access State and Health
+        // For each container, we need to get detailed info to access State
         const detailedContainers = await Promise.all(
           containers.map(async (container) => {
             try {
@@ -87,7 +90,8 @@ export const createRealPortainerService = (): PortainerService => {
                 throw new Error(`Failed to get container details: ${detailResponse.statusText}`)
               }
 
-              return (await detailResponse.json()) as PortainerContainerDetail
+              const detail = (await detailResponse.json()) as PortainerContainerDetail
+              return { container, detail }
             } catch (error) {
               console.error(`Failed to get details for container ${container.Id}:`, error)
               return null
@@ -97,8 +101,8 @@ export const createRealPortainerService = (): PortainerService => {
 
         // Transform to our Container type
         return detailedContainers
-          .filter((detail): detail is PortainerContainerDetail => detail !== null)
-          .map((detail) => {
+          .filter((item): item is { container: PortainerContainer; detail: PortainerContainerDetail } => item !== null)
+          .map(({ container, detail }) => {
             // Map status - check Paused first since paused containers have Running=true
             let status: ContainerStatus = 'stopped'
             if (detail.State.Paused) {
@@ -107,12 +111,15 @@ export const createRealPortainerService = (): PortainerService => {
               status = 'running'
             }
 
-            // Map health
+            // Map health from list API (already includes Health.Status)
             let health: ContainerHealth = 'none'
-            if (detail.Config.Health) {
-              // Container has health check configured, but we need to check the actual health status
-              // For simplicity, we'll default to 'none' unless we can get health status from State
-              health = 'none'
+            if (container.Health?.Status) {
+              if (container.Health.Status === 'healthy') {
+                health = 'healthy'
+              } else if (container.Health.Status === 'unhealthy') {
+                health = 'unhealthy'
+              }
+              // 'starting' or 'none' status → keep as 'none'
             }
 
             // Format uptime - only for running containers (not paused)
