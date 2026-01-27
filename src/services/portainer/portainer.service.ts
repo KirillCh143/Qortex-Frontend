@@ -57,6 +57,14 @@ export const createRealPortainerService = (): PortainerService => {
 
   return {
     async getContainers() {
+      // Validate configuration
+      if (!apiToken) {
+        throw new Error(
+          'Portainer API token not configured. Set VITE_PORTAINER_TOKEN in .env file. ' +
+          'Get token from: Portainer UI → Settings → Users → [Your user] → Add access token'
+        )
+      }
+
       try {
         const response = await fetch(
           `${portainerUrl}/api/endpoints/${endpointId}/docker/containers/json?all=true`,
@@ -68,6 +76,14 @@ export const createRealPortainerService = (): PortainerService => {
         )
 
         if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error(
+              `Portainer endpoint not found (ID: ${endpointId}). ` +
+              'Check VITE_PORTAINER_ENDPOINT_ID in .env. ' +
+              'Find correct ID: Portainer UI → Endpoints, or run: ' +
+              `curl -H "X-API-Key: YOUR_TOKEN" ${portainerUrl}/api/endpoints`
+            )
+          }
           throw new Error(`Portainer API error: ${response.statusText}`)
         }
 
@@ -138,6 +154,15 @@ export const createRealPortainerService = (): PortainerService => {
           })
       } catch (error) {
         console.error('Failed to fetch containers from Portainer:', error)
+
+        // Provide helpful error messages for common issues
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          throw new Error(
+            `Cannot connect to Portainer API. Check VITE_PORTAINER_URL in .env ` +
+            `(current: ${portainerUrl}). Ensure Portainer is running and accessible.`
+          )
+        }
+
         throw new Error(
           error instanceof Error
             ? `Failed to fetch containers: ${error.message}`
