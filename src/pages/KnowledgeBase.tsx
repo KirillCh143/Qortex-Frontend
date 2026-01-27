@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,6 +23,8 @@ import {
   Sheet,
   File as FileIcon,
   Trash2,
+  User,
+  CalendarDays,
 } from 'lucide-react'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile, useDeleteFile } from '@/hooks/useFiles'
@@ -40,36 +41,41 @@ const getFileTypeInfo = (mimeType: string) => {
   if (mimeType.includes('pdf')) {
     return {
       icon: FileText,
-      bgColor: 'bg-red-100',
+      bgColor: 'bg-red-50',
       iconColor: 'text-red-500',
+      borderColor: 'border-red-100',
       label: 'PDF',
     }
   } else if (mimeType.includes('word') || mimeType.includes('document')) {
     return {
       icon: FileType,
-      bgColor: 'bg-blue-100',
-      iconColor: 'text-blue-500',
+      bgColor: 'bg-blue-50',
+      iconColor: 'text-blue-600',
+      borderColor: 'border-blue-100',
       label: 'DOCX',
     }
   } else if (mimeType.includes('sheet') || mimeType.includes('excel')) {
     return {
       icon: Sheet,
-      bgColor: 'bg-green-100',
-      iconColor: 'text-green-500',
+      bgColor: 'bg-green-50',
+      iconColor: 'text-green-600',
+      borderColor: 'border-green-100',
       label: 'XLSX',
     }
   } else if (mimeType.includes('text')) {
     return {
       icon: FileText,
-      bgColor: 'bg-gray-100',
-      iconColor: 'text-gray-500',
+      bgColor: 'bg-slate-50',
+      iconColor: 'text-slate-500',
+      borderColor: 'border-slate-100',
       label: 'TXT',
     }
   } else {
     return {
       icon: FileIcon,
-      bgColor: 'bg-gray-100',
-      iconColor: 'text-gray-500',
+      bgColor: 'bg-slate-50',
+      iconColor: 'text-slate-500',
+      borderColor: 'border-slate-100',
       label: 'FILE',
     }
   }
@@ -199,7 +205,7 @@ export default function KnowledgeBase() {
             <Button
               size="sm"
               onClick={() => setCreateFolderOpen(true)}
-              className="h-10 w-10 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3] text-white hover:bg-[#7049f3]/90"
+              className="h-10 w-10 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3]/90 text-white hover:bg-[#7049f3]"
               title="New Folder"
             >
               <FolderPlus className="h-4 w-4" />
@@ -225,7 +231,9 @@ export default function KnowledgeBase() {
                   type="text"
                   placeholder="Поиск по документам..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSearchQuery(e.target.value)
+                  }
                   className="pl-10"
                 />
               </div>
@@ -235,7 +243,7 @@ export default function KnowledgeBase() {
                 onClick={() => setUploadFileOpen(true)}
                 disabled={selectedFolderId === null}
                 title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
-                className="p-7 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-200 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/30"
+                className="p-7 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-100 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/20"
               >
                 <FilePlus className="h-5 w-5 mr-2 ml-1" />
                 Добавить
@@ -302,7 +310,7 @@ export default function KnowledgeBase() {
                 <p>No documents found</p>
               </div>
             ) : viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {files.map((file) => {
                   const fileTypeInfo = getFileTypeInfo(file.type)
                   const IconComponent = fileTypeInfo.icon
@@ -311,39 +319,85 @@ export default function KnowledgeBase() {
                     : 'Неизвестный'
 
                   return (
-                    <Card
+                    <div
                       key={file.id}
-                      className="group relative rounded-xl shadow-none cursor-pointer transition-all bg-white border border-indigo-200 hover:border-[#8466e4]"
+                      className={`group p-5 bg-white rounded-xl border hover:border-violet-300 transition-all cursor-pointer relative flex flex-col h-full hover:shadow-md hover:shadow-slate-100 ${
+                        selectedDoc?.id === file.id
+                          ? 'border-2 border-[#7049f3]/90 shadow-md shadow-slate-100'
+                          : 'border-slate-200 hover:border-primary/50'
+                      }`}
                       onClick={() => setSelectedDoc(file)}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex flex-col items-start text-start">
-                          {/* Large file icon with colored background */}
-                          <div
-                            className={`w-16 h-16 rounded-xl ${fileTypeInfo.bgColor} flex items-center justify-center mb-4`}
-                          >
-                            <IconComponent className={`w-8 h-8 ${fileTypeInfo.iconColor}`} />
-                          </div>
-
-                          {/* File name */}
-                          <AutoScrollTitle text={file.title} />
-
-                          {/* Uploader name */}
-                          <p className="text-sm text-gray-600 font-medium">Автор: {uploaderName}</p>
-
-                          {/* Date, size, and type */}
-                          <p className="text-xs text-gray-500">
-                            {formatDateRussian(new Date(file.uploaded_on))} •{' '}
-                            {formatFileSize(file.filesize)} • {fileTypeInfo.label}
-                          </p>
+                      <div className="flex justify-between items-start mb-4">
+                        <div
+                          className={`size-12 rounded-xl ${fileTypeInfo.bgColor} flex items-center justify-center ${fileTypeInfo.iconColor} border ${fileTypeInfo.borderColor}`}
+                        >
+                          <IconComponent className="w-7 h-7" />
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                      <h3 className="font-bold text-slate-800 text-sm mb-4 leading-snug line-clamp-2">
+                        <AutoScrollTitle text={file.title} />
+                      </h3>
+                      <div className="space-y-2 mb-5">
+                        <div className="flex items-center gap-2">
+                          <div className="size-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                            <User className="h-[14px] w-[14px]" />
+                          </div>
+                          <span className="text-xs text-slate-500 font-medium">
+                            Автор: {uploaderName}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="size-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                            <CalendarDays className="h-[14px] w-[14px]" />
+                          </div>
+                          <span className="text-xs text-slate-500 font-medium">
+                            {formatDateRussian(new Date(file.uploaded_on))}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            {fileTypeInfo.label} • {formatFileSize(file.filesize)}
+                          </span>
+                        </div>
+                        <button
+                          className="size-8 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 flex items-center justify-center transition-colors"
+                          title="Скачать"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            downloadMutation.mutate(file.id, {
+                              onSuccess: (blob) => {
+                                const url = URL.createObjectURL(blob)
+                                const a = document.createElement('a')
+                                a.href = url
+                                a.download = file.filename_download
+                                document.body.appendChild(a)
+                                a.click()
+                                document.body.removeChild(a)
+                                URL.revokeObjectURL(url)
+                              },
+                            })
+                          }}
+                        >
+                          {downloadMutation.isPending && downloadMutation.variables === file.id ? (
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                          ) : (
+                            <Download className="h-5 w-5" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
                   )
                 })}
               </div>
             ) : (
-              <FileListView files={files} onSelectFile={setSelectedDoc} />
+              <FileListView
+                files={files}
+                onSelectFile={setSelectedDoc}
+                selectedFile={selectedDoc}
+              />
             )}
           </div>
         </div>
@@ -354,7 +408,7 @@ export default function KnowledgeBase() {
         <>
           {/* Overlay with fade animation */}
           <div
-            className={`fixed inset-0 bg-black/50 z-50 transition-opacity duration-300 ${
+            className={`fixed inset-0 bg-black/20 backdrop-blur-xs z-50 transition-opacity duration-300 ${
               isPanelOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={handleClosePanel}

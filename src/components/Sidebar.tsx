@@ -15,7 +15,7 @@ export function Sidebar() {
 
   // Стили для АКТИВНОЙ кнопки (Фиолетовый фон, белый текст, )
   const activeClasses =
-    'bg-[#7049f3] text-white hover:bg-[#7049f3]/90 shadow-lg shadow-indigo-500/20'
+    'bg-[#7049f3]/90 text-white hover:bg-[#7049f3] shadow-lg shadow-indigo-500/20'
 
   // Стили для ОБЫЧНОЙ кнопки (Прозрачный фон, черный текст, серый при наведении)
   const inactiveClasses = 'bg-transparent text-black hover:bg-indigo-100'

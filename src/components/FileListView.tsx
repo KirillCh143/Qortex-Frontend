@@ -1,12 +1,24 @@
-import { Download, FileText, FileType, Sheet, File } from 'lucide-react'
+import {
+  Download,
+  FileText,
+  FileType,
+  Sheet,
+  File,
+  User,
+  Calendar,
+  HardDrive,
+  Loader2,
+} from 'lucide-react'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Card, CardContent } from '@/components/ui/card'
 import type { DirectusFile } from '@/services/directus/types'
+import { cn } from '@/lib/utils'
+import AutoScrollTitle from '@/components/AutoScrollTitle'
+import { useDownloadFile } from '@/hooks/useFiles'
 
 interface FileListViewProps {
   files: DirectusFile[]
   onSelectFile: (file: DirectusFile) => void
+  selectedFile: DirectusFile | null
 }
 
 // Helper function to get file icon, color, and label based on file type
@@ -14,78 +26,182 @@ function getFileTypeInfo(mimeType: string) {
   if (mimeType.includes('pdf')) {
     return {
       Icon: FileText,
-      bgColor: 'bg-red-100',
-      textColor: 'text-red-500',
+      iconBg: 'bg-red-50',
+      iconText: 'text-red-500',
+      iconBorder: 'border-red-100',
+      tagBg: 'bg-red-50',
+      tagText: 'text-red-600',
+      tagBorder: 'border-red-100',
       label: 'PDF',
     }
   } else if (mimeType.includes('word') || mimeType.includes('document')) {
     return {
       Icon: FileType,
-      bgColor: 'bg-blue-100',
-      textColor: 'text-blue-500',
+      iconBg: 'bg-blue-50',
+      iconText: 'text-blue-500',
+      iconBorder: 'border-blue-100',
+      tagBg: 'bg-blue-50',
+      tagText: 'text-blue-600',
+      tagBorder: 'border-blue-100',
       label: 'DOCX',
     }
   } else if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) {
     return {
       Icon: Sheet,
-      bgColor: 'bg-green-100',
-      textColor: 'text-green-500',
+      iconBg: 'bg-green-50',
+      iconText: 'text-green-600',
+      iconBorder: 'border-green-100',
+      tagBg: 'bg-green-50',
+      tagText: 'text-green-600',
+      tagBorder: 'border-green-100',
       label: 'XLSX',
     }
   } else if (mimeType.includes('text')) {
     return {
       Icon: FileText,
-      bgColor: 'bg-gray-100',
-      textColor: 'text-gray-500',
+      iconBg: 'bg-gray-100',
+      iconText: 'text-gray-500',
+      iconBorder: 'border-gray-200',
+      tagBg: 'bg-gray-100',
+      tagText: 'text-gray-600',
+      tagBorder: 'border-gray-200',
       label: 'TXT',
     }
   } else {
     return {
       Icon: File,
-      bgColor: 'bg-gray-100',
-      textColor: 'text-gray-500',
+      iconBg: 'bg-gray-100',
+      iconText: 'text-gray-500',
+      iconBorder: 'border-gray-200',
+      tagBg: 'bg-gray-100',
+      tagText: 'text-gray-600',
+      tagBorder: 'border-gray-200',
       label: 'FILE',
     }
   }
 }
 
-export default function FileListView({ files, onSelectFile }: FileListViewProps) {
+export default function FileListView({ files, onSelectFile, selectedFile }: FileListViewProps) {
+  const downloadMutation = useDownloadFile()
+
   return (
     <div className="flex flex-col gap-3">
       {files.map((file) => {
-        const { Icon, bgColor, textColor, label } = getFileTypeInfo(file.type)
+        const isSelected = selectedFile?.id === file.id
+        const { Icon, iconBg, iconText, iconBorder, tagBg, tagText, tagBorder, label } =
+          getFileTypeInfo(file.type)
         const uploaderName = file.uploaded_by
-          ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name}`
+          ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name?.[0] || ''}.`
           : 'Неизвестный'
 
+        const handleDownloadClick = (e: React.MouseEvent) => {
+          e.stopPropagation() // Prevent selecting the file when download button is clicked
+          downloadMutation.mutate(file.id, {
+            onSuccess: (blob) => {
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = file.filename_download
+              document.body.appendChild(a)
+              a.click()
+              document.body.removeChild(a)
+              URL.revokeObjectURL(url)
+            },
+          })
+        }
+
         return (
-          <Card
+          <div
             key={file.id}
             onClick={() => onSelectFile(file)}
-            className="cursor-pointer hover:border-[#8466e4] transition-all rounded-xl shadow-none bg-white border border-indigo-200"
+            className={cn(
+              'group flex items-center justify-between p-3 pl-4 pr-5 bg-white rounded-xl border transition-all cursor-pointer',
+              {
+                'border-2 bg-white border-[#7049f3]/90 relative z-10': isSelected,
+                'border-slate-200 hover:bg-white hover:border-violet-300 hover:shadow-md hover:shadow-slate-100':
+                  !isSelected,
+              }
+            )}
           >
-            <CardContent className="p-4 flex items-center gap-4">
-              {/* File icon */}
+            <div className="flex items-center gap-5 flex-1 min-w-0">
               <div
-                className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center shrink-0`}
+                className={cn(
+                  'size-12 shrink-0 rounded-xl flex items-center justify-center border',
+                  iconBg,
+                  iconText,
+                  iconBorder
+                )}
               >
-                <Icon className={`h-6 w-6 ${textColor}`} />
+                <Icon className="h-7 w-7" />
               </div>
-
-              {/* File info - takes remaining space */}
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate">{file.title}</h3>
-                <p className="text-sm text-gray-600 font-medium">Загрузил: {uploaderName}</p>
-                <p className="text-xs text-gray-500">
-                  {formatDateRussian(new Date(file.uploaded_on))} • {formatFileSize(file.filesize)}{' '}
-                  • {label}
-                </p>
+              <div className="w-[28%] min-w-[150px] pr-4 pt-2.5">
+                <AutoScrollTitle text={file.title} />
               </div>
-
-              {/* Download icon on far right */}
-              <Download className="h-5 w-5 text-gray-400 shrink-0" />
-            </CardContent>
-          </Card>
+              <div className="flex-1 grid grid-cols-4 gap-4 items-center">
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
+                    <User className="h-3 w-3 mb-0.5" />
+                    Автор
+                  </span>
+                  <span className="text-sm font-semibold text-slate-400 truncate block">
+                    {uploaderName}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
+                    <Calendar className="h-3 w-3 mb-0.5" />
+                    Загружено
+                  </span>
+                  <span className="text-sm font-semibold text-slate-400 truncate block">
+                    {formatDateRussian(new Date(file.uploaded_on))}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
+                    <File className="h-3 w-3 mb-0.5" />
+                    Формат
+                  </span>
+                  <span
+                    className={cn(
+                      'inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase',
+                      tagBg,
+                      tagText,
+                      tagBorder
+                    )}
+                  >
+                    {label}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
+                    <HardDrive className="h-3 w-3 mb-0.5" />
+                    Вес
+                  </span>
+                  <span className="text-sm font-semibold text-slate-400 truncate block">
+                    {formatFileSize(file.filesize)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleDownloadClick}
+              disabled={downloadMutation.isPending}
+              className={cn(
+                'ml-4 size-10 rounded-full flex items-center justify-center transition-all',
+                {
+                  'bg-[#7049f3] text-white shadow-lg shadow-indigo-500/30': isSelected,
+                  'bg-white text-slate-400 border border-indigo-200 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]':
+                    !isSelected,
+                }
+              )}
+            >
+              {downloadMutation.isPending ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Download className="h-5 w-5" />
+              )}
+            </button>
+          </div>
         )
       })}
     </div>

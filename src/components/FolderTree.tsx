@@ -38,7 +38,7 @@ const FolderNode = ({
         onClick={handleClick}
         className={`flex items-center mb-2 gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
           isSelected
-            ? 'bg-[#7049f3]/90 text-white shadow-lg shadow-indigo-500/20'
+            ? 'bg-[#7049f3]/90 hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20'
             : 'text-gray-700 hover:bg-indigo-100'
         }`}
         style={{ paddingLeft: `${level * 16 + 12}px` }}
@@ -110,7 +110,7 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
         onClick={() => onSelectFolder(null)}
         className={`flex mb-2 items-center gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
           selectedFolderId === null
-            ? 'bg-[#7049f3]/90 text-white shadow-lg shadow-indigo-500/20'
+            ? 'bg-[#7049f3]/90 hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20'
             : 'text-gray-700 hover:bg-indigo-100'
         }`}
       >

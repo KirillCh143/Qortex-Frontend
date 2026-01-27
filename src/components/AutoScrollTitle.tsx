@@ -48,7 +48,7 @@ const AutoScrollTitle: FC<AutoScrollTitleProps> = ({ text }) => {
           } as React.CSSProperties
         }
         className={`
-          whitespace-nowrap text-lg font-semibold text-gray-900 mb-2
+          whitespace-nowrap text-sm font-semibold text-gray-900 mb-2
           ${isOverflow ? 'text-ellipsis overflow-hidden' : ''}
           
           /* В animation-class добавлено '_alternate' */
@@ -71,4 +71,3 @@ const AutoScrollTitle: FC<AutoScrollTitleProps> = ({ text }) => {
 }
 
 export default AutoScrollTitle
-
