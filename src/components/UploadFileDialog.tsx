@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -34,6 +34,7 @@ export function UploadFileDialog({
   const [description, setDescription] = useState('')
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null)
 
   const uploadFileMutation = useUploadFile()
 
@@ -53,6 +54,18 @@ export function UploadFileDialog({
       setError(null)
     }
   }
+
+  useEffect(() => {
+    if (descriptionTextareaRef.current) {
+      // Reset height to auto to calculate scrollHeight correctly
+      descriptionTextareaRef.current.style.height = 'auto'
+      // Set height to scrollHeight, ensuring a minimum height of 80px (from min-h-[80px])
+      descriptionTextareaRef.current.style.height = `${Math.max(
+        80,
+        descriptionTextareaRef.current.scrollHeight
+      )}px`
+    }
+  }, [description])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -121,7 +134,7 @@ export function UploadFileDialog({
                 onChange={handleFileChange}
                 disabled={uploadFileMutation.isPending}
                 aria-required="true"
-                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center leading-[56px]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center leading-[40px]"
               />
               {selectedFile && (
                 <div className="text-sm text-gray-600">
@@ -149,12 +162,12 @@ export function UploadFileDialog({
               <Label htmlFor="file-description">Описание</Label>
               <Textarea
                 id="file-description"
+                ref={descriptionTextareaRef}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Введите описание (необязательно)"
                 disabled={uploadFileMutation.isPending}
-                rows={3}
-                className="rounded-xl border-slate-300 focus:border-[#8466e4]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4] resize-none"
               />
             </div>
 
