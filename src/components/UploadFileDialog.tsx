@@ -121,7 +121,7 @@ export function UploadFileDialog({
                 onChange={handleFileChange}
                 disabled={uploadFileMutation.isPending}
                 aria-required="true"
-                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center leading-[56px]"
               />
               {selectedFile && (
                 <div className="text-sm text-gray-600">
