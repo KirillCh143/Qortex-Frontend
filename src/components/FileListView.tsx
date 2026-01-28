@@ -85,7 +85,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
   const downloadMutation = useDownloadFile()
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {files.map((file) => {
         const isSelected = selectedFile?.id === file.id
         const { Icon, iconBg, iconText, iconBorder, tagBg, tagText, tagBorder, label } =
@@ -115,7 +115,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
             key={file.id}
             onClick={() => onSelectFile(file)}
             className={cn(
-              'group flex items-center justify-between p-3 pl-4 pr-5 bg-white rounded-xl border transition-all cursor-pointer',
+              'group flex items-center justify-between p-5 pl-5 pr-6 bg-white rounded-xl border transition-all cursor-pointer',
               {
                 'border-2 bg-white border-[#7049f3]/90 relative z-10': isSelected,
                 'border-slate-200 hover:bg-white hover:border-violet-300 hover:shadow-md hover:shadow-slate-100':
@@ -134,51 +134,29 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
               >
                 <Icon className="h-7 w-7" />
               </div>
-              <div className="w-[28%] min-w-[150px] pr-4 pt-2.5">
-                <AutoScrollTitle text={file.title} />
-              </div>
-              <div className="flex-1 grid grid-cols-4 gap-4 items-center">
-                <div className="min-w-0">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
-                    <User className="h-3 w-3 mb-0.5" />
-                    Автор
+              <div className="flex flex-col flex-1 min-w-0 pr-4">
+                <h3 className="font-bold text-slate-800 text-sm leading-snug line-clamp-2">
+                  <AutoScrollTitle text={file.title} />
+                </h3>
+                <div className="flex items-center text-xs font-medium text-slate-500 gap-x-2">
+                  <span className="flex items-center gap-1">
+                    <User className="h-3 w-3" />
+                    <span>Автор: {uploaderName}</span>
                   </span>
-                  <span className="text-sm font-semibold text-slate-400 truncate block">
-                    {uploaderName}
+                  <span className="mx-0.5 font-medium text-slate-500">•</span>
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>Дата: {formatDateRussian(new Date(file.uploaded_on))}</span>
                   </span>
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
-                    <Calendar className="h-3 w-3 mb-0.5" />
-                    Загружено
+                  <span className="mx-0.5 font-medium text-slate-500">•</span>
+                  <span className="flex items-center gap-1">
+                    <File className="h-3 w-3" />
+                    <span>Формат: {label}</span>
                   </span>
-                  <span className="text-sm font-semibold text-slate-400 truncate block">
-                    {formatDateRussian(new Date(file.uploaded_on))}
-                  </span>
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
-                    <File className="h-3 w-3 mb-0.5" />
-                    Формат
-                  </span>
-                  <span
-                    className={cn(
-                      'inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase',
-                      tagBg,
-                      tagText,
-                      tagBorder
-                    )}
-                  >
-                    {label}
-                  </span>
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block mb-0.5 flex items-center gap-1">
-                    <HardDrive className="h-3 w-3 mb-0.5" />
-                    Вес
-                  </span>
-                  <span className="text-sm font-semibold text-slate-400 truncate block">
-                    {formatFileSize(file.filesize)}
+                  <span className="mx-0.5 font-medium text-slate-500">•</span>
+                  <span className="flex items-center gap-1">
+                    <HardDrive className="h-3 w-3" />
+                    <span>Размер: {formatFileSize(file.filesize)}</span>
                   </span>
                 </div>
               </div>

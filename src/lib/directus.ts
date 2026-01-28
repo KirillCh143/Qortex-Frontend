@@ -36,7 +36,7 @@ const client = useMockData
 
       // Debug: show which base URL the Directus client will use (helps troubleshoot CORS/proxy)
       if (import.meta.env.DEV) {
-        // eslint-disable-next-line no-console
+         
         console.debug('[directus] BACKEND_URL =', BACKEND_URL);
       }
 

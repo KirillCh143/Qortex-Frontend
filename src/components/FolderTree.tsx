@@ -36,7 +36,7 @@ const FolderNode = ({
     <div>
       <div
         onClick={handleClick}
-        className={`flex items-center mb-2 gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
+        className={`flex items-center mb-2 gap-2 px-3 py-3 cursor-pointer rounded-xl transition-colors ${
           isSelected
             ? 'bg-[#7049f3]/90 hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20'
             : 'text-gray-700 hover:bg-indigo-100'

@@ -27,7 +27,7 @@ export function UploadFileDialog({
   open,
   onOpenChange,
   selectedFolderId,
-  folders
+  folders,
 }: UploadFileDialogProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [title, setTitle] = useState('')
@@ -37,9 +37,10 @@ export function UploadFileDialog({
 
   const uploadFileMutation = useUploadFile()
 
-  const selectedFolderName = selectedFolderId === null
-    ? 'Root'
-    : folders.find(f => f.id === selectedFolderId)?.name || 'Unknown Folder'
+  const selectedFolderName =
+    selectedFolderId === null
+      ? 'Root'
+      : folders.find((f) => f.id === selectedFolderId)?.name || 'Unknown Folder'
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -67,7 +68,7 @@ export function UploadFileDialog({
         file: selectedFile,
         title: title.trim() || selectedFile.name,
         description: description.trim(),
-        folder: selectedFolderId
+        folder: selectedFolderId,
       },
       {
         onSuccess: () => {
@@ -78,7 +79,7 @@ export function UploadFileDialog({
         },
         onError: (err) => {
           setError(err instanceof Error ? err.message : 'Failed to upload file')
-        }
+        },
       }
     )
   }
@@ -102,13 +103,11 @@ export function UploadFileDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white" hideCloseButton={true}>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">Загрузить файл</DialogTitle>
-            <DialogDescription>
-              Загрузите файл в базу знаний. Файлы будут сохранены в выбранной папке.
-            </DialogDescription>
+            <DialogDescription>Файлы будут сохранены в текущей папке.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-6">
             <div className="grid gap-2">
@@ -122,17 +121,13 @@ export function UploadFileDialog({
                 onChange={handleFileChange}
                 disabled={uploadFileMutation.isPending}
                 aria-required="true"
-                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center"
               />
               {selectedFile && (
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">{selectedFile.name}</span>
-                  <span className="ml-2 text-gray-500">
-                    ({formatFileSize(selectedFile.size)})
-                  </span>
-                  <span className="ml-2 text-gray-500">
-                    {selectedFile.type || 'Unknown type'}
-                  </span>
+                  <span className="ml-2 text-gray-500">({formatFileSize(selectedFile.size)})</span>
+                  <span className="ml-2 text-gray-500">{selectedFile.type || 'Unknown type'}</span>
                 </div>
               )}
             </div>
@@ -145,11 +140,9 @@ export function UploadFileDialog({
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Введите название (необязательно)"
                 disabled={uploadFileMutation.isPending}
-                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4]"
               />
-              <p className="text-xs text-gray-500">
-                Оставьте пустым, чтобы использовать имя файла
-              </p>
+              <p className="text-xs text-gray-500">Оставьте пустым, чтобы использовать имя файла</p>
             </div>
 
             <div className="grid gap-2">
@@ -161,13 +154,13 @@ export function UploadFileDialog({
                 placeholder="Введите описание (необязательно)"
                 disabled={uploadFileMutation.isPending}
                 rows={3}
-                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4]"
               />
             </div>
 
             <div className="grid gap-2">
               <Label>Папка</Label>
-              <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-md border">
+              <div className="text-sm h-14 text-gray-600 bg-gray-50 px-3 py-2 rounded-xl border border-slate-300 flex items-center">
                 {selectedFolderName}
               </div>
             </div>
@@ -182,6 +175,7 @@ export function UploadFileDialog({
             <Button
               type="button"
               variant="outline"
+              className="h-14 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
               onClick={() => handleOpenChange(false)}
               disabled={uploadFileMutation.isPending}
             >
@@ -190,7 +184,7 @@ export function UploadFileDialog({
             <Button
               type="submit"
               disabled={uploadFileMutation.isPending || !selectedFile}
-              className="bg-[#8466e4] hover:bg-[#7049f3] text-white"
+              className="bg-[#8466e4] hover:bg-[#7049f3] shadow-lg shadow-indigo-500/20 text-white h-14 w-34 rounded-xl"
             >
               {uploadFileMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -30,7 +30,7 @@ function App() {
         path="/chat"
         element={
           <ProtectedRoute>
-            <Layout hideHeader>
+            <Layout title="ИИ Чат" subtitle="Интеллектуальный поиск по корпоративной базе знаний">
               <Chat />
             </Layout>
           </ProtectedRoute>

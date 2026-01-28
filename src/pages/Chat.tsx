@@ -89,7 +89,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-full">
       {/* Header with mode toggle */}
-      <Header mode={mode} onModeChange={setMode} />
+      {/* <Header mode={mode} onModeChange={setMode} /> */}
 
       {/* Container for messages and overlaying chat input */}
       <div className="flex-1 relative overflow-hidden">

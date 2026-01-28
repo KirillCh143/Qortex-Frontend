@@ -32,7 +32,7 @@ export function CreateFolderDialog({
   open,
   onOpenChange,
   folders,
-  defaultParentId = null
+  defaultParentId = null,
 }: CreateFolderDialogProps) {
   const [folderName, setFolderName] = useState('')
   const [parentFolderId, setParentFolderId] = useState<string | null>(defaultParentId)
@@ -58,7 +58,7 @@ export function CreateFolderDialog({
     createFolderMutation.mutate(
       {
         name: trimmedName,
-        parent: parentFolderId
+        parent: parentFolderId,
       },
       {
         onSuccess: () => {
@@ -70,7 +70,7 @@ export function CreateFolderDialog({
         },
         onError: (err) => {
           setError(err instanceof Error ? err.message : 'Failed to create folder')
-        }
+        },
       }
     )
   }
@@ -87,7 +87,7 @@ export function CreateFolderDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white" hideCloseButton>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">Создать новую папку</DialogTitle>
@@ -107,7 +107,7 @@ export function CreateFolderDialog({
                 placeholder="Введите название..."
                 disabled={createFolderMutation.isPending}
                 aria-required="true"
-                className="rounded-md border-gray-300 focus:ring-2 focus:ring-[#8466e4] focus:border-[#8466e4]"
+                className="rounded-xl border-slate-300 focus:ring-[#8466e4] focus:border-[#8466e4]"
               />
             </div>
             <div className="grid gap-2">
@@ -139,7 +139,7 @@ export function CreateFolderDialog({
           <DialogFooter>
             <Button
               type="button"
-              variant="outline"
+              className="h-14 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
               onClick={() => handleOpenChange(false)}
               disabled={createFolderMutation.isPending}
             >
@@ -148,7 +148,7 @@ export function CreateFolderDialog({
             <Button
               type="submit"
               disabled={createFolderMutation.isPending || !folderName.trim()}
-              className="bg-[#8466e4] hover:bg-[#7049f3] text-white"
+              className="h-14 w-34 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20"
             >
               {createFolderMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

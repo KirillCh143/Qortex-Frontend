@@ -24,7 +24,7 @@ import {
   File as FileIcon,
   Trash2,
   User,
-  CalendarDays,
+  Calendar,
 } from 'lucide-react'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
 import { useFiles, useDownloadFile, useDeleteFile } from '@/hooks/useFiles'
@@ -35,6 +35,7 @@ import { FolderTree } from '@/components/FolderTree'
 import { CreateFolderDialog } from '@/components/CreateFolderDialog'
 import { UploadFileDialog } from '@/components/UploadFileDialog'
 import AutoScrollTitle from '@/components/AutoScrollTitle'
+import { cn } from '@/lib/utils'
 
 // Helper function to get file type icon and color
 const getFileTypeInfo = (mimeType: string) => {
@@ -335,12 +336,12 @@ export default function KnowledgeBase() {
                           <IconComponent className="w-7 h-7" />
                         </div>
                       </div>
-                      <h3 className="font-bold text-slate-800 text-sm mb-4 leading-snug line-clamp-2">
+                      <h3 className="font-bold text-slate-800 text-sm mb-1 leading-snug line-clamp-2">
                         <AutoScrollTitle text={file.title} />
                       </h3>
-                      <div className="space-y-2 mb-5">
+                      <div className="space-y-2 mb-3">
                         <div className="flex items-center gap-2">
-                          <div className="size-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                          <div className="size-5 flex items-center justify-center text-slate-500">
                             <User className="h-[14px] w-[14px]" />
                           </div>
                           <span className="text-xs text-slate-500 font-medium">
@@ -348,23 +349,30 @@ export default function KnowledgeBase() {
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="size-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                            <CalendarDays className="h-[14px] w-[14px]" />
+                          <div className="size-5 flex items-center justify-center text-slate-500">
+                            <Calendar className="h-[14px] w-[14px]" />
                           </div>
                           <span className="text-xs text-slate-500 font-medium">
-                            {formatDateRussian(new Date(file.uploaded_on))}
+                            Дата: {formatDateRussian(new Date(file.uploaded_on))}
                           </span>
                         </div>
                       </div>
-                      <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <div className="mt-auto pt-4 border-t border-slate-200 flex items-center justify-between">
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                             {fileTypeInfo.label} • {formatFileSize(file.filesize)}
                           </span>
                         </div>
                         <button
-                          className="size-8 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5 flex items-center justify-center transition-colors"
-                          title="Скачать"
+                          className={cn(
+                            'ml-4 size-10 rounded-full flex items-center justify-center transition-all',
+                            {
+                              'bg-[#7049f3] text-white shadow-lg shadow-indigo-500/30':
+                                selectedDoc?.id === file.id,
+                              'bg-white text-slate-400 border border-indigo-200 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]':
+                                selectedDoc?.id !== file.id,
+                            }
+                          )}
                           onClick={(e) => {
                             e.stopPropagation()
                             downloadMutation.mutate(file.id, {
@@ -408,7 +416,7 @@ export default function KnowledgeBase() {
         <>
           {/* Overlay with fade animation */}
           <div
-            className={`fixed inset-0 bg-black/20 backdrop-blur-xs z-50 transition-opacity duration-300 ${
+            className={`fixed inset-0 bg-black/10 backdrop-blur-sm z-50 transition-opacity duration-300 ${
               isPanelOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={handleClosePanel}
@@ -416,7 +424,7 @@ export default function KnowledgeBase() {
 
           {/* Panel with slide-in animation */}
           <div
-            className={`fixed right-0 top-0 h-full w-full md:w-1/2 bg-white shadow-xl z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
+            className={`fixed right-0 top-0 h-full w-full md:w-1/4 bg-white shadow-xl z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
               isPanelOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
@@ -437,7 +445,7 @@ export default function KnowledgeBase() {
 
               {/* Document title and file type badge */}
               <div className="mb-6 pr-12">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h3>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
                     {getFileTypeInfo(selectedDoc.type).label}
