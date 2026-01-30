@@ -3,6 +3,13 @@ import { webhookService } from '@/lib/config'
 import type { ChatQueryPayload, WebhookResponse } from '@/services/n8n/types'
 
 /**
+ * Extended payload type that includes optional streaming callback
+ */
+type ChatQueryPayloadWithCallback = ChatQueryPayload & {
+  onChunk?: (text: string) => void
+}
+
+/**
  * React Query mutation hook for chat queries
  *
  * Chat queries are mutations (not queries) because:
@@ -13,7 +20,8 @@ import type { ChatQueryPayload, WebhookResponse } from '@/services/n8n/types'
  * Mutations don't retry by default (retry: 0), which is correct for chat queries
  */
 export const useChatQuery = () => {
-  return useMutation<WebhookResponse, Error, ChatQueryPayload>({
-    mutationFn: (payload: ChatQueryPayload) => webhookService.sendQuery(payload)
+  return useMutation<WebhookResponse, Error, ChatQueryPayloadWithCallback>({
+    mutationFn: ({ onChunk, ...payload }: ChatQueryPayloadWithCallback) =>
+      webhookService.sendQuery(payload, onChunk)
   })
 }

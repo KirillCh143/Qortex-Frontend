@@ -10,6 +10,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 export default function Chat() {
   const { user } = useAuth()
   const [mode] = useState<'rag' | 'llm'>('rag')
+  const [streamingResponse, setStreamingResponse] = useState<string>('')
+  const [isStreaming, setIsStreaming] = useState(false)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const chatMutation = useChatQuery()
 
@@ -18,7 +20,7 @@ export default function Chat() {
   const saveMutation = useSaveChatMessage()
   const clearMutation = useClearChatHistory()
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive or streaming updates
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -26,7 +28,7 @@ export default function Chat() {
         behavior: 'smooth',
       })
     }
-  }, [messages.length])
+  }, [messages.length, streamingResponse])
 
   const handleSend = (content: string) => {
     if (!user?.id) return
@@ -48,7 +50,11 @@ export default function Chat() {
       },
       {
         onSuccess: () => {
-          // Send query to webhook service (mock or real)
+          // Start streaming state
+          setIsStreaming(true)
+          setStreamingResponse('')
+
+          // Send query to webhook service (mock or real) with streaming callback
           chatMutation.mutate(
             {
               question: content,
@@ -59,10 +65,17 @@ export default function Chat() {
                 role: msg.role,
                 content: msg.content,
               })),
+              onChunk: (text: string) => {
+                // Update streaming response as chunks arrive
+                setStreamingResponse(text)
+              },
             },
             {
               onSuccess: (data) => {
-                // Save assistant response to Directus
+                // Stream complete - save final response to Directus
+                setIsStreaming(false)
+                setStreamingResponse('')
+
                 saveMutation.mutate({
                   user: user.id,
                   role: 'assistant',
@@ -71,11 +84,17 @@ export default function Chat() {
                 })
               },
               onError: (error) => {
-                // Save error message to Directus
+                // Stream failed - save error message
+                setIsStreaming(false)
+                const errorContent = streamingResponse
+                  ? `${streamingResponse}\n\n[Error: ${error.message}]`
+                  : `Error: ${error.message}`
+                setStreamingResponse('')
+
                 saveMutation.mutate({
                   user: user.id,
                   role: 'assistant',
-                  content: `Error: ${error.message}`,
+                  content: errorContent,
                   mode,
                 })
               },
@@ -138,8 +157,18 @@ export default function Chat() {
                 />
               ))}
 
-              {/* Typing indicator */}
-              {chatMutation.isPending && (
+              {/* Streaming response */}
+              {isStreaming && streamingResponse && (
+                <MessageBubble
+                  role="assistant"
+                  content={streamingResponse}
+                  timestamp={new Date()}
+                  mode={mode}
+                />
+              )}
+
+              {/* Typing indicator - show only when pending but not yet streaming */}
+              {chatMutation.isPending && !isStreaming && (
                 <div className="flex gap-3 mb-4 flex-row">
                   <Avatar className="h-11 w-11 shrink-0">
                     <AvatarFallback className="bg-gradient-to-br from-[#8d6df5] to-[#7049f3] text-white">
