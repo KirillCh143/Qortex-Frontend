@@ -3,10 +3,18 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
 import type { DirectusFile } from '@/services/directus/types'
 import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
 import { useUpdateFile } from '@/hooks/useFiles'
+import { useFolders } from '@/hooks/useFolders'
 
 interface FileDetailPanelProps {
   file: DirectusFile | null
@@ -28,6 +36,7 @@ export function FileDetailPanel({
   const [editedDescription, setEditedDescription] = useState('')
 
   const updateFileMutation = useUpdateFile()
+  const { data: folders = [], isLoading: foldersLoading } = useFolders()
 
   if (!file) return null
 
@@ -62,6 +71,46 @@ export function FileDetailPanel({
     setEditedTitle(file.title)
     setEditedDescription(file.description)
     setIsEditing(false)
+  }
+
+  const handleMoveToFolder = async (newFolderId: string) => {
+    try {
+      await updateFileMutation.mutateAsync({
+        id: file.id,
+        data: {
+          folder: newFolderId === 'root' ? null : newFolderId
+        }
+      })
+      // Close the detail panel after successful move
+      handleClose()
+    } catch (error) {
+      console.error('Failed to move file:', error)
+    }
+  }
+
+  // Build folder options with hierarchy
+  const buildFolderOptions = () => {
+    const folderMap = new Map(folders.map(f => [f.id, f]))
+    const getFolderDepth = (folderId: string): number => {
+      const folder = folderMap.get(folderId)
+      if (!folder || !folder.parent) return 0
+      return 1 + getFolderDepth(folder.parent)
+    }
+
+    const sortedFolders = [...folders].sort((a, b) => {
+      const depthDiff = getFolderDepth(a.id) - getFolderDepth(b.id)
+      if (depthDiff !== 0) return depthDiff
+      return a.name.localeCompare(b.name)
+    })
+
+    return [
+      { id: 'root', name: 'Корневая папка', depth: 0 },
+      ...sortedFolders.map(f => ({
+        id: f.id,
+        name: f.name,
+        depth: getFolderDepth(f.id)
+      }))
+    ]
   }
 
   return (
@@ -151,9 +200,9 @@ export function FileDetailPanel({
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-3">
+          <div className="space-y-3">
             {isEditing ? (
-              <>
+              <div className="flex gap-3">
                 <Button
                   onClick={handleSave}
                   disabled={updateFileMutation.isPending}
@@ -172,30 +221,57 @@ export function FileDetailPanel({
                 >
                   Отмена
                 </Button>
-              </>
+              </div>
             ) : (
               <>
-                <Button
-                  variant="outline"
-                  onClick={handleEdit}
-                  className="flex-1 border-[#8466e4] text-[#8466e4] hover:bg-[#8466e4]/10"
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Редактировать
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => onDownload(file)}
-                  disabled={isDownloading}
-                  className="flex-1"
-                >
-                  {isDownloading ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  Скачать
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={handleEdit}
+                    className="flex-1 border-[#8466e4] text-[#8466e4] hover:bg-[#8466e4]/10"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Редактировать
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => onDownload(file)}
+                    disabled={isDownloading}
+                    className="flex-1"
+                  >
+                    {isDownloading ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" />
+                    )}
+                    Скачать
+                  </Button>
+                </div>
+
+                {/* Move to Folder section */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Переместить в папку
+                  </label>
+                  <Select
+                    value={file.folder || 'root'}
+                    onValueChange={handleMoveToFolder}
+                    disabled={updateFileMutation.isPending || foldersLoading}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Выберите папку" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {buildFolderOptions().map(folder => (
+                        <SelectItem key={folder.id} value={folder.id}>
+                          <span style={{ paddingLeft: `${folder.depth * 16}px` }}>
+                            {folder.name}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </>
             )}
           </div>
