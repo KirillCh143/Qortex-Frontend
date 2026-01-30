@@ -329,7 +329,7 @@ Phase 11 repurposes the Settings page into a container monitoring dashboard. Rem
 
 Plans:
 - [x] 12-01: UI/UX Polish (typing indicator + download loading state fix)
-- [ ] 12-02: Extract Detail Panel Component
+- [x] 12-02: Extract Detail Panel Component
 - [ ] 12-03: Knowledge Base Layout Refinement
 - [ ] 12-04: Improve Sidebar Folder Tree
 - [ ] 12-05: Streaming Responses Implementation

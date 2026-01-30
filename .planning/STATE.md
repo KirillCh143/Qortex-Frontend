@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 ## Current Position
 
 Phase: 12 of 12 (Small improvements and fixes)
-Plan: 1 of 5 in current phase
-Status: 12-01-PLAN.md complete (UI/UX Polish)
-Last activity: 2026-01-30 — Completed 12-01-PLAN.md (Typing indicator & download loading state fix)
+Plan: 2 of 5 in current phase
+Status: 12-02-PLAN.md complete (Extract Detail Panel Component)
+Last activity: 2026-01-30 — Completed 12-02-PLAN.md (FileDetailPanel component extraction)
 
-Progress: █████████████████████████████ 41/45 plans = 91%
+Progress: ██████████████████████████████ 42/45 plans = 93%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 31
-- Average duration: ~12.9 min/plan
-- Total execution time: ~400 min
+- Total plans completed: 32
+- Average duration: ~12.6 min/plan
+- Total execution time: ~403 min
 
 **By Phase:**
 
@@ -43,7 +43,7 @@ Progress: ███████████████████████�
 | 9. UI Overhaul | 5 | ~15 min | ~3 min | Parallel (1 wave, no checkpoints) |
 | 10. Knowledgebase Page Edits | 2 | ~TBD | ~TBD | TBD |
 | 11. Table with Containers statuses from Portainer | 2 | ~5 min | ~2.5 min | Parallel (2 waves, fully autonomous) |
-| 12. Small improvements and fixes | 1 | ~15 min | ~15 min | Sequential |
+| 12. Small improvements and fixes | 2 | ~18 min | ~9 min | Sequential |
 
 **Recent Trend:**
 - Last 5 plans: 09-01 (15m), 09-02 (10m), 09-03 (15m), 09-04 (15m), 09-05 (8m)
@@ -143,6 +143,12 @@ Recent decisions affecting current work:
 - Typing indicator displays while chatMutation.isPending with Bot avatar and gray background matching assistant messages
 - Download loading spinners scoped to individual files using downloadingFileId state in both grid and list views
 
+**Phase 12 Plan 2 (Extract Detail Panel Component):**
+- FileDetailPanel component extracted as standalone reusable component with props: file, open, onOpenChange, onDownload, isDownloading
+- getFileTypeInfo utility moved to shared lib/fileTypeHelpers.ts for cross-component file type detection
+- Delete button removed from detail panel (deferred to Plan 03 with enhanced file management features)
+- Detail panel maintains slide-in animation and all existing styling/localization
+
 ### Deferred Issues
 
 None yet.
@@ -165,5 +171,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Phase 12 Plan 1 complete - Ready for 12-02-PLAN.md (Extract Detail Panel Component)
+Stopped at: Phase 12 Plan 2 complete - Ready for 12-03-PLAN.md (File Management Features)
 Resume file: None
