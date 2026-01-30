@@ -31,6 +31,13 @@ export default function Chat() {
   const handleSend = (content: string) => {
     if (!user?.id) return
 
+    // Generate sessionidkey from user data
+    const sessionidkey = user.first_name && user.last_name
+      ? `${user.first_name}_${user.last_name}`
+      : user.first_name || user.last_name
+      ? `User_${user.id}`
+      : 'Unknown_User'
+
     // Save user message to Directus
     saveMutation.mutate(
       {
@@ -47,6 +54,7 @@ export default function Chat() {
               question: content,
               mode,
               sessionId: crypto.randomUUID(),
+              sessionidkey,
               history: messages.slice(-10).map((msg) => ({
                 role: msg.role,
                 content: msg.content,

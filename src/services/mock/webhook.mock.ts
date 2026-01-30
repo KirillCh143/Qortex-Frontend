@@ -6,7 +6,12 @@ export const createMockWebhookService = (): WebhookService => ({
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    const { question, mode } = payload
+    const { question, mode, sessionidkey } = payload
+
+    // Log sessionidkey for debugging
+    if (import.meta.env.DEV) {
+      console.debug('[mock webhook] Received sessionidkey:', sessionidkey)
+    }
 
     if (mode === 'rag') {
       return {

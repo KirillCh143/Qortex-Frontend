@@ -5,6 +5,7 @@ export const ChatQueryPayloadSchema = z.object({
   question: z.string().min(1),
   mode: z.enum(['rag', 'llm']),
   sessionId: z.string(),
+  sessionidkey: z.string(),
   history: z.array(z.object({
     role: z.enum(['user', 'assistant']),
     content: z.string()
