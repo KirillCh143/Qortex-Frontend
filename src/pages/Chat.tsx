@@ -6,6 +6,7 @@ import { Bot } from 'lucide-react'
 import { useChatQuery } from '@/hooks/useChatQuery'
 import { useChatMessages, useSaveChatMessage, useClearChatHistory } from '@/hooks/useChat'
 import { useAuth } from '@/contexts/AuthContext'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export default function Chat() {
   const { user } = useAuth()
@@ -96,7 +97,7 @@ export default function Chat() {
         {/* Messages container with scroll */}
         <div
           ref={messagesContainerRef}
-          className="absolute inset-0 overflow-y-auto p-4 pb-32 bg-[#fdfefe]"
+          className="absolute inset-0 overflow-y-auto p-4 pb-32 bg-[#fbfcfd]"
         >
           {isLoading ? (
             <div className="flex items-center justify-center h-full text-gray-500">
@@ -129,6 +130,27 @@ export default function Chat() {
                   mode={message.mode}
                 />
               ))}
+
+              {/* Typing indicator */}
+              {chatMutation.isPending && (
+                <div className="flex gap-3 mb-4 flex-row">
+                  <Avatar className="h-10 w-10 shrink-0">
+                    <AvatarFallback className="bg-gradient-to-br from-[#8d6df5] to-[#7049f3] text-white">
+                      <Bot size={20} />
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex flex-col items-start max-w-[50%]">
+                    <div className="rounded-xl rounded-tl-none px-4 py-3 bg-white text-gray-900 border shadow-lg shadow-slate-100">
+                      <div className="flex gap-1.5">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
