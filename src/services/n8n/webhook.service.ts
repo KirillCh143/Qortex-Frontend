@@ -29,12 +29,12 @@ export const createWebhookService = (webhookUrl: string): WebhookService => ({
         throw new Error(`Webhook request failed with status ${response.status}`)
       }
 
-      // Check if response is streaming
+      // Check if response is streaming (n8n with enableStreaming: true)
       const contentType = response.headers.get('Content-Type') || ''
-      const isStreaming = contentType.includes('text/event-stream') || contentType.includes('text/plain')
+      const isStreaming = response.body && onChunk
 
-      if (isStreaming && response.body && onChunk) {
-        // Handle streaming response
+      if (isStreaming) {
+        // Handle streaming response from n8n AI Agent
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
         let accumulatedAnswer = ''
@@ -46,42 +46,21 @@ export const createWebhookService = (webhookUrl: string): WebhookService => ({
             if (done) break
 
             const chunk = decoder.decode(value, { stream: true })
-            const lines = chunk.split('\n')
 
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const data = line.substring(6).trim()
-                if (data && data !== '[DONE]') {
-                  try {
-                    // Try parsing as JSON first (in case n8n sends JSON chunks)
-                    const parsed = JSON.parse(data)
-                    if (parsed.answer) {
-                      accumulatedAnswer += parsed.answer
-                      onChunk(accumulatedAnswer)
-                    } else if (typeof parsed === 'string') {
-                      accumulatedAnswer += parsed
-                      onChunk(accumulatedAnswer)
-                    }
-                  } catch {
-                    // If not JSON, treat as plain text
-                    accumulatedAnswer += data
-                    onChunk(accumulatedAnswer)
-                  }
-                }
-              } else if (line.trim() && !line.startsWith(':')) {
-                // Plain text chunk (not SSE format)
-                accumulatedAnswer += line
-                onChunk(accumulatedAnswer)
-              }
+            // n8n AI Agent streams plain text chunks (not SSE format)
+            // Just accumulate and send each chunk
+            if (chunk.trim()) {
+              accumulatedAnswer += chunk
+              onChunk(accumulatedAnswer)
             }
           }
         } finally {
           reader.releaseLock()
         }
 
-        // Return final accumulated response
+        // Return final accumulated response in expected format
         return WebhookResponseSchema.parse({
-          answer: accumulatedAnswer
+          answer: accumulatedAnswer.trim()
         })
       } else {
         // Fall back to JSON response for non-streaming
