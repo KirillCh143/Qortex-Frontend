@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-13)
 ## Current Position
 
 Phase: 12 of 12 (Small improvements and fixes)
-Plan: 3 of 5 in current phase
-Status: 12-03-PLAN.md complete (File Management Features)
-Last activity: 2026-01-30 — Completed 12-03-PLAN.md (inline editing and folder relocation)
+Plan: 4 of 5 in current phase
+Status: In progress
+Last activity: 2026-01-30 — Completed 12-04-PLAN.md (Webhook Session Key)
 
-Progress: ██████████████████████████████░ 43/45 plans = 96%
+Progress: ███████████████████████████████ 44/45 plans = 98%
 
 ## Performance Metrics
 
@@ -43,11 +43,11 @@ Progress: ███████████████████████�
 | 9. UI Overhaul | 5 | ~15 min | ~3 min | Parallel (1 wave, no checkpoints) |
 | 10. Knowledgebase Page Edits | 2 | ~TBD | ~TBD | TBD |
 | 11. Table with Containers statuses from Portainer | 2 | ~5 min | ~2.5 min | Parallel (2 waves, fully autonomous) |
-| 12. Small improvements and fixes | 3 | ~26 min | ~8.7 min | Sequential |
+| 12. Small improvements and fixes | 4 | ~28 min | ~7 min | Sequential |
 
 **Recent Trend:**
-- Last 5 plans: 09-01 (15m), 09-02 (10m), 09-03 (15m), 09-04 (15m), 09-05 (8m)
-- Trend: Phase 9 executed fully in parallel (5 agents, 1 wave), all plans completed successfully, purple theme and Russian localization applied across UI
+- Last 5 plans: 09-05 (8m), 11-01 (2.5m), 11-02 (2.5m), 12-01 (12m), 12-03 (10m), 12-04 (2m)
+- Trend: Phase 12 completing efficiently with small focused improvements, avg ~6-8 min per plan
 
 ## Accumulated Context
 
@@ -155,6 +155,12 @@ Recent decisions affecting current work:
 - Folder hierarchy built with depth-based indentation (16px per level) using recursive parent traversal
 - Edit button uses purple outline style, Save button uses purple solid style matching Phase 9 theme guidelines
 
+**Phase 12 Plan 4 (Webhook Session Key):**
+- FirstName_LastName format as primary sessionidkey format for n8n webhook payload
+- Graceful fallback chain for robustness: full name → User_{id} → Unknown_User
+- DEV-mode logging in mock service to aid debugging without cluttering production logs
+- Zod schema automatically validates new field without changes needed to useChatQuery hook or webhook service
+
 ### Deferred Issues
 
 None yet.
@@ -177,5 +183,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-30
-Stopped at: Phase 12 Plan 3 complete - Ready for 12-04-PLAN.md (Webhook Session Key)
+Stopped at: Phase 12 Plan 4 complete - Ready for 12-05-PLAN.md (Streaming Responses)
 Resume file: None

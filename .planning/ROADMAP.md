@@ -331,7 +331,7 @@ Plans:
 - [x] 12-01: UI/UX Polish (typing indicator + download loading state fix)
 - [x] 12-02: Extract Detail Panel Component
 - [x] 12-03: File Management Features (inline editing + folder relocation)
-- [ ] 12-04: Webhook Session Key
+- [x] 12-04: Webhook Session Key
 - [ ] 12-05: Streaming Responses Implementation
 
 **Details:**
