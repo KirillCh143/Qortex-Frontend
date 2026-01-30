@@ -320,10 +320,38 @@ Phase 11 repurposes the Settings page into a container monitoring dashboard. Rem
 - Purple theme and Russian localization matching Phase 9 design
 - Read-only monitoring (no container actions)
 
+### Phase 12: Small improvements and fixes
+**Goal**: Polish UI/UX with incremental improvements across chat and knowledge base interfaces
+**Depends on**: Phase 11
+**Research**: Unlikely (internal UI/UX improvements)
+**Plans**: 5 plans
+**Status**: In Progress
+
+Plans:
+- [x] 12-01: UI/UX Polish (typing indicator + download loading state fix)
+- [ ] 12-02: Extract Detail Panel Component
+- [ ] 12-03: Knowledge Base Layout Refinement
+- [ ] 12-04: Improve Sidebar Folder Tree
+- [ ] 12-05: Streaming Responses Implementation
+
+**Details:**
+Phase 12 addresses incremental improvements and polish identified during user testing:
+1. UI/UX Polish:
+   - Typing indicator for bot responses (animated dots)
+   - Fix download loading state scoping (per-file instead of global)
+2. Component Extraction:
+   - Extract detail panel from KnowledgeBase.tsx into reusable component
+3. Layout Refinement:
+   - Improve spacing, alignment, and visual hierarchy in Knowledge Base
+4. Folder Tree Enhancement:
+   - Better expand/collapse UX and visual indicators
+5. Streaming Responses:
+   - Implement real-time streaming for chat responses
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9 → 10 → 11
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 8 → 9 → 10 → 11 → 12
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -342,4 +370,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 8. Configuration Refactoring & UX Enhancements | 5/5 | Complete | 2026-01-20 |
 | 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
 | 10. Knowledgebase page edits | 0/0 | Not planned | - |
-| 11. Table with Containers statuses from Portainer | 0/0 | Not planned | - |
+| 11. Table with Containers statuses from Portainer | 2/2 | Complete | 2026-01-26 |
+| 12. Small improvements and fixes | 1/5 | In Progress | - |

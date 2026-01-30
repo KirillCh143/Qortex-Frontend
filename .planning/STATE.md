@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-13)
 
 **Core value:** Exceptional chat user experience that makes finding documentation feel natural and effortless.
-**Current focus:** Phase 11 — Table with Containers statuses from Portainer (Complete)
+**Current focus:** Phase 12 — Small improvements and fixes (In Progress)
 
 ## Current Position
 
-Phase: 11 of 11 (Table with Containers statuses from Portainer)
-Plan: 3 of 3 in current phase (including FIX)
-Status: Phase complete, UAT fixes applied
-Last activity: 2026-01-27 — Completed 11-FIX.md (UAT issue resolution)
+Phase: 12 of 12 (Small improvements and fixes)
+Plan: 1 of 5 in current phase
+Status: 12-01-PLAN.md complete (UI/UX Polish)
+Last activity: 2026-01-30 — Completed 12-01-PLAN.md (Typing indicator & download loading state fix)
 
-Progress: ████████████████████████████ 40/40 plans = 100%
+Progress: █████████████████████████████ 41/45 plans = 91%
 
 ## Performance Metrics
 
@@ -43,6 +43,7 @@ Progress: ███████████████████████�
 | 9. UI Overhaul | 5 | ~15 min | ~3 min | Parallel (1 wave, no checkpoints) |
 | 10. Knowledgebase Page Edits | 2 | ~TBD | ~TBD | TBD |
 | 11. Table with Containers statuses from Portainer | 2 | ~5 min | ~2.5 min | Parallel (2 waves, fully autonomous) |
+| 12. Small improvements and fixes | 1 | ~15 min | ~15 min | Sequential |
 
 **Recent Trend:**
 - Last 5 plans: 09-01 (15m), 09-02 (10m), 09-03 (15m), 09-04 (15m), 09-05 (8m)
@@ -136,6 +137,12 @@ Recent decisions affecting current work:
 - Clean white backgrounds with subtle shadows throughout
 - Polished table styling with light gray headers and hover states
 
+**Phase 12 Plan 1 (UI/UX Polish):**
+- Typing indicator pattern: Animated bouncing dots with staggered delays (0ms, 150ms, 300ms) in MessageBubble-style container
+- Scoped loading state pattern: Local state tracks specific item ID being processed, check both isPending && itemId === currentId
+- Typing indicator displays while chatMutation.isPending with Bot avatar and gray background matching assistant messages
+- Download loading spinners scoped to individual files using downloadingFileId state in both grid and list views
+
 ### Deferred Issues
 
 None yet.
@@ -149,6 +156,7 @@ None yet.
 - Phase 7.5 inserted after Phase 7.4: Login page design overhaul and redirect fix (URGENT)
 - Phase 10 added: Knowledgebase page edits (2026-01-24)
 - Phase 11 added: Table with Containers statuses from Portainer (2026-01-26, completed same day)
+- Phase 12 added: Small improvements and fixes (2026-01-29)
 
 ### Blockers/Concerns
 
@@ -156,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-27
-Stopped at: Phase 11 UAT fixes complete - Ready for re-verification
+Last session: 2026-01-30
+Stopped at: Phase 12 Plan 1 complete - Ready for 12-02-PLAN.md (Extract Detail Panel Component)
 Resume file: None
