@@ -330,8 +330,8 @@ Phase 11 repurposes the Settings page into a container monitoring dashboard. Rem
 Plans:
 - [x] 12-01: UI/UX Polish (typing indicator + download loading state fix)
 - [x] 12-02: Extract Detail Panel Component
-- [ ] 12-03: Knowledge Base Layout Refinement
-- [ ] 12-04: Improve Sidebar Folder Tree
+- [x] 12-03: File Management Features (inline editing + folder relocation)
+- [ ] 12-04: Webhook Session Key
 - [ ] 12-05: Streaming Responses Implementation
 
 **Details:**
@@ -371,4 +371,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
 | 10. Knowledgebase page edits | 0/0 | Not planned | - |
 | 11. Table with Containers statuses from Portainer | 2/2 | Complete | 2026-01-26 |
-| 12. Small improvements and fixes | 1/5 | In Progress | - |
+| 12. Small improvements and fixes | 3/5 | In Progress | - |
