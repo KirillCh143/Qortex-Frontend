@@ -111,6 +111,7 @@ export default function KnowledgeBase() {
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
   const [createFolderOpen, setCreateFolderOpen] = useState(false)
   const [uploadFileOpen, setUploadFileOpen] = useState(false)
+  const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null)
 
   // Fetch folders and files using React Query
   const { data: folders = [] } = useFolders()
@@ -162,6 +163,7 @@ export default function KnowledgeBase() {
   const handleDownload = () => {
     if (!selectedDoc) return
 
+    setDownloadingFileId(selectedDoc.id)
     // Use download mutation - the hook handles the download logic
     downloadMutation.mutate(selectedDoc.id, {
       onSuccess: (blob) => {
@@ -176,6 +178,10 @@ export default function KnowledgeBase() {
         // Clean up
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
+        setDownloadingFileId(null)
+      },
+      onError: () => {
+        setDownloadingFileId(null)
       },
     })
   }
@@ -197,9 +203,9 @@ export default function KnowledgeBase() {
   }
 
   return (
-    <div className="h-full flex bg-[#fdfefe]">
+    <div className="h-full flex bg-[#fbfcfd]">
       {/* Folder Sidebar - Far Left */}
-      <div className="hidden md:block w-74 border-r border-slate-300 overflow-y-auto bg-[#fdfefe]">
+      <div className="hidden md:block w-74 border-r border-slate-300 overflow-y-auto bg-[#fbfcfd]">
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
@@ -375,6 +381,7 @@ export default function KnowledgeBase() {
                           )}
                           onClick={(e) => {
                             e.stopPropagation()
+                            setDownloadingFileId(file.id)
                             downloadMutation.mutate(file.id, {
                               onSuccess: (blob) => {
                                 const url = URL.createObjectURL(blob)
@@ -385,11 +392,15 @@ export default function KnowledgeBase() {
                                 a.click()
                                 document.body.removeChild(a)
                                 URL.revokeObjectURL(url)
+                                setDownloadingFileId(null)
+                              },
+                              onError: () => {
+                                setDownloadingFileId(null)
                               },
                             })
                           }}
                         >
-                          {downloadMutation.isPending && downloadMutation.variables === file.id ? (
+                          {downloadMutation.isPending && downloadingFileId === file.id ? (
                             <Loader2 className="h-5 w-5 animate-spin" />
                           ) : (
                             <Download className="h-5 w-5" />
@@ -487,10 +498,10 @@ export default function KnowledgeBase() {
                 <Button
                   variant="outline"
                   onClick={handleDownload}
-                  disabled={downloadMutation.isPending}
+                  disabled={downloadMutation.isPending && downloadingFileId === selectedDoc.id}
                   className="flex-1"
                 >
-                  {downloadMutation.isPending ? (
+                  {downloadMutation.isPending && downloadingFileId === selectedDoc.id ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
                     <Download className="h-4 w-4 mr-2" />

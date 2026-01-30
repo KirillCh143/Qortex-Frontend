@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Download,
   FileText,
@@ -83,6 +84,7 @@ function getFileTypeInfo(mimeType: string) {
 
 export default function FileListView({ files, onSelectFile, selectedFile }: FileListViewProps) {
   const downloadMutation = useDownloadFile()
+  const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null)
 
   return (
     <div className="flex flex-col gap-4">
@@ -96,6 +98,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
 
         const handleDownloadClick = (e: React.MouseEvent) => {
           e.stopPropagation() // Prevent selecting the file when download button is clicked
+          setDownloadingFileId(file.id)
           downloadMutation.mutate(file.id, {
             onSuccess: (blob) => {
               const url = URL.createObjectURL(blob)
@@ -106,6 +109,10 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
               a.click()
               document.body.removeChild(a)
               URL.revokeObjectURL(url)
+              setDownloadingFileId(null)
+            },
+            onError: () => {
+              setDownloadingFileId(null)
             },
           })
         }
@@ -163,7 +170,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
             </div>
             <button
               onClick={handleDownloadClick}
-              disabled={downloadMutation.isPending}
+              disabled={downloadMutation.isPending && downloadingFileId === file.id}
               className={cn(
                 'ml-4 size-10 rounded-full flex items-center justify-center transition-all',
                 {
@@ -173,7 +180,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
                 }
               )}
             >
-              {downloadMutation.isPending ? (
+              {downloadMutation.isPending && downloadingFileId === file.id ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <Download className="h-5 w-5" />
