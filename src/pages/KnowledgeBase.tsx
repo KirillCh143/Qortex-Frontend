@@ -11,18 +11,12 @@ import {
 } from '@/components/ui/dialog'
 import {
   Search,
-  X,
   Download,
   Loader2,
   LayoutGrid,
   List,
   FilePlus,
   FolderPlus,
-  FileText,
-  FileType,
-  Sheet,
-  File as FileIcon,
-  Trash2,
   User,
   Calendar,
 } from 'lucide-react'
@@ -35,52 +29,9 @@ import { FolderTree } from '@/components/FolderTree'
 import { CreateFolderDialog } from '@/components/CreateFolderDialog'
 import { UploadFileDialog } from '@/components/UploadFileDialog'
 import AutoScrollTitle from '@/components/AutoScrollTitle'
+import { FileDetailPanel } from '@/components/FileDetailPanel'
+import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
 import { cn } from '@/lib/utils'
-
-// Helper function to get file type icon and color
-const getFileTypeInfo = (mimeType: string) => {
-  if (mimeType.includes('pdf')) {
-    return {
-      icon: FileText,
-      bgColor: 'bg-red-50',
-      iconColor: 'text-red-500',
-      borderColor: 'border-red-100',
-      label: 'PDF',
-    }
-  } else if (mimeType.includes('word') || mimeType.includes('document')) {
-    return {
-      icon: FileType,
-      bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600',
-      borderColor: 'border-blue-100',
-      label: 'DOCX',
-    }
-  } else if (mimeType.includes('sheet') || mimeType.includes('excel')) {
-    return {
-      icon: Sheet,
-      bgColor: 'bg-green-50',
-      iconColor: 'text-green-600',
-      borderColor: 'border-green-100',
-      label: 'XLSX',
-    }
-  } else if (mimeType.includes('text')) {
-    return {
-      icon: FileText,
-      bgColor: 'bg-slate-50',
-      iconColor: 'text-slate-500',
-      borderColor: 'border-slate-100',
-      label: 'TXT',
-    }
-  } else {
-    return {
-      icon: FileIcon,
-      bgColor: 'bg-slate-50',
-      iconColor: 'text-slate-500',
-      borderColor: 'border-slate-100',
-      label: 'FILE',
-    }
-  }
-}
 
 // Helper function for Russian pluralization of file count
 const getPluralForm = (count: number) => {
@@ -423,109 +374,17 @@ export default function KnowledgeBase() {
       </div>
 
       {/* Detail Panel */}
-      {selectedDoc && (
-        <>
-          {/* Overlay with fade animation */}
-          <div
-            className={`fixed inset-0 bg-black/10 backdrop-blur-sm z-50 transition-opacity duration-300 ${
-              isPanelOpen ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={handleClosePanel}
-          />
-
-          {/* Panel with slide-in animation */}
-          <div
-            className={`fixed right-0 top-0 h-full w-full md:w-1/4 bg-white shadow-xl z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-              isPanelOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
-          >
-            <div className="p-6">
-              {/* Close button */}
-              <button
-                onClick={handleClosePanel}
-                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5 text-gray-500" />
-              </button>
-
-              {/* Panel header */}
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Информация о файле</h2>
-              </div>
-
-              {/* Document title and file type badge */}
-              <div className="mb-6 pr-12">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{selectedDoc.title}</h3>
-                <div className="flex items-center gap-3 text-sm text-gray-500">
-                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
-                    {getFileTypeInfo(selectedDoc.type).label}
-                  </span>
-                  <span>{formatDateRussian(new Date(selectedDoc.uploaded_on))}</span>
-                </div>
-              </div>
-
-              {/* Metadata section */}
-              <div className="mb-6 space-y-2">
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Имя файла:</span>
-                  <span className="text-sm text-gray-600">{selectedDoc.filename_download}</span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Размер:</span>
-                  <span className="text-sm text-gray-600">
-                    {formatFileSize(selectedDoc.filesize)}
-                  </span>
-                </div>
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm font-medium text-gray-700">Загрузил:</span>
-                  <span className="text-sm text-gray-600">
-                    {selectedDoc.uploaded_by
-                      ? `${selectedDoc.uploaded_by.first_name} ${selectedDoc.uploaded_by.last_name}`
-                      : 'Неизвестный'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Description section */}
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Описание</h3>
-                <p className="text-gray-700 leading-relaxed">{selectedDoc.description}</p>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleDownload}
-                  disabled={downloadMutation.isPending && downloadingFileId === selectedDoc.id}
-                  className="flex-1"
-                >
-                  {downloadMutation.isPending && downloadingFileId === selectedDoc.id ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  Скачать
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => setDeleteDialogOpen(true)}
-                  disabled={deleteMutation.isPending}
-                  className="flex-1"
-                >
-                  {deleteMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-4 w-4 mr-2" />
-                  )}
-                  Удалить
-                </Button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      <FileDetailPanel
+        file={selectedDoc}
+        open={isPanelOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleClosePanel()
+          }
+        }}
+        onDownload={handleDownload}
+        isDownloading={downloadMutation.isPending && downloadingFileId === selectedDoc?.id}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
