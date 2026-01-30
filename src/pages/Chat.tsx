@@ -50,8 +50,8 @@ export default function Chat() {
       },
       {
         onSuccess: () => {
-          // Start streaming state
-          setIsStreaming(true)
+          // Reset streaming state
+          setIsStreaming(false)
           setStreamingResponse('')
 
           // Send query to webhook service (mock or real) with streaming callback
@@ -66,6 +66,10 @@ export default function Chat() {
                 content: msg.content,
               })),
               onChunk: (text: string) => {
+                // First chunk: hide typing indicator, show streaming
+                if (!isStreaming) {
+                  setIsStreaming(true)
+                }
                 // Update streaming response as chunks arrive
                 setStreamingResponse(text)
               },
