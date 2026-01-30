@@ -1,8 +1,12 @@
-import { X, Download, Loader2 } from 'lucide-react'
+import { X, Download, Loader2, Edit } from 'lucide-react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { formatFileSize, formatDateRussian } from '@/lib/mockDocuments'
 import type { DirectusFile } from '@/services/directus/types'
 import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
+import { useUpdateFile } from '@/hooks/useFiles'
 
 interface FileDetailPanelProps {
   file: DirectusFile | null
@@ -19,10 +23,45 @@ export function FileDetailPanel({
   onDownload,
   isDownloading,
 }: FileDetailPanelProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedTitle, setEditedTitle] = useState('')
+  const [editedDescription, setEditedDescription] = useState('')
+
+  const updateFileMutation = useUpdateFile()
+
   if (!file) return null
 
   const handleClose = () => {
     onOpenChange(false)
+    // Reset edit mode when closing
+    setIsEditing(false)
+  }
+
+  const handleEdit = () => {
+    setEditedTitle(file.title)
+    setEditedDescription(file.description)
+    setIsEditing(true)
+  }
+
+  const handleSave = async () => {
+    try {
+      await updateFileMutation.mutateAsync({
+        id: file.id,
+        data: {
+          title: editedTitle,
+          description: editedDescription
+        }
+      })
+      setIsEditing(false)
+    } catch (error) {
+      console.error('Failed to update file:', error)
+    }
+  }
+
+  const handleCancel = () => {
+    setEditedTitle(file.title)
+    setEditedDescription(file.description)
+    setIsEditing(false)
   }
 
   return (
@@ -58,7 +97,16 @@ export function FileDetailPanel({
 
           {/* Document title and file type badge */}
           <div className="mb-6 pr-12">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{file.title}</h3>
+            {isEditing ? (
+              <Input
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                className="mb-2"
+                placeholder="Название файла"
+              />
+            ) : (
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{file.title}</h3>
+            )}
             <div className="flex items-center gap-3 text-sm text-gray-500">
               <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
                 {getFileTypeInfo(file.type).label}
@@ -90,24 +138,66 @@ export function FileDetailPanel({
           {/* Description section */}
           <div className="mb-6">
             <h3 className="text-sm font-medium text-gray-700 mb-2">Описание</h3>
-            <p className="text-gray-700 leading-relaxed">{file.description}</p>
+            {isEditing ? (
+              <Textarea
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                placeholder="Описание файла"
+                className="min-h-[100px]"
+              />
+            ) : (
+              <p className="text-gray-700 leading-relaxed">{file.description}</p>
+            )}
           </div>
 
           {/* Action buttons */}
           <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={() => onDownload(file)}
-              disabled={isDownloading}
-              className="flex-1"
-            >
-              {isDownloading ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4 mr-2" />
-              )}
-              Скачать
-            </Button>
+            {isEditing ? (
+              <>
+                <Button
+                  onClick={handleSave}
+                  disabled={updateFileMutation.isPending}
+                  className="flex-1 bg-[#8466e4] hover:bg-[#7049f3]"
+                >
+                  {updateFileMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : null}
+                  Сохранить
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={updateFileMutation.isPending}
+                  className="flex-1"
+                >
+                  Отмена
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={handleEdit}
+                  className="flex-1 border-[#8466e4] text-[#8466e4] hover:bg-[#8466e4]/10"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Редактировать
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => onDownload(file)}
+                  disabled={isDownloading}
+                  className="flex-1"
+                >
+                  {isDownloading ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Скачать
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

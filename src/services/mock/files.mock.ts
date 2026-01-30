@@ -85,6 +85,22 @@ export const createMockFilesService = (): FilesService => {
       }
       mockFiles.splice(index, 1);
       console.log('Mock: Deleted file', id);
+    },
+
+    async updateFileMetadata(id: string, data: { title?: string; description?: string; folder?: string | null }) {
+      // In mock mode, find and update file in mockFiles array
+      const file = mockFiles.find(f => f.id === id);
+      if (!file) {
+        throw new Error(`File not found: ${id}`);
+      }
+
+      // Update the file with new metadata
+      if (data.title !== undefined) file.title = data.title;
+      if (data.description !== undefined) file.description = data.description;
+      if (data.folder !== undefined) file.folder = data.folder;
+
+      console.log('Mock: Updated file metadata', id, data);
+      return file;
     }
   };
 };

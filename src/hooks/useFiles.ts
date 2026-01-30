@@ -56,3 +56,20 @@ export const useDeleteFile = () => {
     }
   });
 };
+
+// Hook for updating file metadata (title, description, folder)
+export const useUpdateFile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { title?: string; description?: string; folder?: string | null } }) =>
+      filesService.updateFileMetadata(id, data),
+    onSuccess: () => {
+      // Invalidate files query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['files'] });
+    },
+    onError: (error) => {
+      console.error('Failed to update file:', error);
+    }
+  });
+};

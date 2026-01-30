@@ -30,6 +30,7 @@ export interface FilesService {
   downloadFile: (id: string) => Promise<Blob>;
   uploadFile: (data: { file: File; title?: string; description?: string; folder: string | null }) => Promise<DirectusFile>;
   deleteFile: (id: string) => Promise<void>;
+  updateFileMetadata: (id: string, data: { title?: string; description?: string; folder?: string | null }) => Promise<DirectusFile>;
 }
 
 // ChatMessage interface matching Directus chat_messages collection schema

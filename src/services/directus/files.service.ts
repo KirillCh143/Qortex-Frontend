@@ -1,4 +1,4 @@
-import { readFiles, readFolders, createFolder } from '@directus/sdk';
+import { readFiles, readFolders, createFolder, updateFile } from '@directus/sdk';
 import { FilesService, DirectusFile, FoldersService, DirectusFolder } from './types';
 
 // Real implementation using Directus SDK
@@ -114,6 +114,13 @@ export const createRealFilesService = (client: any): FilesService => ({
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.errors?.[0]?.message || `Failed to delete file: ${response.statusText}`);
     }
+  },
+
+  async updateFileMetadata(id: string, data: { title?: string; description?: string; folder?: string | null }) {
+    const result = await client.request(
+      updateFile(id, data)
+    );
+    return result as DirectusFile;
   }
 });
 
