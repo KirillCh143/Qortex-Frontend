@@ -29,44 +29,37 @@ export const createWebhookService = (webhookUrl: string): WebhookService => ({
         throw new Error(`Webhook request failed with status ${response.status}`)
       }
 
-      // Check if response is streaming (n8n with enableStreaming: true)
-      const contentType = response.headers.get('Content-Type') || ''
-      const isStreaming = response.body && onChunk
+      // Get response data
+      const data = await response.json()
 
-      if (isStreaming) {
-        // Handle streaming response from n8n AI Agent
-        const reader = response.body.getReader()
-        const decoder = new TextDecoder()
-        let accumulatedAnswer = ''
-
-        try {
-          while (true) {
-            const { done, value } = await reader.read()
-
-            if (done) break
-
-            const chunk = decoder.decode(value, { stream: true })
-
-            // n8n AI Agent streams plain text chunks (not SSE format)
-            // Just accumulate and send each chunk
-            if (chunk.trim()) {
-              accumulatedAnswer += chunk
-              onChunk(accumulatedAnswer)
-            }
-          }
-        } finally {
-          reader.releaseLock()
-        }
-
-        // Return final accumulated response in expected format
-        return WebhookResponseSchema.parse({
-          answer: accumulatedAnswer.trim()
-        })
+      // Handle n8n AI Agent JSON wrapper format: {"output": "text"}
+      let answerText: string
+      if (data.output) {
+        answerText = data.output
+      } else if (data.answer) {
+        answerText = data.answer
       } else {
-        // Fall back to JSON response for non-streaming
-        const data = await response.json()
-        return WebhookResponseSchema.parse(data)
+        answerText = JSON.stringify(data)
       }
+
+      // Simulate streaming for ChatGPT-like UX (since n8n doesn't stream token-by-token)
+      if (onChunk) {
+        const words = answerText.split(' ')
+        let accumulated = ''
+
+        for (let i = 0; i < words.length; i++) {
+          accumulated += (i > 0 ? ' ' : '') + words[i]
+          onChunk(accumulated)
+          // 30ms delay between words for smooth streaming effect
+          await new Promise(resolve => setTimeout(resolve, 30))
+        }
+      }
+
+      // Return final response
+      return WebhookResponseSchema.parse({
+        answer: answerText,
+        sources: data.sources
+      })
     } catch (error) {
       clearTimeout(timeoutId)
 
