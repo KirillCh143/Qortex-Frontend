@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
-import { Header } from '@/components/Header'
 import { Bot } from 'lucide-react'
 import { useChatQuery } from '@/hooks/useChatQuery'
 import { useChatMessages, useSaveChatMessage, useClearChatHistory } from '@/hooks/useChat'
@@ -10,7 +9,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export default function Chat() {
   const { user } = useAuth()
-  const [mode, setMode] = useState<'rag' | 'llm'>('rag')
+  const [mode] = useState<'rag' | 'llm'>('rag')
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const chatMutation = useChatQuery()
 
@@ -134,18 +133,27 @@ export default function Chat() {
               {/* Typing indicator */}
               {chatMutation.isPending && (
                 <div className="flex gap-3 mb-4 flex-row">
-                  <Avatar className="h-10 w-10 shrink-0">
+                  <Avatar className="h-11 w-11 shrink-0">
                     <AvatarFallback className="bg-gradient-to-br from-[#8d6df5] to-[#7049f3] text-white">
                       <Bot size={20} />
                     </AvatarFallback>
                   </Avatar>
 
                   <div className="flex flex-col items-start max-w-[50%]">
-                    <div className="rounded-xl rounded-tl-none px-4 py-3 bg-white text-gray-900 border shadow-lg shadow-slate-100">
-                      <div className="flex gap-1.5">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <div className="rounded-xl rounded-tl-none px-4 py-3 bg-white text-gray-900 border shadow-lg shadow-slate-100 h-11">
+                      <div className="flex gap-1.5 pt-1.25">
+                        <div
+                          className="w-2 h-2 bg-[#7049f3]/90 rounded-full animate-bounce"
+                          style={{ animationDelay: '0ms' }}
+                        />
+                        <div
+                          className="w-2 h-2 bg-[#7049f3]/90 rounded-full animate-bounce"
+                          style={{ animationDelay: '150ms' }}
+                        />
+                        <div
+                          className="w-2 h-2 bg-[#7049f3]/90 rounded-full animate-bounce"
+                          style={{ animationDelay: '300ms' }}
+                        />
                       </div>
                     </div>
                   </div>

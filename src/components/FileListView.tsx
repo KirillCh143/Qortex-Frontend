@@ -90,7 +90,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
     <div className="flex flex-col gap-4">
       {files.map((file) => {
         const isSelected = selectedFile?.id === file.id
-        const { Icon, iconBg, iconText, iconBorder, tagBg, tagText, tagBorder, label } =
+        const { Icon, iconBg, iconText, iconBorder, label } =
           getFileTypeInfo(file.type)
         const uploaderName = file.uploaded_by
           ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name?.[0] || ''}.`
