@@ -320,19 +320,20 @@ Phase 11 repurposes the Settings page into a container monitoring dashboard. Rem
 - Purple theme and Russian localization matching Phase 9 design
 - Read-only monitoring (no container actions)
 
-### Phase 12: Small improvements and fixes
+### Phase 12: Small improvements and fixes ✓
 **Goal**: Polish UI/UX with incremental improvements across chat and knowledge base interfaces
 **Depends on**: Phase 11
 **Research**: Unlikely (internal UI/UX improvements)
-**Plans**: 5 plans
-**Status**: In Progress
+**Plans**: 5/5 complete
+**Status**: Complete
+**Completed**: 2026-01-30
 
 Plans:
 - [x] 12-01: UI/UX Polish (typing indicator + download loading state fix)
 - [x] 12-02: Extract Detail Panel Component
 - [x] 12-03: File Management Features (inline editing + folder relocation)
 - [x] 12-04: Webhook Session Key
-- [ ] 12-05: Streaming Responses Implementation
+- [x] 12-05: Streaming Responses Implementation
 
 **Details:**
 Phase 12 addresses incremental improvements and polish identified during user testing:
@@ -371,4 +372,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 9. UI Overhaul | 5/5 | Complete | 2026-01-21 |
 | 10. Knowledgebase page edits | 0/0 | Not planned | - |
 | 11. Table with Containers statuses from Portainer | 2/2 | Complete | 2026-01-26 |
-| 12. Small improvements and fixes | 3/5 | In Progress | - |
+| 12. Small improvements and fixes | 5/5 | Complete | 2026-01-30 |
