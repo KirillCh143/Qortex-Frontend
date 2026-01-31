@@ -11,6 +11,8 @@ export interface Container {
   status: ContainerStatus;
   uptime: string;
   health: ContainerHealth;
+  port: string;
+  image: string;
 }
 
 // PortainerService interface for both mock and real implementations

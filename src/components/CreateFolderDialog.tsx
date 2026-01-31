@@ -139,7 +139,7 @@ export function CreateFolderDialog({
           <DialogFooter>
             <Button
               type="button"
-              className="h-14 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
+              className="h-13 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
               onClick={() => handleOpenChange(false)}
               disabled={createFolderMutation.isPending}
             >
@@ -148,7 +148,7 @@ export function CreateFolderDialog({
             <Button
               type="submit"
               disabled={createFolderMutation.isPending || !folderName.trim()}
-              className="h-14 w-34 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20"
+              className="h-13 w-34 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20"
             >
               {createFolderMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

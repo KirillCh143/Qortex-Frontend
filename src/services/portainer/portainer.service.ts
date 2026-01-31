@@ -14,6 +14,12 @@ interface PortainerContainer {
   State: string
   Status: string
   Created: number
+  Image: string
+  Ports: Array<{
+    PrivatePort: number
+    PublicPort?: number
+    Type: string
+  }>
   Health?: {
     Status: string
   }
@@ -144,12 +150,22 @@ export const createRealPortainerService = (): PortainerService => {
             // Clean up container name (remove leading slash)
             const name = detail.Name.startsWith('/') ? detail.Name.substring(1) : detail.Name
 
+            // Extract port mapping - format as "PublicPort:PrivatePort"
+            const port = container.Ports.length > 0 && container.Ports[0].PublicPort
+              ? `${container.Ports[0].PublicPort}:${container.Ports[0].PrivatePort}`
+              : '-'
+
+            // Extract image name
+            const image = container.Image || '-'
+
             return {
               id: detail.Id,
               name,
               status,
               uptime,
               health,
+              port,
+              image,
             }
           })
       } catch (error) {

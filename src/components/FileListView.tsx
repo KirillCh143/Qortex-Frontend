@@ -90,8 +90,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
     <div className="flex flex-col gap-4">
       {files.map((file) => {
         const isSelected = selectedFile?.id === file.id
-        const { Icon, iconBg, iconText, iconBorder, label } =
-          getFileTypeInfo(file.type)
+        const { Icon, iconBg, iconText, iconBorder, label } = getFileTypeInfo(file.type)
         const uploaderName = file.uploaded_by
           ? `${file.uploaded_by.first_name} ${file.uploaded_by.last_name?.[0] || ''}.`
           : 'Неизвестный'
@@ -125,7 +124,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
               'group flex items-center justify-between p-5 pl-5 pr-6 bg-white rounded-xl border transition-all cursor-pointer',
               {
                 'border-2 bg-white border-[#7049f3]/90 relative z-10': isSelected,
-                'border-slate-200 hover:bg-white hover:border-violet-300 hover:shadow-md hover:shadow-slate-100':
+                'border-slate-300/85 hover:bg-white hover:border-violet-300 hover:shadow-md hover:shadow-slate-100':
                   !isSelected,
               }
             )}
@@ -171,14 +170,7 @@ export default function FileListView({ files, onSelectFile, selectedFile }: File
             <button
               onClick={handleDownloadClick}
               disabled={downloadMutation.isPending && downloadingFileId === file.id}
-              className={cn(
-                'ml-4 size-10 rounded-full flex items-center justify-center transition-all',
-                {
-                  'bg-[#7049f3] text-white shadow-lg shadow-indigo-500/30': isSelected,
-                  'bg-white text-slate-400 border border-indigo-200 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]':
-                    !isSelected,
-                }
-              )}
+              className="ml-4 size-10 rounded-full flex items-center justify-center transition-all bg-white text-slate-400 border border-slate-300/85 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]"
             >
               {downloadMutation.isPending && downloadingFileId === file.id ? (
                 <Loader2 className="h-5 w-5 animate-spin" />

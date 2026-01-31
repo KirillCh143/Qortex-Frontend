@@ -183,7 +183,7 @@ export default function Login() {
       {/* Footer */}
       <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 z-10">
         <p className="text-slate-400 text-[11px] font-medium tracking-widest uppercase">
-          © 2026 ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+          Copyright © 2026 Kirill Churnossov. All Rights Reserved.
         </p>
       </footer>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Bot } from 'lucide-react'
@@ -20,13 +20,19 @@ export default function Chat() {
   const saveMutation = useSaveChatMessage()
   const clearMutation = useClearChatHistory()
 
+  // Clear streaming state only after the persisted bot message appears in history
+  // useLayoutEffect ensures this runs before the browser paints, avoiding a flash
+  useLayoutEffect(() => {
+    if (isStreaming && messages.length > 0 && messages[messages.length - 1].role === 'assistant') {
+      setIsStreaming(false)
+      setStreamingResponse('')
+    }
+  }, [messages, isStreaming])
+
   // Auto-scroll to bottom when new messages arrive or streaming updates
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: 'smooth',
-      })
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
     }
   }, [messages.length, streamingResponse])
 
@@ -76,9 +82,9 @@ export default function Chat() {
             },
             {
               onSuccess: (data) => {
-                // Stream complete - save final response to Directus
-                setIsStreaming(false)
-                setStreamingResponse('')
+                // Keep streaming bubble visible with final text while saving
+                // The useEffect will clear streaming state once the message is persisted
+                setStreamingResponse(data.answer)
 
                 saveMutation.mutate({
                   user: user.id,
@@ -88,12 +94,11 @@ export default function Chat() {
                 })
               },
               onError: (error) => {
-                // Stream failed - save error message
-                setIsStreaming(false)
+                // Stream failed - save error message, keep bubble visible
                 const errorContent = streamingResponse
                   ? `${streamingResponse}\n\n[Error: ${error.message}]`
                   : `Error: ${error.message}`
-                setStreamingResponse('')
+                setStreamingResponse(errorContent)
 
                 saveMutation.mutate({
                   user: user.id,

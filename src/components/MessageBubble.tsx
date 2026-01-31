@@ -24,7 +24,7 @@ export default function MessageBubble({ role, content, timestamp }: MessageBubbl
   return (
     <div className={`flex gap-3 mb-4 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       {!isUser && (
-        <Avatar className="h-10 w-10 shrink-0">
+        <Avatar className="h-11 w-11 shrink-0">
           <AvatarFallback className="bg-gradient-to-br from-[#8d6df5] to-[#7049f3] text-white">
             <Bot size={20} />
           </AvatarFallback>

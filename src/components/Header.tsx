@@ -8,7 +8,7 @@ interface HeaderProps {
 export function Header({ title, subtitle, mode, onModeChange }: HeaderProps) {
   return (
     <header
-      className={`w-full h-20 bg-[#fdfefe] border-b flex items-center px-6 py-4 ${title ? 'justify-between' : 'justify-center'}`}
+      className={`w-full h-20 bg-[#fbfcfd] border-b border-slate-300/85 flex items-center px-6 py-4 ${title ? 'justify-between' : 'justify-center'}`}
     >
       {/* Page title section */}
       {title && (

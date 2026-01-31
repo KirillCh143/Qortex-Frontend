@@ -31,7 +31,6 @@ import { UploadFileDialog } from '@/components/UploadFileDialog'
 import AutoScrollTitle from '@/components/AutoScrollTitle'
 import { FileDetailPanel } from '@/components/FileDetailPanel'
 import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
-import { cn } from '@/lib/utils'
 
 // Helper function for Russian pluralization of file count
 const getPluralForm = (count: number) => {
@@ -75,6 +74,16 @@ export default function KnowledgeBase() {
   // Mutations
   const downloadMutation = useDownloadFile()
   const deleteMutation = useDeleteFile()
+
+  // Sync selectedDoc with fresh data after mutations (e.g. file update)
+  useEffect(() => {
+    if (selectedDoc) {
+      const updated = files.find((f) => f.id === selectedDoc.id)
+      if (updated && updated !== selectedDoc) {
+        setSelectedDoc(updated)
+      }
+    }
+  }, [files])
 
   // Trigger panel animation when selectedDoc changes
   useEffect(() => {
@@ -156,14 +165,14 @@ export default function KnowledgeBase() {
   return (
     <div className="h-full flex bg-[#fbfcfd]">
       {/* Folder Sidebar - Far Left */}
-      <div className="hidden md:block w-74 border-r border-slate-300 overflow-y-auto bg-[#fbfcfd]">
+      <div className="hidden md:block w-74 border-r border-slate-300/85 overflow-y-auto bg-[#fbfcfd]">
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
             <Button
               size="sm"
               onClick={() => setCreateFolderOpen(true)}
-              className="h-10 w-10 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3]/90 text-white hover:bg-[#7049f3]"
+              className="h-11 w-11 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3]/90 text-white hover:bg-[#7049f3]"
               title="New Folder"
             >
               <FolderPlus className="h-4 w-4" />
@@ -201,7 +210,7 @@ export default function KnowledgeBase() {
                 onClick={() => setUploadFileOpen(true)}
                 disabled={selectedFolderId === null}
                 title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
-                className="p-7 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-100 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/20"
+                className="h-13 p-6 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-100 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/20"
               >
                 <FilePlus className="h-5 w-5 mr-2 ml-1" />
                 Добавить
@@ -282,7 +291,7 @@ export default function KnowledgeBase() {
                       className={`group p-5 bg-white rounded-xl border hover:border-violet-300 transition-all cursor-pointer relative flex flex-col h-full hover:shadow-md hover:shadow-slate-100 ${
                         selectedDoc?.id === file.id
                           ? 'border-2 border-[#7049f3]/90 shadow-md shadow-slate-100'
-                          : 'border-slate-200 hover:border-primary/50'
+                          : 'border-slate-300/85 hover:border-primary/50'
                       }`}
                       onClick={() => setSelectedDoc(file)}
                     >
@@ -314,22 +323,14 @@ export default function KnowledgeBase() {
                           </span>
                         </div>
                       </div>
-                      <div className="mt-auto pt-4 border-t border-slate-200 flex items-center justify-between">
+                      <div className="mt-auto pt-4 border-t border-slate-300/85 flex items-center justify-between">
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                             {fileTypeInfo.label} • {formatFileSize(file.filesize)}
                           </span>
                         </div>
                         <button
-                          className={cn(
-                            'ml-4 size-10 rounded-full flex items-center justify-center transition-all',
-                            {
-                              'bg-[#7049f3] text-white shadow-lg shadow-indigo-500/30':
-                                selectedDoc?.id === file.id,
-                              'bg-white text-slate-400 border border-indigo-200 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]':
-                                selectedDoc?.id !== file.id,
-                            }
-                          )}
+                          className="ml-4 size-10 rounded-full flex items-center justify-center transition-all bg-white text-slate-400 border border-slate-300/85 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3]"
                           onClick={(e) => {
                             e.stopPropagation()
                             setDownloadingFileId(file.id)
@@ -383,6 +384,7 @@ export default function KnowledgeBase() {
           }
         }}
         onDownload={handleDownload}
+        onDelete={() => setDeleteDialogOpen(true)}
         isDownloading={downloadMutation.isPending && downloadingFileId === selectedDoc?.id}
       />
 
@@ -402,7 +404,7 @@ export default function KnowledgeBase() {
             <Button
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {deleteMutation.isPending ? (
                 <>

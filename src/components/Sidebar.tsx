@@ -11,7 +11,7 @@ export function Sidebar() {
   const navigate = useNavigate()
 
   // Общие стили для всех кнопок (отступы, ширина, скругление)
-  const baseClasses = 'w-full justify-start gap-3 rounded-[8px]'
+  const baseClasses = 'w-full h-11 justify-start gap-3 rounded-xl'
 
   // Стили для АКТИВНОЙ кнопки (Фиолетовый фон, белый текст, )
   const activeClasses =
@@ -40,7 +40,7 @@ export function Sidebar() {
 
   return (
     // Важно: поменял bg-primary на bg-white, чтобы черный текст был виден
-    <div className="flex h-screen w-64 flex-col justify-between bg-[#f9fafb] border-r text-black">
+    <div className="flex h-screen w-64 flex-col justify-between bg-[#f8f9fc] border-r border-slate-300/85 text-black">
       <div>
         {/* Branding Section */}
         <div className="flex items-center gap-4 p-5">
@@ -96,7 +96,7 @@ export function Sidebar() {
       </div>
 
       {/* User Section at Bottom */}
-      <div className="p-4 pt-6 pb-6 border-t">
+      <div className="p-4 pt-6 pb-6 border-t border-slate-300/85">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback className="bg-gradient-to-br from-[#8466e4] to-[#7049f3] text-white font-semibold">
@@ -105,14 +105,14 @@ export function Sidebar() {
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">
-              {user?.first_name} {user?.last_name}
+              {user?.last_name} <br /> {user?.first_name}
             </p>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleLogout}
-            className="hover:bg-indigo-50 flex-shrink-0"
+            className="hover:bg-indigo-100 flex-shrink-0 h-11 w-11"
             title="Выйти"
           >
             <LogOut className="h-4 w-4" />

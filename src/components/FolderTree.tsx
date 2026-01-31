@@ -108,7 +108,7 @@ export const FolderTree = ({ folders, selectedFolderId, onSelectFolder }: Folder
       {/* All Documents option */}
       <div
         onClick={() => onSelectFolder(null)}
-        className={`flex mb-2 items-center gap-2 px-3 py-3 cursor-pointer rounded-lg transition-colors ${
+        className={`flex mb-2 items-center gap-2 px-3 py-3 cursor-pointer rounded-xl transition-colors ${
           selectedFolderId === null
             ? 'bg-[#7049f3]/90 hover:bg-[#7049f3] text-white shadow-lg shadow-indigo-500/20'
             : 'text-gray-700 hover:bg-indigo-100'

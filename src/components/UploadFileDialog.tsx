@@ -134,7 +134,7 @@ export function UploadFileDialog({
                 onChange={handleFileChange}
                 disabled={uploadFileMutation.isPending}
                 aria-required="true"
-                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center leading-[40px]"
+                className="rounded-xl border-slate-300 focus:border-[#8466e4] flex items-center leading-[36px]"
               />
               {selectedFile && (
                 <div className="text-sm text-gray-600">
@@ -167,7 +167,7 @@ export function UploadFileDialog({
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Введите описание (необязательно)"
                 disabled={uploadFileMutation.isPending}
-                className="rounded-xl border-slate-300 focus:border-[#8466e4] resize-none"
+                className="rounded-xl border border-slate-300 hover:border-violet-300 focus:border-[#8466e4] resize-none"
               />
             </div>
 
@@ -188,7 +188,7 @@ export function UploadFileDialog({
             <Button
               type="button"
               variant="outline"
-              className="h-14 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
+              className="h-13 w-34 rounded-xl bg-white border border-slate-300 hover:border-violet-300 text-gray-900"
               onClick={() => handleOpenChange(false)}
               disabled={uploadFileMutation.isPending}
             >
@@ -197,7 +197,7 @@ export function UploadFileDialog({
             <Button
               type="submit"
               disabled={uploadFileMutation.isPending || !selectedFile}
-              className="bg-[#8466e4] hover:bg-[#7049f3] shadow-lg shadow-indigo-500/20 text-white h-14 w-34 rounded-xl"
+              className="bg-[#8466e4] hover:bg-[#7049f3] shadow-lg shadow-indigo-500/20 text-white h-13 w-34 rounded-xl"
             >
               {uploadFileMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

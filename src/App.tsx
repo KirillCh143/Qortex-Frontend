@@ -55,7 +55,10 @@ function App() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <Layout title="Settings" subtitle="Manage your account preferences">
+            <Layout
+              title="Настройки"
+              subtitle="Управление настройками системы и мониторинг состояния"
+            >
               <Settings />
             </Layout>
           </ProtectedRoute>

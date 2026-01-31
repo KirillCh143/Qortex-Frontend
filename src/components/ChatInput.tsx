@@ -46,7 +46,7 @@ export default function ChatInput({
   }
 
   return (
-    <div className="p-5 bg-[#fdfefe]">
+    <div className="p-5 bg-[#fbfcfd]">
       {/* Constrain content to match message area width */}
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-2 items-end">
