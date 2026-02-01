@@ -25,13 +25,14 @@ import type { DirectusFile } from '@/services/directus/types'
 import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
 import { useUpdateFile } from '@/hooks/useFiles'
 import { useFolders } from '@/hooks/useFolders'
+import { usePermissions } from '@/hooks/usePermissions'
 
 interface FileDetailPanelProps {
   file: DirectusFile | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onDownload: (file: DirectusFile) => void
-  onDelete: (file: DirectusFile) => void
+  onDelete?: (file: DirectusFile) => void
   isDownloading: boolean
 }
 
@@ -48,6 +49,7 @@ export function FileDetailPanel({
   const [editedDescription, setEditedDescription] = useState('')
   const [editedFolder, setEditedFolder] = useState<string>('root')
 
+  const { canManageFiles } = usePermissions()
   const updateFileMutation = useUpdateFile()
   const { data: folders = [], isLoading: foldersLoading } = useFolders()
 
@@ -301,23 +303,25 @@ export function FileDetailPanel({
                   )}
                   Скачать
                 </Button>
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleEdit}
-                    className="flex-1 bg-white text-slate-500 border border-slate-400/75 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3] rounded-xl h-12"
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Редактировать
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => onDelete(file)}
-                    className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-xl h-12 hover:shadow-lg hover:shadow-red-100/50"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Удалить
-                  </Button>
-                </div>
+                {canManageFiles && (
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={handleEdit}
+                      className="flex-1 bg-white text-slate-500 border border-slate-400/75 hover:border-none hover:shadow-lg hover:shadow-indigo-500/30 hover:bg-[#7049f3]/90 hover:text-white active:bg-[#7049f3] rounded-xl h-12"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Редактировать
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => onDelete?.(file)}
+                      className="flex-1 border-red-300 text-red-600 hover:bg-red-50 rounded-xl h-12 hover:shadow-lg hover:shadow-red-100/50"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Удалить
+                    </Button>
+                  </div>
+                )}
               </>
             )}
           </div>

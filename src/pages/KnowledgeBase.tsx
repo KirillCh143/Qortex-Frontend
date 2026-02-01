@@ -31,6 +31,7 @@ import { UploadFileDialog } from '@/components/UploadFileDialog'
 import AutoScrollTitle from '@/components/AutoScrollTitle'
 import { FileDetailPanel } from '@/components/FileDetailPanel'
 import { getFileTypeInfo } from '@/lib/fileTypeHelpers'
+import { usePermissions } from '@/hooks/usePermissions'
 
 // Helper function for Russian pluralization of file count
 const getPluralForm = (count: number) => {
@@ -62,6 +63,9 @@ export default function KnowledgeBase() {
   const [createFolderOpen, setCreateFolderOpen] = useState(false)
   const [uploadFileOpen, setUploadFileOpen] = useState(false)
   const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null)
+
+  // Role-based permissions
+  const { canManageFiles } = usePermissions()
 
   // Fetch folders and files using React Query
   const { data: folders = [] } = useFolders()
@@ -169,14 +173,16 @@ export default function KnowledgeBase() {
         <div className="p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-gray-700">Структура каталогов</h2>
-            <Button
-              size="sm"
-              onClick={() => setCreateFolderOpen(true)}
-              className="h-11 w-11 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3]/90 text-white hover:bg-[#7049f3]"
-              title="New Folder"
-            >
-              <FolderPlus className="h-4 w-4" />
-            </Button>
+            {canManageFiles && (
+              <Button
+                size="sm"
+                onClick={() => setCreateFolderOpen(true)}
+                className="h-11 w-11 p-0 shadow-lg shadow-indigo-500/30 bg-[#7049f3]/90 text-white hover:bg-[#7049f3]"
+                title="New Folder"
+              >
+                <FolderPlus className="h-4 w-4" />
+              </Button>
+            )}
           </div>
           <FolderTree
             folders={folders}
@@ -205,16 +211,18 @@ export default function KnowledgeBase() {
                 />
               </div>
 
-              {/* Upload button */}
-              <Button
-                onClick={() => setUploadFileOpen(true)}
-                disabled={selectedFolderId === null}
-                title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
-                className="h-13 p-6 pl-5 pr-6 rounded-xl bg-[#8466e4] hover:bg-[#7049f3] text-white disabled:bg-indigo-100 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/20"
-              >
-                <FilePlus className="h-5 w-5 mr-2 ml-1" />
-                Добавить
-              </Button>
+              {/* Upload button - only for administrators and moderators */}
+              {canManageFiles && (
+                <Button
+                  onClick={() => setUploadFileOpen(true)}
+                  disabled={selectedFolderId === null}
+                  title={selectedFolderId === null ? 'Please select a folder first' : 'Upload file'}
+                  className="h-13 p-6 pl-5 pr-6 rounded-xl bg-[#7049f3]/90 hover:bg-[#7049f3] text-white disabled:bg-indigo-100 disabled:text-gray-900 disabled:shadow-none shrink-0 shadow-lg shadow-indigo-500/20"
+                >
+                  <FilePlus className="h-5 w-5 mr-2 ml-1" />
+                  Добавить
+                </Button>
+              )}
             </div>
           </div>
 
@@ -384,40 +392,42 @@ export default function KnowledgeBase() {
           }
         }}
         onDownload={handleDownload}
-        onDelete={() => setDeleteDialogOpen(true)}
+        onDelete={canManageFiles ? () => setDeleteDialogOpen(true) : undefined}
         isDownloading={downloadMutation.isPending && downloadingFileId === selectedDoc?.id}
       />
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="bg-white">
-          <DialogHeader>
-            <DialogTitle>Удалить файл?</DialogTitle>
-            <DialogDescription>
-              Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              Отмена
-            </Button>
-            <Button
-              onClick={handleDelete}
-              disabled={deleteMutation.isPending}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              {deleteMutation.isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Удаление...
-                </>
-              ) : (
-                'Удалить'
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Delete Confirmation Dialog - only for administrators and moderators */}
+      {canManageFiles && (
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="bg-white">
+            <DialogHeader>
+              <DialogTitle>Удалить файл?</DialogTitle>
+              <DialogDescription>
+                Вы уверены, что хотите удалить этот файл? Это действие нельзя отменить.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                Отмена
+              </Button>
+              <Button
+                onClick={handleDelete}
+                disabled={deleteMutation.isPending}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {deleteMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Удаление...
+                  </>
+                ) : (
+                  'Удалить'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Create Folder Dialog */}
       <CreateFolderDialog
