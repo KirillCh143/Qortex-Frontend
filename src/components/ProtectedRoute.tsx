@@ -1,12 +1,14 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import type { UserRole } from '@/hooks/usePermissions';
 
 interface ProtectedRouteProps {
   children: React.ReactNode
+  allowedRoles?: UserRole[]
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, loading } = useAuth();
+export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { isAuthenticated, loading, user } = useAuth();
 
   // Check loading state BEFORE checking authentication to prevent race condition
   if (loading) {
@@ -20,6 +22,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   // If not authenticated, redirect to login with replace to prevent back button issues
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // If allowedRoles specified, check if user's role is permitted
+  // Unauthorized roles silently redirect to /chat (user IS authenticated, just not authorized)
+  if (allowedRoles && user && !allowedRoles.includes(user.frontend_role)) {
+    return <Navigate to="/chat" replace />;
   }
 
   return <>{children}</>
