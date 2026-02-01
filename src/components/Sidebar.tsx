@@ -3,12 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom' // 1. Импо
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useAuth } from '@/contexts/AuthContext'
+import { usePermissions } from '@/hooks/usePermissions'
 
 export function Sidebar() {
   const location = useLocation() // 2. Получаем текущий путь
   const pathname = location.pathname
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { canAccessSettings } = usePermissions()
 
   // Общие стили для всех кнопок (отступы, ширина, скругление)
   const baseClasses = 'w-full h-11 justify-start gap-3 rounded-xl'
@@ -81,17 +83,19 @@ export function Sidebar() {
             </Link>
           </Button>
 
-          {/* Кнопка Settings */}
-          <Button
-            variant="ghost"
-            className={`${baseClasses} ${pathname === '/settings' ? activeClasses : inactiveClasses}`}
-            asChild
-          >
-            <Link to="/settings">
-              <Settings className="h-5 w-5" />
-              Настройки
-            </Link>
-          </Button>
+          {/* Кнопка Settings - only visible to administrators */}
+          {canAccessSettings && (
+            <Button
+              variant="ghost"
+              className={`${baseClasses} ${pathname === '/settings' ? activeClasses : inactiveClasses}`}
+              asChild
+            >
+              <Link to="/settings">
+                <Settings className="h-5 w-5" />
+                Настройки
+              </Link>
+            </Button>
+          )}
         </nav>
       </div>
 

@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '@/components/Layout'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { useAuth } from '@/contexts/AuthContext'
+import type { UserRole } from '@/hooks/usePermissions'
 import Login from '@/pages/Login'
 import Chat from '@/pages/Chat'
 import KnowledgeBase from '@/pages/KnowledgeBase'
@@ -54,7 +55,7 @@ function App() {
       <Route
         path="/settings"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['administrator'] as UserRole[]}>
             <Layout
               title="Настройки"
               subtitle="Управление настройками системы и мониторинг состояния"
