@@ -111,10 +111,10 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-[440px] rounded-3xl bg-white/80 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-violet-100 p-10">
         {/* Company Branding */}
         <div className="mb-10 flex flex-col items-center">
-          <div className="size-18 rounded-2xl bg-gradient-to-br from-[#8d6df5] to-[#7049f3] flex items-center justify-center text-white shadow-xl shadow-primary/20 mb-5">
+          <div className="size-18 rounded-2xl bg-gradient-to-br from-[#7049f3]/90 to-[#7049f3] flex items-center justify-center text-white shadow-xl shadow-indigo-500/30 mb-4">
             <img src="/logo.svg" alt="Logo" className="h-14 w-14" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight mb-1">База знаний</h1>
+          <img src="/logo_full.svg" alt="Qortex Logo" className="h-8 w-auto mb-2" />
           <p className="text-slate-500 font-medium">Вход в систему</p>
         </div>
 
@@ -173,7 +173,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 w-full bg-[#7049f3] hover:bg-[#6542db] text-white font-bold h-14 rounded-xl shadow-lg shadow-[#8466e4]/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-4 w-full bg-[#7049f3]/90 hover:bg-[#7049f3] text-white font-bold h-14 rounded-xl shadow-xl shadow-indigo-500/20 transition-all transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting ? 'Осуществляется вход' : 'Войти'}
           </button>

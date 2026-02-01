@@ -49,21 +49,21 @@ export default function ChatInput({
     <div className="p-5 bg-[#fbfcfd]">
       {/* Constrain content to match message area width */}
       <div className="max-w-7xl mx-auto">
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-2 items-end pb-1">
           {/* Clear History button (left side) */}
           {onClearHistory && (
             <Button
               onClick={onClearHistory}
               disabled={messageCount === 0}
               title="Очистить историю чата"
-              className="mb-[1px] shadow-xl shadow-indigo-500/10 rounded-xl w-14 h-14 flex items-center justify-center bg-white backdrop-blur-sm border border-slate-300 text-slate-400 hover:bg-[#fef2f2] hover:border-[#f47c7c] hover:text-[#f15757] transition-all"
+              className="shadow-xl shadow-indigo-500/10 hover:shadow-red-100/50 flex rounded-xl w-14 h-[54px] items-center justify-center bg-white backdrop-blur-sm border border-slate-300 text-slate-400 hover:bg-[#fef2f2] hover:border-[#f47c7c] hover:text-[#f15757] transition-all"
             >
               <Trash2 className="h-5 w-5" />
             </Button>
           )}
 
           {/* Input capsule with textarea and send button */}
-          <div className="shadow-lg shadow-indigo-500/10 mb-[2px] flex-1 flex items-end gap-2 rounded-xl px-2 py-2 bg-white backdrop-blur-sm border border-slate-300 hover:border-violet-300 focus-within:border-[#7049f3] focus-within:hover:border-[#7049f3] transition-all">
+          <div className="shadow-lg shadow-indigo-500/10 flex-1 flex items-end gap-2 rounded-xl px-2 py-2 bg-white backdrop-blur-sm border border-slate-300 hover:border-violet-300 focus-within:border-[#7049f3] focus-within:hover:border-[#7049f3] transition-all">
             {/* Text input area */}
             <textarea
               ref={textareaRef}
@@ -89,7 +89,7 @@ export default function ChatInput({
         </div>
 
         {/* Disclaimer text */}
-        <p className="text-xs text-gray-500 text-center mt-2">
+        <p className="text-xs text-gray-500 text-center pt-2">
           AI может ошибаться. Проверяйте важную информацию.
         </p>
       </div>
