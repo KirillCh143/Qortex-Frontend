@@ -400,6 +400,31 @@ Phase 13 implements three-tier role-based access control:
    - FileDetailPanel Edit/Delete hidden, Download always visible
    - No visual gaps — each role sees a complete-feeling app
 
+### Phase 13: User Roles and Permissions ✓
+**Goal**: Implement user roles and permissions system
+**Depends on**: Phase 12
+**Research**: Likely (Directus roles/permissions API, frontend route guarding patterns)
+**Plans**: 2/2 complete
+**Status**: Complete
+**Completed**: 2026-02-01
+
+Plans:
+- [x] 13-01: Role Infrastructure (User type, usePermissions hook, ProtectedRoute)
+- [x] 13-02: UI Gating (Sidebar, routes, Knowledge Base CRUD controls)
+
+**Details:**
+Phase 13 implements three-tier role-based access control:
+1. Role Infrastructure:
+   - User type extended with frontend_role field from Directus
+   - usePermissions hook with boolean permissions (canAccessSettings, canManageFiles)
+   - ProtectedRoute enhanced with optional allowedRoles prop
+2. UI Gating:
+   - Sidebar Settings link hidden for non-administrators
+   - /settings route protected, unauthorized silently redirected to /chat
+   - Knowledge Base CRUD controls hidden for user role
+   - FileDetailPanel Edit/Delete hidden, Download always visible
+   - No visual gaps — each role sees a complete-feeling app
+
 ## Progress
 
 <<<<<<< HEAD
@@ -447,4 +472,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 7.1 �
 | 11. Table with Containers statuses from Portainer | 2/2 | Complete | 2026-01-26 |
 | 12. Small improvements and fixes | 5/5 | Complete | 2026-01-30 |
 | 13. User Roles and Permissions | 2/2 | Complete | 2026-02-01 |
+<<<<<<< HEAD
+>>>>>>> f9fdd40 (docs(13): complete User Roles and Permissions phase)
+=======
 >>>>>>> f9fdd40 (docs(13): complete User Roles and Permissions phase)
