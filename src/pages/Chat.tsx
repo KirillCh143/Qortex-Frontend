@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import { useState, useLayoutEffect, useRef } from 'react'
 import MessageBubble from '@/components/MessageBubble'
 import ChatInput from '@/components/ChatInput'
 import { Bot } from 'lucide-react'
