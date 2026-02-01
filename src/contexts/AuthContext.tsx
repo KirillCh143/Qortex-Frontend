@@ -118,6 +118,7 @@ interface User {
   email: string;
   first_name: string;
   last_name: string;
+  frontend_role: 'administrator' | 'moderator' | 'user';
 }
 
 interface AuthContextType {
@@ -144,6 +145,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Skip real auth check if using mock data
       const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
       if (useMockData) {
+        setUser({
+          id: 'mock-user-id',
+          email: 'mock@example.com',
+          first_name: 'Mock',
+          last_name: 'User',
+          frontend_role: 'administrator',
+        });
         setLoading(false);
         return;
       }
@@ -157,8 +165,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.debug('[auth] Checking session (SDK will auto-restore/refresh if needed)');
       }
 
+      // Request all fields including custom frontend_role field
+      // Cast through unknown because frontend_role is a custom Directus field not in SDK types
       const currentUser = await client.request(readMe());
-      setUser(currentUser as User);
+      setUser(currentUser as unknown as User);
 
       if (import.meta.env.DEV) {
         console.debug('[auth] Session valid, user:', currentUser.email);
