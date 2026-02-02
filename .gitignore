@@ -13,9 +13,7 @@ dist-ssr
 *.local
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.vscode
 .idea
 .DS_Store
 *.suo
@@ -23,6 +21,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code
+.claude
+.planning
+
+# MCP configuration
+.mcp.json
+claude.json
 
 # Environment files
 .env*.local
