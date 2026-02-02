@@ -7,9 +7,10 @@ import { createRealChatService } from '@/services/directus/chat.service'
 import { createMockPortainerService } from '@/services/mock/portainer.mock'
 import { createRealPortainerService } from '@/services/portainer/portainer.service'
 import directusClient from '@/lib/directus'
+import { getEnv } from '@/lib/env'
 
 // Determine if mock data should be used based on environment variable
-export const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true'
+export const useMockData = getEnv('VITE_USE_MOCK_DATA') === 'true'
 
 // Create webhook service based on mock/real toggle
 export const createWebhookServiceInstance = () => {
@@ -18,7 +19,7 @@ export const createWebhookServiceInstance = () => {
   }
 
   // Load webhook URL from environment variable
-  const n8nWebhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL as string || 'http://localhost:8081/webhook/chat'
+  const n8nWebhookUrl = getEnv('VITE_N8N_WEBHOOK_URL', 'http://localhost:8081/webhook/chat')
   return createWebhookService(n8nWebhookUrl)
 }
 

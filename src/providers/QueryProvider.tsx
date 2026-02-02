@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { getEnv } from '@/lib/env';
 
 // DevTools controlled by VITE_SHOW_DEVTOOLS env var (default: true in dev, false in prod)
-const showDevTools = import.meta.env.VITE_SHOW_DEVTOOLS === 'true';
+const showDevTools = getEnv('VITE_SHOW_DEVTOOLS') === 'true';
 
 const queryClient = new QueryClient({
   defaultOptions: {

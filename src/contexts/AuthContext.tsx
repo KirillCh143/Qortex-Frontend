@@ -7,6 +7,7 @@ import {
 } from 'react';
 import client from '../lib/directus';
 import { readMe } from '@directus/sdk';
+import { getEnv } from '@/lib/env';
 
 /**
  * Authentication Context - SDK-Managed Auth Flow
@@ -143,7 +144,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const checkAuth = async () => {
     try {
       // Skip real auth check if using mock data
-      const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+      const useMockData = getEnv('VITE_USE_MOCK_DATA') === 'true';
       if (useMockData) {
         setUser({
           id: 'mock-user-id',

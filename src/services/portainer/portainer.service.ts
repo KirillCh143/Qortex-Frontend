@@ -1,4 +1,5 @@
 import { PortainerService, ContainerStatus, ContainerHealth } from './types'
+import { getEnv } from '@/lib/env'
 
 // Portainer API response types
 interface PortainerContainerState {
@@ -57,9 +58,9 @@ const formatUptime = (startedAt: string): string => {
 
 // Real implementation using Portainer API
 export const createRealPortainerService = (): PortainerService => {
-  const portainerUrl = import.meta.env.VITE_PORTAINER_URL || 'http://localhost:9443'
-  const endpointId = import.meta.env.VITE_PORTAINER_ENDPOINT_ID || '2'
-  const apiToken = import.meta.env.VITE_PORTAINER_TOKEN || ''
+  const portainerUrl = getEnv('VITE_PORTAINER_URL', 'http://localhost:9443')
+  const endpointId = getEnv('VITE_PORTAINER_ENDPOINT_ID', '2')
+  const apiToken = getEnv('VITE_PORTAINER_TOKEN')
 
   return {
     async getContainers() {

@@ -181,8 +181,10 @@ export default function Login() {
       </div>
 
       {/* Footer */}
-      <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 z-10">
+      <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 z-10 text-center">
         <p className="text-slate-400 text-[11px] font-medium tracking-widest uppercase">
+          Qortex Frontend - Beta v.0.5.2
+          <br />
           Copyright © 2026 Kirill Churnossov. All Rights Reserved.
         </p>
       </footer>

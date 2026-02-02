@@ -1,4 +1,5 @@
 import { createDirectus, rest, authentication } from '@directus/sdk';
+import { getEnv } from '@/lib/env';
 
 // TypeScript interface for DirectusAuth structure
 export interface DirectusAuth {
@@ -23,7 +24,7 @@ interface DirectusSchema {
 }
 
 // Check if we're in mock mode - if so, skip Directus initialization to prevent CORS errors
-const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+const useMockData = getEnv('VITE_USE_MOCK_DATA') === 'true';
 
 // Create Directus client configured for JSON auth mode (localStorage-based)
 // Only initialize if NOT in mock mode to prevent SDK auto-refresh attempts
@@ -31,8 +32,7 @@ const client = useMockData
   ? null
   : (() => {
       // Directus URL from environment variable with fallback
-      const envUrl = import.meta.env.VITE_DIRECTUS_URL as string;
-      const BACKEND_URL = envUrl || 'http://localhost:8080';
+      const BACKEND_URL = getEnv('VITE_DIRECTUS_URL', 'http://localhost:8080');
 
       // Debug: show which base URL the Directus client will use (helps troubleshoot CORS/proxy)
       if (import.meta.env.DEV) {
