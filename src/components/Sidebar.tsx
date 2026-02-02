@@ -79,7 +79,7 @@ export function Sidebar() {
           >
             <Link to="/knowledge-base">
               <BookOpen className="h-5 w-5" />
-              Докумненты
+              Документы
             </Link>
           </Button>
 

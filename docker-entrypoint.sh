@@ -18,4 +18,4 @@ EOF
 echo "Runtime config injected into env-config.js"
 
 # Start the static file server
-exec npx serve -s /app/dist -l 3000
+exec npx serve -s /app/dist --listen tcp://0.0.0.0:3000
