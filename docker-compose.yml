@@ -6,15 +6,9 @@ services:
     environment:
       - VITE_USE_MOCK_DATA=false
       - VITE_SHOW_DEVTOOLS=false
-<<<<<<< HEAD
       - VITE_DIRECTUS_URL=http://192.168.2.18:8080
       - VITE_N8N_WEBHOOK_URL=http://192.168.2.18:8081/webhook/chat
       - VITE_PORTAINER_URL=http://192.168.2.18:8082
-=======
-      - VITE_DIRECTUS_URL=http://localhost:8080
-      - VITE_N8N_WEBHOOK_URL=http://localhost:8081/webhook/chat
-      - VITE_PORTAINER_URL=http://localhost:8082
->>>>>>> c3f73e1 (	new file:   .dockerignore)
       - VITE_PORTAINER_TOKEN=ptr_jD6YWRuSkrgg8kJWMIHzmuVZN0U3uCSLgUFg6EcTAt4=
       - VITE_PORTAINER_ENDPOINT_ID=3
     restart: unless-stopped
