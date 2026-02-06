@@ -1,4 +1,5 @@
 import type { ChatMessage, ChatService } from '../directus/types';
+import { generateUUID } from '@/lib/utils';
 
 // In-memory store for mock mode (simulates per-user storage)
 const mockStore = new Map<string, ChatMessage[]>();
@@ -22,7 +23,7 @@ export function createMockChatService(): ChatService {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       const newMessage: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         ...message,
         timestamp: new Date().toISOString(),
       };

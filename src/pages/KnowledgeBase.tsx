@@ -227,7 +227,7 @@ export default function KnowledgeBase() {
           </div>
 
           {/* Document List Section */}
-          <div className="flex-1 overflow-y-auto pt-2 rounded-xl bg-[#fdfefe]">
+          <div className="flex-1 overflow-y-auto pt-2 rounded-xl bg-[#fbfcfd]">
             {/* Folder info and View toggle */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">

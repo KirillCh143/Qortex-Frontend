@@ -6,6 +6,7 @@ import { useChatQuery } from '@/hooks/useChatQuery'
 import { useChatMessages, useSaveChatMessage, useClearChatHistory } from '@/hooks/useChat'
 import { useAuth } from '@/contexts/AuthContext'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { generateUUID } from '@/lib/utils'
 
 export default function Chat() {
   const { user } = useAuth()
@@ -65,7 +66,7 @@ export default function Chat() {
             {
               question: content,
               mode,
-              sessionId: crypto.randomUUID(),
+              sessionId: generateUUID(),
               sessionidkey,
               history: messages.slice(-10).map((msg) => ({
                 role: msg.role,
